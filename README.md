@@ -1,2 +1,2 @@
-# dace
+# DACE
 Differential Algebra Computational Toolbox
