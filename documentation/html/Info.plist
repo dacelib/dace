@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN"
+"http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+     <key>CFBundleName</key>
+     <string>DACE 2.0 API Manual</string>
+     <key>CFBundleIdentifier</key>
+     <string>github.com.dacelib.dace</string>
+     <key>CFBundleVersion</key>
+     <string>ESA 4000117860/16/NL/LF/as</string>
+     <key>DocSetFeedName</key>
+     <string>DACE</string>
+     <key>DocSetPublisherIdentifier</key>
+     <string>github.com.dacelib</string>
+     <key>DocSetPublisherName</key>
+     <string>Team</string>
+     <key>DashDocSetFamily</key>
+     <string>doxy</string>
+     <key>DocSetPlatformFamily</key>
+     <string>doxygen</string>
+</dict>
+</plist>
