@@ -7,16 +7,17 @@ Dinamica Srl in 2014 and extended by Politecnico di Milano and ESA ACT in 2016.
 In 2014 Dinamica Srl developed DACE 1.0 which comprises a Core and a C++ interface.
 The work as been performed under ESA Contract "Nonlinear Propagation of Uncertainties in Space Dynamics based on Taylor Differential Algebra"  
 People involved in the fist development at Dinamica Srl:
-- Pierluigi Di Lizia (dilizia@dinamicatech.com)
-- Mauro Massari (massari@dinamicatech.com)
-- Mirco Rasotto (rasotto@dinamicatech.com)
-- Alexander Wittig (wittig@dinamicatech.com)
-- Roberto Armellin (armellin@dinamicatech.com)
-- Alessandro Morselli (morselli@dinamicatech.com)
+- Pierluigi Di Lizia
+- Mauro Massari
+- Mirco Rasotto
+- Alexander Wittig
+- Roberto Armellin
+- Alessandro Morselli
+- Maritn Berz 
 
 In 2016 Politecnico di Milano and ESA's Advanced Concepts Team developed an improved Core while keeping the previously developed C++ interface.
 This work has been performed under an ESA ACT Ariadna Study "Assessment of Onboard DA State Estimation for Spacecraft Relative Navigation"   
 People involved in the development at Politecnico di Milano and ESA-ACT:
-- Mauro Massari (mauro.massari@polimi.it)
-- Pierluigi Di Lizia (pierluigi.dilizia@polimi.it)
-- Alexander Wittig (alexander.wittig@esa.int)
+- Mauro Massari
+- Pierluigi Di Lizia 
+- Alexander Wittig 
