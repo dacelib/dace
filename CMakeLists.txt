@@ -143,6 +143,21 @@ SET(CPACK_COMPONENT_HEADERS_DEPENDS libraries)
 # OS specific settings and overrides
 IF(WIN32)
     SET(CPACK_GENERATOR "NSIS")
+    set(CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS "!include \\\"x64.nsh\\\"")
+    set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+    
+    \\\${DisableX64FSRedirection}
+     
+    CopyFiles \\\"$INSTDIR\\\\lib\\\\dace.dll\\\" \\\"$SYSDIR\\\" 
+     
+     ")
+    set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+    
+    \\\${DisableX64FSRedirection}
+     
+    Delete \\\"$SYSDIR\\\\dace.dll\\\"  
+     
+     ")
     UNSET(CPACK_PACKAGING_INSTALL_PREFIX)	# replace by whatever it needs to be
 ELSEIF(APPLE)
     SET(CPACK_GENERATOR "productbuild")
