@@ -60,6 +60,8 @@ matrix:
     - os: linux
       addons:
         apt:
+          sources:
+            - "llvm-toolchain-trusty-4.0"
           packages:
             - "clang-4.0"
       env:
@@ -68,6 +70,8 @@ matrix:
     - os: linux
       addons:
         apt:
+          sources:
+            - "llvm-toolchain-trusty-5.0"
           packages:
             - "clang-5.0"
       env:
@@ -76,6 +80,8 @@ matrix:
     - os: linux
       addons:
         apt:
+          sources:
+            - "llvm-toolchain-trusty-6.0"
           packages:
             - "clang-6.0"
       env:
