@@ -22,7 +22,7 @@ matrix:
     - os: linux
       compilers: gcc
       env:
-         - MATRIX_EVAL="PKG_PREFIX=linux-gcc"
+         - MATRIX_EVAL="PKG_PREFIX=linux-gcc-"
 
     - os: linux
       addons:
@@ -105,12 +105,6 @@ matrix:
       osx_image: xcode9
       env:
         - MATRIX_EVAL="PKG_PREFIX=osx-xcode9-"
-
-before_deploy:
-  # Set up git user name and tag this commit
-  - git config --local user.name "Travis CI (Alexander Wittig)"
-  - git config --local user.email "a.wittig@soton.ac.uk"
-  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
 
 deploy:
   provider: releases
