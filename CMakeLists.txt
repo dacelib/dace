@@ -29,6 +29,13 @@ if(DACESTATIC AND DACEDYNAMIC)
     message(FATAL_ERROR "It is not possible to select both static and dynamic memory management at the same time")
 endif(DACESTATIC AND DACEDYNAMIC)
 
+# Set a default build type
+if(NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release CACHE STRING
+       "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
+       FORCE)
+endif(NOT CMAKE_BUILD_TYPE)
+
 set(DACE_OPT_FLAGS "")
 
 if(DACEPTHREAD)
