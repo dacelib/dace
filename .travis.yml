@@ -1,10 +1,10 @@
 language: cpp
 script: 
-   - mkdir build
-   - cd build
+   - mkdir build && cd build
    - cmake ..
    - make
    - make package
+   - mkdir packages && for f in DACE-2.0*; do mv $f packages/${PKG_PREFIX}${f}; done
 dist: trusty
 sudo: false
 git:
@@ -16,12 +16,12 @@ matrix:
     - os: linux
       compilers: clang
       env:
-         - MATRIX_EVAL=""
+         - MATRIX_EVAL="PKG_PREFIX=linux-clang-"
 
     - os: linux
       compilers: gcc
       env:
-         - MATRIX_EVAL=""
+         - MATRIX_EVAL="PKG_PREFIX=linux-gcc"
 
     - os: linux
       addons:
@@ -32,7 +32,7 @@ matrix:
           packages:
           - "g++-4.9"
       env:
-         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9"
+         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && PKG_PREFIX=linux-gcc-4.9-"
 
     - os: linux
       addons:
@@ -43,7 +43,7 @@ matrix:
           packages:
             - "g++-5"
       env:
-         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
+         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5 && PKG_PREFIX=linux-gcc-5-"
 
     - os: linux
       addons:
@@ -54,7 +54,7 @@ matrix:
           packages:
             - "g++-6"
       env:
-        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6"
+        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6 && PKG_PREFIX=linux-gcc-6-"
 
     - os: linux
       addons:
@@ -65,7 +65,7 @@ matrix:
           packages:
             - "g++-7"
       env:
-        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7"
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && PKG_PREFIX=linux-gcc-7-"
 
     - os: linux
       addons:
@@ -76,7 +76,7 @@ matrix:
           packages:
             - "clang-4.0"
       env:
-        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0"
+        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0 && PKG_PREFIX=linux-clang-4-"
 
     - os: linux
       addons:
@@ -87,7 +87,7 @@ matrix:
           packages:
             - "clang-5.0"
       env:
-        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0"
+        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0 && PKG_PREFIX=linux-clang-5-"
 
     - os: linux
       addons:
@@ -98,12 +98,27 @@ matrix:
           packages:
             - "clang-6.0"
       env:
-        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0"
+        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0 && PKG_PREFIX=linux-clang-6-"
 
     - os: osx
       osx_image: xcode9
       env:
-        - MATRIX_EVAL=""
+        - MATRIX_EVAL="PKG_PREFIX=osx-xcode9-"
+
+before_deploy:
+  # Set up git user name and tag this commit
+  - git config --local user.name "Travis CI (Alexander Wittig)"
+  - git config --local user.email "a.wittig@soton.ac.uk"
+  - git tag "$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)"
+
+deploy:
+  provider: releases
+  api_key:
+    secure: gZBhI/gFI8tzO/1+lR0BALC7kEjpbVtWhvmufyfWtGqoWKEolhcSk2UtxvRwogzAMGd2Z/fsnU09G515c0lu8su7Gg93w1uSvuHEHVs+sMfveLUrqaBk4msNWJJJLobZr0p4Taj8ylFghewdyuDdw4Nl9B8pULCIhnHt3V/h1j07FDmUx7CDQg8RLxiHrToI5Qmce+ObRZxqgLhSIZDVhTTm3VSdZDetVNgiYCU8pemzXkWvcoPaNoEhV4Ph9cDHApttFhFroZUsG0PxaT7DnjQ71K2ugObL3wloZk+sFFo1cbaTDOMd0JK0V43bGF8Uu8lOZpcXbsW6VALO1rVM43awoa2i6F3EG+EccaSjKWs3iB9/51e3psecMmLublNAuaaq9fn9t+UlqV/78H3RUvnmMmN3c8Sfm+h/YxR8BY0qriHMX+4HlkN7enFg6SD27y4q1FvGiBG24s3QfVeHJs1tV4Gvq64abQZBoQRrim9iyGn6IRG+NqB1W7eUcMHBTkZ7NrvbuMflI0SwCPmXIkY71wZ55DMqSooxeoRIBuL8aoQGjdDE3+2Oyu1sELHUj9e5SJtEyX1WXgf30v6NRyMrwexeUqtyN6nspbM6RUPdMnZaincEmduwm8NoMifwA4D/U+q4FrA00yU4bkouPC55+NZxz66NsVsD+aV+z3k=
+  file: packages/*
+  skip_cleanup: true
+  on:
+    tags: true
 
 before_install:
     - eval "${MATRIX_EVAL}"
