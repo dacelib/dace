@@ -5,8 +5,7 @@ script:
    - cmake ..
    - make
    - make package
-#dist: bionic		# apt-get doesn't work for this
-dist: xenial
+dist: trusty
 sudo: false
 git:
   depth: 1
