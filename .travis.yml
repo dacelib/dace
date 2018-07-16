@@ -1,4 +1,4 @@
-language: cpp
+#language: cpp
 script: cmake . && cmake --build .
 dist: bionic
 git:
@@ -52,7 +52,7 @@ matrix:
         apt:
           sources:
             - ubuntu-toolchain-r-test
-            - llvm-toolchain-precise-3.8
+            - llvm-toolchain-bionic-3.8
           packages:
             - clang-3.8
       env:
@@ -62,7 +62,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-trusty-3.9
+            - llvm-toolchain-bionic-3.9
           packages:
             - clang-3.9
       env:
@@ -72,7 +72,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-trusty-4.0
+            - llvm-toolchain-bionic-4.0
           packages:
             - clang-4.0
       env:
@@ -82,7 +82,7 @@ matrix:
       addons:
         apt:
           sources:
-            - llvm-toolchain-trusty-5.0
+            - llvm-toolchain-bionic-5.0
           packages:
             - clang-5.0
       env:
