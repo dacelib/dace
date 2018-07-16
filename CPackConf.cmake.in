@@ -1,0 +1,29 @@
+IF(WIN32)
+    set(CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS "!include \\\"x64.nsh\\\"")
+    set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+
+    \\\${DisableX64FSRedirection}
+
+    CopyFiles \\\"$INSTDIR\\\\lib\\\\dace.dll\\\" \\\"$SYSDIR\\\"
+
+     ")
+    set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+
+    \\\${DisableX64FSRedirection}
+
+    Delete \\\"$SYSDIR\\\\dace.dll\\\"
+
+     ")
+    UNSET(CPACK_PACKAGING_INSTALL_PREFIX)	# replace by whatever it needs to be
+ELSEIF(APPLE)
+    # gymnastics to copy the LICENSE file to the binary dir and give it a .txt extension so Mac installer can handle it
+    file(COPY "@CMAKE_SOURCE_DIR@/LICENSE" DESTINATION "@CMAKE_BINARY_DIR@")
+    file(RENAME "@CMAKE_BINARY_DIR@/LICENSE" "@CMAKE_BINARY_DIR@/LICENSE.txt")
+    SET(CPACK_RESOURCE_FILE_LICENSE "@CMAKE_BINARY_DIR@/LICENSE.txt")
+    SET(CPACK_PACKAGE_VENDOR "DACEDevelopmentGroup")    # no spaces allowed for packagebuild
+    SET(CPACK_RESOURCE_FILE_README "@CMAKE_CURRENT_SOURCE_DIR@/README-MAC.rtf")
+#    UNSET(CPACK_COMPONENT_HEADERS_DEPENDS)        # broken for Mac in cmake 3.10.0, fix submitted for 3.10.1
+ELSEIF(UNIX)
+    SET(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+    SET(CPACK_PACKAGE_DESCRIPTION_FILE "@CMAKE_CURRENT_SOURCE_DIR@/README-LINUX")
+ENDIF(WIN32)
