@@ -1,5 +1,10 @@
 language: cpp
-script: cmake . && cmake --build .
+script: 
+   - mkdir build
+   - cd build
+   - cmake ..
+   - make
+   - make package
 dist: bionic
 git:
   depth: 1
@@ -25,7 +30,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-5123
+            - g++-5
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
