@@ -32,6 +32,8 @@
 
 // MS C library needs this to trigger it to define math constants
 #define _USE_MATH_DEFINES
+// Glibc needs this to expose the jn() and yn() Bessel functions under that name
+#define _XOPEN_SOURCE
 #include <math.h>
 #include <stdlib.h>
 
@@ -1499,7 +1501,7 @@ void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
 
     const double a0 = daceGetConstant(ina);
     for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-        bz[i] = jn(n-DACECom_t.nocut+i, a0);		// XXX: Mauro: MSVC complains that "warning C4996: 'jn': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _jn. See online help for details." But at least on my Mac these don't seem to exist. I recommend we leave it as is (remove comment after fix).
+        bz[i] = jn(n-DACECom_t.nocut+i, a0);        // MSVC recommends using _jn, but not portable
 
     daceEvaluateBesselFunction(ina, bz, inc);
 #ifndef DACE_STATIC_MEMORY
@@ -1529,7 +1531,7 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
 #endif
 
     for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-        bz[i] = yn(n-DACECom_t.nocut+i, a0);		// XXX: Mauro, same here as above. MSVC recommends using _yn
+        bz[i] = yn(n-DACECom_t.nocut+i, a0);		// MSVC recommends using _yn, but not portable
 
     daceEvaluateBesselFunction(ina, bz, inc);
 #ifndef DACE_STATIC_MEMORY
