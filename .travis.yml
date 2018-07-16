@@ -5,9 +5,9 @@ script:
    - cmake ..
    - make
    - make package
-#dist: bionic
+#dist: bionic		# apt-get doesn't work for this
 dist: xenial
-sudo: true
+sudo: false
 git:
   depth: 1
 
@@ -30,7 +30,7 @@ matrix:
         apt:
           update: true
           sources:
-            - ubuntu-toolchain-r-test
+            - "ubuntu-toolchain-r-test"
           packages:
             - "g++-5"
       env:
@@ -41,7 +41,7 @@ matrix:
         apt:
           update: true
           sources:
-            - ubuntu-toolchain-r-test
+            - "ubuntu-toolchain-r-test"
           packages:
             - "g++-6"
       env:
@@ -52,7 +52,7 @@ matrix:
         apt:
           update: true
           sources:
-            - ubuntu-toolchain-r-test
+            - "ubuntu-toolchain-r-test"
           packages:
             - "g++-7"
       env:
