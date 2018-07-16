@@ -6,6 +6,7 @@ script:
    - make
    - make package
 dist: bionic
+sudo: false
 git:
   depth: 1
 
