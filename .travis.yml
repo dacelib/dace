@@ -1,0 +1,7 @@
+language: cpp
+script: cmake
+compiler:
+  - clang
+  - gcc
+git:
+  depth: 1
