@@ -3,6 +3,8 @@ script: cmake
 compiler:
   - clang
   - gcc
+os:
+  - linux
+dist: bionic
 git:
   depth: 1
-
