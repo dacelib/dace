@@ -5,7 +5,8 @@ script:
    - cmake ..
    - make
    - make package
-dist: bionic
+#dist: bionic
+dist: xenial
 sudo: true
 git:
   depth: 1
