@@ -1,4 +1,4 @@
-#language: cpp
+language: cpp
 script: cmake . && cmake --build .
 dist: bionic
 git:
@@ -23,7 +23,7 @@ matrix:
           sources:
             - ubuntu-toolchain-r-test
           packages:
-            - g++-5
+            - g++-5123
       env:
          - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5"
 
