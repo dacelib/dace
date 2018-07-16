@@ -1,5 +1,5 @@
 language: cpp
-script: cmake abgandar/dace && cmake --build abgandar/dace
+script: cmake . && cmake --build .
 dist: bionic
 git:
   depth: 1
