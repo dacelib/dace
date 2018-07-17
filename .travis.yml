@@ -127,12 +127,7 @@ deploy:
 #      condition: $TRAVIS_EVENT_TYPE != pull_request
 
   - provider: script
-    script:
-      - pwd
-      - git clone -b pkg-latest https://${GITHUB_TOKEN}@github.com/abgandar/dace.git pkg-latest
-      - cp build/packages/* pkg-latest
-      - git commit -a -m "Update build artifacts"
-      - git push pkg-latest
+    script: sh -c "pwd && git clone -b pkg-latest https://abgandar:${GITHUB_TOKEN}@github.com/abgandar/dace.git pkg-latest && cd pkg-latest && cp ../build/packages/* . && git commit -a -m 'Update build artifacts' && git push"
     skip_cleanup: true
     on:
       branch: master
