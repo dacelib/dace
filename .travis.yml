@@ -115,11 +115,24 @@ deploy:
     on:
       tags: true                    # only upload tagged builds (= releases)
 
-  - provider: pages
-    target-branch: pkg-latest
-    github-token: $GITHUB_TOKEN
-    keep-history: true
-    local-dir: build/packages
+#  - provider: pages
+#    target-branch: pkg-latest
+#    github-token: $GITHUB_TOKEN
+#    keep-history: true
+#    local-dir: build/packages
+#    skip_cleanup: true
+#    on:
+#      branch: master
+#      tags: false
+#      condition: $TRAVIS_EVENT_TYPE != pull_request
+
+  - provider: script
+    script:
+      - pwd
+      - git clone -b pkg-latest https://${GITHUB_TOKEN}@github.com/abgandar/dace.git pkg-latest
+      - cp build/packages/* pkg-latest
+      - git commit -a -m "Update build artifacts"
+      - git push pkg-latest
     skip_cleanup: true
     on:
       branch: master
