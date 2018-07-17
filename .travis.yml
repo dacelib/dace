@@ -127,7 +127,7 @@ deploy:
 #      condition: $TRAVIS_EVENT_TYPE != pull_request
 
   - provider: script
-    script: sh ${TRAVIS_}/deploy.sh
+    script: sh ${TRAVIS_BUILD_DIR}/deploy.sh
     skip_cleanup: true
     on:
       branch: master
