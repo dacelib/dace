@@ -107,16 +107,24 @@ matrix:
         - MATRIX_EVAL="PKG_PREFIX=osx-xcode9-"
 
 deploy:
-  provider: releases
-  api_key:
-    secure: gZBhI/gFI8tzO/1+lR0BALC7kEjpbVtWhvmufyfWtGqoWKEolhcSk2UtxvRwogzAMGd2Z/fsnU09G515c0lu8su7Gg93w1uSvuHEHVs+sMfveLUrqaBk4msNWJJJLobZr0p4Taj8ylFghewdyuDdw4Nl9B8pULCIhnHt3V/h1j07FDmUx7CDQg8RLxiHrToI5Qmce+ObRZxqgLhSIZDVhTTm3VSdZDetVNgiYCU8pemzXkWvcoPaNoEhV4Ph9cDHApttFhFroZUsG0PxaT7DnjQ71K2ugObL3wloZk+sFFo1cbaTDOMd0JK0V43bGF8Uu8lOZpcXbsW6VALO1rVM43awoa2i6F3EG+EccaSjKWs3iB9/51e3psecMmLublNAuaaq9fn9t+UlqV/78H3RUvnmMmN3c8Sfm+h/YxR8BY0qriHMX+4HlkN7enFg6SD27y4q1FvGiBG24s3QfVeHJs1tV4Gvq64abQZBoQRrim9iyGn6IRG+NqB1W7eUcMHBTkZ7NrvbuMflI0SwCPmXIkY71wZ55DMqSooxeoRIBuL8aoQGjdDE3+2Oyu1sELHUj9e5SJtEyX1WXgf30v6NRyMrwexeUqtyN6nspbM6RUPdMnZaincEmduwm8NoMifwA4D/U+q4FrA00yU4bkouPC55+NZxz66NsVsD+aV+z3k=
-  file_glob: true
-  file: packages/*
-  skip_cleanup: true
-# only upload tagged builds (= releases) / non-tagged builds (commits)
-# careful: no setting means new tags are created for untagged => new build is started for those => built twice :(
-  on:
-    tags: true
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: packages/*
+    skip_cleanup: true
+    on:
+      tags: true                    # only upload tagged builds (= releases)
+
+  - provider: pages
+    target-branch: pkg-latest
+    github-token: $GITHUB_TOKEN
+    keep-history: true
+    local-dir: packages
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: false
+      condition: $TRAVIS_EVENT_TYPE != pull_request
 
 before_install:
     - eval "${MATRIX_EVAL}"
