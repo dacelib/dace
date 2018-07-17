@@ -119,7 +119,7 @@ deploy:
     target-branch: pkg-latest
     github-token: $GITHUB_TOKEN
     keep-history: true
-    local-dir: packages
+    local-dir: build/packages
     skip_cleanup: true
     on:
       branch: master
