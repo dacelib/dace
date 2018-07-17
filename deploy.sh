@@ -4,7 +4,7 @@ cd ${TRAVIS_BUILD_DIR}/build
 cd pkg-latest
 cp ${TRAVIS_BUILD_DIR}/build/packages/* .
 git add *
-git commit -a -m 'Update build artifacts for commit ${TRAVIS_COMMIT}'
+git commit -a -m "Automatic update of build artifacts for commit ${TRAVIS_COMMIT}"
 git push
 cd ..
 rm -rf pkg-latest
