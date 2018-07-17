@@ -4,8 +4,8 @@ cd ${TRAVIS_BUILD_DIR}/build
 git clone --branch pkg-latest https://github.com/abgandar/dace.git pkg-latest
 cd pkg-latest
 cp ${TRAVIS_BUILD_DIR}/build/packages/* .
-git -q add *
-git -q commit -a -m 'Update build artifacts for commit ${TRAVIS_COMMIT}'
-git -q push
+git add *
+git commit -a -m 'Update build artifacts for commit ${TRAVIS_COMMIT}'
+git push
 cd ..
 rm -rf pkg-latest
