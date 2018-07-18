@@ -8,4 +8,4 @@ target_compile_definitions(c_core PRIVATE ${DACE_OPT_FLAGS})
 add_library(c_core_s OBJECT ${SRCCCORE})
 target_compile_definitions(c_core_s PRIVATE ${DACE_OPT_FLAGS})
 
-install(DIRECTORY ${PROJECT_SOURCE_DIR}/core/include/ DESTINATION include/DA COMPONENT headers)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/core/include/ DESTINATION include/ COMPONENT headers)

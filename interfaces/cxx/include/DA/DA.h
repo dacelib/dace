@@ -40,8 +40,7 @@
 #include <stack>
 
 #include "DA/Def.h"
-//#include "DA/libdace.h"
-#include "dacecore.h"
+#include "DA/dacecore.h"
 
 namespace DACE{
 
