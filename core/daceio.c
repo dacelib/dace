@@ -492,7 +492,7 @@ void daceImportBlob(const void *blob, DACEDA *inc)
 #else
     unsigned int *p = dacecalloc(umax(nv, DACECom.nvmax), sizeof(unsigned int));
 #endif
-    bool truncated = false;
+    //bool truncated = false;
 
     for(unsigned int i = 0; i < data->len; i++)
     {
@@ -506,8 +506,8 @@ void daceImportBlob(const void *blob, DACEDA *inc)
 
         if(order <= DACECom.nomax && extravar == 0)
             cc[daceEncode(p)] = data->monomials[i].cc;
-        else
-            truncated = true;
+        //else
+        //    truncated = true;
     }
 
     dacePack(cc, inc);
