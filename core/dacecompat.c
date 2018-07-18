@@ -30,9 +30,9 @@
  *  @{
  */
 
-#include "dacebase.h"
-#include "dacecompat.h"
-#include "daceaux.h"
+#include "DA/dacebase.h"
+#include "DA/dacecompat.h"
+#include "DA/daceaux.h"
 
 /********************************************************************************
  *     Compatibility shims to bridge old and new interface

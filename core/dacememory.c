@@ -38,8 +38,8 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
+#include "DA/dacebase.h"
+#include "DA/daceaux.h"
 
 
 // Global DACE data structure allocation
