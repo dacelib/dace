@@ -1,6 +1,0 @@
-IF(APPLE)
-  # gymnastics to copy the LICENSE file to the binary dir and give it a .txt extension so Mac installer can handle it
-  file(COPY "@CMAKE_SOURCE_DIR@/LICENSE" DESTINATION "@CMAKE_BINARY_DIR@")
-  file(RENAME "@CMAKE_BINARY_DIR@/LICENSE" "@CMAKE_BINARY_DIR@/LICENSE.txt")
-  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_BINARY_DIR}/LICENSE.txt")
-ENDIF(APPLE)

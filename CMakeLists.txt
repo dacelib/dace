@@ -105,7 +105,7 @@ add_subdirectory(interfaces/cxx)
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DACE Library")
 set(CPACK_PACKAGE_NAME "DACE")
 set(CPACK_PACKAGE_VENDOR "DACE Development Group")
-#set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
+set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
 set(CPACK_PACKAGE_VERSION "${DACE_VERSION_MAJOR}.${DACE_VERSION_MINOR}.${DACE_VERSION_PATCH}")
 set(CPACK_PACKAGE_VERSION_MAJOR "${DACE_VERSION_MAJOR}")
 set(CPACK_PACKAGE_VERSION_MINOR "${DACE_VERSION_MINOR}")
@@ -122,15 +122,11 @@ set(CPACK_COMPONENT_HEADERS_DESCRIPTION "DACE C++ headers files")
 set(CPACK_COMPONENT_HEADERS_DEPENDS libraries)
 #set(CPACK_MONOLITHIC_INSTALL 1)
 
-# Package generation time overrides for some CPack settings
-configure_file("${CMAKE_SOURCE_DIR}/CPackConf.cmake.in" "${CMAKE_BINARY_DIR}/CPackConf.cmake" @ONLY)
-set(CPACK_PROJECT_CONFIG_FILE "${CMAKE_BINARY_DIR}/CPackConf.cmake")
-
 # OS specific packager settings
-IF(WIN32)
-    set(CPACK_GENERATOR "NSIS")
-    set(CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS "!include \\\"x64.nsh\\\"")
-    set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+if(WIN32)
+  set(CPACK_GENERATOR "NSIS")
+  set(CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS "!include \\\"x64.nsh\\\"")
+  set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
 
     \\\${DisableX64FSRedirection}
 
@@ -143,19 +139,22 @@ IF(WIN32)
 
     Delete \\\"$SYSDIR\\\\dace.dll\\\"
 
-     ")
-    UNset(CPACK_PACKAGING_INSTALL_PREFIX)	# replace by whatever it needs to be
-ELSEIF(APPLE)
-    set(CPACK_GENERATOR "productbuild")
-    set(CPACK_PACKAGE_VENDOR "DACEDevelopmentGroup")    # no spaces allowed for packagebuild
-    set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README-MAC.rtf")
-ELSEIF(UNIX)
-    set(CPACK_GENERATOR "TGZ;DEB")
-    set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-    # dependencies are set to default libraries on trusty (Ubuntu 14.04 LTS). Should be set to actual versions on build system.
-    set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.19), libstdc++ (>= 4.8.4)")
-    set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README-LINUX")
-    install(FILES README-LINUX DESTINATION share/libdace/ )
-ENDIF(WIN32)
+  ")
+  unset(CPACK_PACKAGING_INSTALL_PREFIX)	# replace by whatever it needs to be
+elseif(APPLE)
+  set(CPACK_GENERATOR "productbuild")
+  set(CPACK_PACKAGE_VENDOR "DACEDevelopmentGroup")    # no spaces allowed for packagebuild
+  set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README-MAC.rtf")
+  file(COPY "${CMAKE_SOURCE_DIR}/LICENSE" DESTINATION "${CMAKE_BINARY_DIR}")
+  file(RENAME "${CMAKE_BINARY_DIR}/LICENSE" "${CMAKE_BINARY_DIR}/LICENSE.txt")
+  set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_BINARY_DIR}/LICENSE.txt")
+elseif(UNIX)
+  set(CPACK_GENERATOR "TGZ;DEB")
+  set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
+  # dependencies are set to default libraries on trusty (Ubuntu 14.04 LTS). Should be set to actual versions on build system.
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.19), libstdc++ (>= 4.8.4)")
+  set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README-LINUX")
+  install(FILES README-LINUX DESTINATION share/libdace/ )
+endif(WIN32)
 
 include(CPack)
