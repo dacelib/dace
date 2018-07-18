@@ -1713,7 +1713,7 @@ DACE_API std::istream& operator>>(std::istream &in, DA &da){
         if(line.length() > 0)
         {
             // parse the content of line into string array
-            const std::string::iterator beg = line.begin(), end = line.end();
+            const std::string::iterator end = line.end();
             std::string::iterator p = line.begin();
             while(p != end)
             {

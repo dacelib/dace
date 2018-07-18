@@ -224,7 +224,7 @@ void daceEstimate(const DACEDA *ina, const unsigned int ivar, const unsigned int
 
     // set up xtx^-1 and xty for linear least squares
     double ai[2] = {0.0};
-    double xtx[2][2] = {0.0};
+    double xtx[2][2] = {{0.0}, {0.0}};
     for(unsigned int i = 1; i <= DACECom.nomax; i++)
     {
         if(onorm[i] > DACECom_t.eps)
