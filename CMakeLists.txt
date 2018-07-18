@@ -142,7 +142,7 @@ if(WIN32)
   ")
   unset(CPACK_PACKAGING_INSTALL_PREFIX)	# replace by whatever it needs to be
 elseif(APPLE)
-  set(CPACK_GENERATOR "productbuild")
+  set(CPACK_GENERATOR "TGZ;productbuild")
   set(CPACK_PACKAGE_VENDOR "DACEDevelopmentGroup")    # no spaces allowed for packagebuild
   set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README-MAC.rtf")
   file(COPY "${CMAKE_SOURCE_DIR}/LICENSE" DESTINATION "${CMAKE_BINARY_DIR}")
