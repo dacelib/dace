@@ -37,8 +37,8 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
+#include "DA/dacebase.h"
+#include "DA/daceaux.h"
 
 // define various math constants in case they have not been defined by math.h
 // these are non-standard C, but most C libraries have them

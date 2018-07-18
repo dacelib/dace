@@ -32,7 +32,7 @@
 
 // DACE classes
 #include "DA/DACEException.h"
-#include <dacecore.h>
+#include <DA/dacecore.h>
 
 namespace DACE{
 
