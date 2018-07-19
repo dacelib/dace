@@ -9,3 +9,5 @@ target_compile_definitions(c_core PRIVATE DACE_DLL_EXPORTS=1)
 add_library(c_core_s OBJECT ${SRCCCORE})
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/core/include/ DESTINATION include/ COMPONENT headers FILES_MATCHING PATTERN "*.h")
+install(FILES ${CMAKE_BINARY_DIR}/core/include/dace/config.h DESTINATION include/dace COMPONENT headers)
+

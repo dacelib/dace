@@ -86,8 +86,9 @@
 *     DACE initialization and state related routines
 *********************************************************************************/
 void daceInitialize(unsigned int no, unsigned int nv);              
-void daceInitializeThread();                                        
-void daceGetVersion(int REF(imaj), int REF(imin), int REF(icos));   
+void daceInitializeThread();
+void daceCleanupThread();
+void daceGetVersion(int REF(imaj), int REF(imin), int REF(icos));
 double daceSetEpsilon(const double deps);                           
 double daceGetEpsilon();                                            
 double daceGetMachineEpsilon();                                     
