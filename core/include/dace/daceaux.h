@@ -56,8 +56,7 @@
 #endif
 
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
-
-    // choose these constants carefully!
+    // choose these constants carefully at library compile time!
     // Maximum order and maximum variables supported independently of each other
     #define DACE_STATIC_NOMAX 10
     #define DACE_STATIC_NVMAX 10
@@ -72,44 +71,24 @@
     // maximum number of DA variables and memory size
     #define DACE_STATIC_VAR_SIZE 100
     #define DACE_STATIC_MEM_SIZE (DACE_STATIC_NMMAX*DACE_STATIC_VAR_SIZE)
-
-    // DACE internal data structure
-    typedef struct dcom {
-        unsigned int ie1[DACE_STATIC_NMMAX], ie2[DACE_STATIC_NMMAX], ieo[DACE_STATIC_NMMAX], ia1[DACE_STATIC_LIAMAX+1], ia2[DACE_STATIC_LIAMAX+1];
-        unsigned int nomax, nvmax, nv1, nv2, nmmax;
-        double epsmac;
-    } dacecom;
-
-    // DACE thread local data structure
-    typedef struct dcom_t {
-        unsigned int nocut;
-        double eps;
-    #ifdef DACE_FILTERING
-        unsigned int ifi[DACE_STATIC_NMMAX];
-        unsigned int lfi;
-    #endif
-    } dacecom_t;
-
-#elif DACE_MEMORY_MODEL == DACE_MEMORY_HYBRID || DACE_MEMORY_MODEL == DACE_MEMORY_DYNAMIC
-
-    // DACE internal data structure
-    typedef struct dcom {
-        unsigned int *ie1, *ie2, *ieo, *ia1, *ia2;
-        unsigned int nomax, nvmax, nv1, nv2, nmmax;
-        double epsmac;
-    } dacecom;
-
-    // DACE thread local data structure
-    typedef struct dcom_t {
-        unsigned int nocut;
-        double eps;
-    #ifdef DACE_FILTERING
-        unsigned int *ifi;
-        unsigned int lfi;
-    #endif
-    } dacecom_t;
-
 #endif
+
+// DACE internal data structure
+typedef struct dcom {
+    unsigned int *ie1, *ie2, *ieo, *ia1, *ia2;
+    unsigned int nomax, nvmax, nv1, nv2, nmmax;
+    double epsmac;
+} dacecom;
+
+// DACE thread local data structure
+typedef struct dcom_t {
+    unsigned int nocut;
+    double eps;
+#ifdef DACE_FILTERING
+    unsigned int *ifi;
+    unsigned int lfi;
+#endif
+} dacecom_t;
 
 #define ERROR_FUN_SIZE 64
 #define ERROR_MSG_SIZE 256
@@ -151,17 +130,10 @@ extern dacecom DACECom;
 extern DACE_THREAD_LOCAL dacecom_t DACECom_t;
 extern DACE_THREAD_LOCAL dacedbg DACEDbg;
 
-// math utility routines
-/*! Return the minimum between two unsigned integer.
-   \return Minimum between a and b
-*/
-inline unsigned int umin(const unsigned int a, const unsigned int b) { return (a > b)? b : a; }
-
-/*! Return the maximum between two unsigned integer.
-   \return Maximum between a and b
-*/
-inline unsigned int umax(const unsigned int a, const unsigned int b) { return (a < b)? b : a; }
 /// @cond
+// math utility routines
+unsigned int umin(const unsigned int a, const unsigned int b);
+unsigned int umax(const unsigned int a, const unsigned int b);
 double pown(double a, unsigned int b);
 int npown(int a, unsigned int b);
 

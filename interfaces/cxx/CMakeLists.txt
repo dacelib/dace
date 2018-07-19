@@ -16,6 +16,11 @@ target_compile_definitions(dacecxx PRIVATE DACE_DLL_EXPORTS=1)
 add_library(dace SHARED $<TARGET_OBJECTS:c_core> $<TARGET_OBJECTS:dacecxx>)
 add_library(dace_s STATIC $<TARGET_OBJECTS:c_core_s> $<TARGET_OBJECTS:dacecxx_s>)
 
+if(WITH_PTHREAD)
+target_link_libraries(dace PUBLIC pthread)
+target_link_libraries(dace_s PUBLIC pthread)
+endif(WITH_PTHREAD)
+
 install(TARGETS dace LIBRARY DESTINATION lib COMPONENT libraries
         RUNTIME DESTINATION lib COMPONENT libraries
         ARCHIVE DESTINATION lib COMPONENT libraries
