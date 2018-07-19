@@ -34,8 +34,8 @@
 #include <iostream>
 
 // DACE classes required for interface definition
-#include "DA/PromotionTrait.h"
-#include "DA/Def.h"
+#include "dace/PromotionTrait.h"
+#include "dace/Def.h"
 
 namespace DACE{
 

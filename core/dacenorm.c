@@ -33,8 +33,9 @@
 #include <math.h>
 #include <stdbool.h>
 
-#include "DA/dacebase.h"
-#include "DA/daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 
 /********************************************************************************
@@ -145,7 +146,7 @@ void daceOrderedNorm(const DACEDA *ina, const unsigned int ivar, const unsigned 
     }
     else
     {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
         unsigned int jj[DACE_STATIC_NVMAX];
 #else
         unsigned int *jj = (unsigned int*)dacecalloc(DACECom.nvmax, sizeof(unsigned int));
@@ -181,7 +182,7 @@ void daceOrderedNorm(const DACEDA *ina, const unsigned int ivar, const unsigned 
                 onorm[i] = pow(onorm[i], 1.0/ityp);
         }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
         dacefree(jj);
 #endif
     }
@@ -215,7 +216,7 @@ void daceEstimate(const DACEDA *ina, const unsigned int ivar, const unsigned int
     }
 
     // get order sorted norms
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double onorm[DACE_STATIC_NOMAX+1];
 #else
     double *onorm = (double*)dacecalloc(DACECom.nomax+1, sizeof(double));
@@ -260,7 +261,7 @@ void daceEstimate(const DACEDA *ina, const unsigned int ivar, const unsigned int
             err[i] = temp > 0.0 ? temp : 0.0;
         }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(onorm);
 #endif
 }
@@ -289,7 +290,7 @@ void daceGetBounds(const DACEDA *ina, double *alo, double *aup)
         illa--;
     }
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     unsigned int jj[DACE_STATIC_NVMAX];
 #else
     unsigned int *jj = (unsigned int*)dacecalloc(DACECom.nvmax, sizeof(unsigned int));
@@ -323,7 +324,7 @@ void daceGetBounds(const DACEDA *ina, double *alo, double *aup)
         }
     }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(jj);
 #endif
 }

@@ -35,8 +35,9 @@
 #include <math.h>
 #include <string.h>
 
-#include "DA/dacebase.h"
-#include "DA/daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 
 /*! Raise double a to positive integer power b.
@@ -75,7 +76,7 @@ int npown(int a, unsigned int b)
     return res;
 }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     /*! Wrapper for C calloc function (allocate memory and zero it) with DACE error handling
        \param[in] count number of elements to allocate
        \param[in] size size of each element
@@ -142,7 +143,7 @@ int npown(int a, unsigned int b)
     {
         if(ptr) free(ptr);
     }
-#endif      // DACE_STATIC_MEMORY
+#endif      // DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
 
 /*! Return a single integer containing all nv exponents in p[] with maximum order no
    \param[in] p C array of nv exponents

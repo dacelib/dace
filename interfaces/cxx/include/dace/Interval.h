@@ -20,26 +20,26 @@
 *******************************************************************************/
 
 /*
- * MathExtension.h
+ * Interval.h
  *
- *  Created on: Sep. 22, 2014
+ *  Created on: Mar 14, 2014
  *      Author: Dinamica Srl
  */
 
-#ifndef DINAMICA_MATHEXTENSION_H_
-#define DINAMICA_MATHEXTENSION_H_
+#ifndef DINAMICA_INTERVAL_H_
+#define DINAMICA_INTERVAL_H_
 
-#include "DA/Def.h"
+#include "dace/Def.h"
 
 namespace DACE{
 
-DACE_API double cons(const double x);                            //!< Constant part (i.e. the value x)
-DACE_API double logb(const double x, const double b = 10.0);     //!< Logarithm relative to base b
-DACE_API double isrt(const double x);                            //!< Inverse square root
-DACE_API double sqr(const double x);                             //!< Square
-DACE_API double minv(const double x);                            //!< Multiplicative inverse
-DACE_API double root(const double x, const int p = 2);           //!< p-th root
+/*! Class representing an interval. */
+class DACE_API Interval
+{
+public:
+    double m_lb;            //!< Lower bound.
+    double m_ub;            //!< Upper bound.
+};
 
 }
-
-#endif /* DINAMICA_MATHEXTENSION_H_ */
+#endif /* DINAMICA_INTERVAL_H_ */

@@ -35,8 +35,9 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "DA/dacebase.h"
-#include "DA/daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 
 /*! Set up the ordering and addressing arrays in the common data structure
@@ -84,7 +85,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
     const unsigned int lia = (unsigned int)clia;  // length of reverse lookup array
     const unsigned int lea = daceCountMonomials(no, nv);     // number of monomials = length of forward lookup array
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     if(no > DACE_STATIC_NOMAX || nv > DACE_STATIC_NVMAX || lea > DACE_STATIC_NMMAX || lia > DACE_STATIC_LIAMAX)
     {
          daceSetError(__func__, DACE_SEVERE, 11);
@@ -113,7 +114,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
     unsigned int no1 = 0, no2 = 0;
 
     // allocate and set exponents to zero
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
 	unsigned int p1[DACE_STATIC_NVMAX] = {0}, p2[DACE_STATIC_NVMAX] = {0}; // array of powers of first and second part of monomial
 #else
     unsigned int *p1, *p2;                                    // array of powers of first and second part of monomial
@@ -137,7 +138,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
     } while((no1 = daceNextOrderedMonomial(p1, no, nv1)) > 0);
     
     // free memory
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(p1);
     dacefree(p2);
 #endif
@@ -193,7 +194,7 @@ void daceInitializeThread0()
     DACECom_t.nocut = DACECom.nomax;
 
 #ifdef DACE_FILTERING
-    #ifndef DACE_STATIC_MEMORY
+    #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
         dacefree(DACECom_t.ifi);
         DACECom_t.ifi = dacecalloc(DACECom.nmmax, sizeof(unsigned int));
     #endif

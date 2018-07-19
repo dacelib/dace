@@ -32,8 +32,9 @@
 
 #include <math.h>
 
-#include "DA/dacebase.h"
-#include "DA/daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 
 /********************************************************************************
@@ -97,7 +98,7 @@ void daceEvalVariable(const DACEDA *ina, const unsigned int nvar, const double v
         j -= DACECom.nv1;
     const unsigned int idiv = npown(ibase, j);
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double p[DACE_STATIC_NOMAX+1];
 #else
     double *p = dacecalloc(DACECom.nomax+1, sizeof(double));
@@ -106,7 +107,7 @@ void daceEvalVariable(const DACEDA *ina, const unsigned int nvar, const double v
     for(unsigned int i = 1; i <= DACECom.nomax; i++)
         p[i] = p[i-1]*val;
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double cc[DACE_STATIC_NMMAX] = {0};
 #else
     double *cc = dacecalloc(DACECom.nmmax, sizeof(double));
@@ -139,7 +140,7 @@ void daceEvalVariable(const DACEDA *ina, const unsigned int nvar, const double v
 
     dacePack(cc, inc);
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(cc);
     dacefree(p);
 #endif
@@ -171,7 +172,7 @@ void daceReplaceVariable(const DACEDA *ina, const unsigned int from, const unsig
 
     daceVariableInformation(ina, &ipoa, &ilma, &illa);
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     unsigned int p[DACE_STATIC_NOMAX+1];
     double pows[DACE_STATIC_NOMAX+1];
     double cc[DACE_STATIC_NMMAX] = {0};
@@ -196,7 +197,7 @@ void daceReplaceVariable(const DACEDA *ina, const unsigned int from, const unsig
 
     dacePack(cc, inc);
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(cc);
     dacefree(p);
     dacefree(pows);
@@ -224,7 +225,7 @@ void daceScaleVariable(const DACEDA *ina, const unsigned int nvar, const double 
     daceVariableInformation(inc, &ipoc, &ilmc, &illc);
 
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double pows[DACE_STATIC_NOMAX+1];
 #else
     double *pows = (double*) dacecalloc(DACECom.nomax+1, sizeof(double));
@@ -257,7 +258,7 @@ void daceScaleVariable(const DACEDA *ina, const unsigned int nvar, const double 
         }
     }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(pows);
 #endif
 }
@@ -282,7 +283,7 @@ void daceTranslateVariable(const DACEDA *ina, const unsigned int nvar, const dou
         return;
     }
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     unsigned int p[DACE_STATIC_NOMAX+1];
     double cc[DACE_STATIC_NMMAX] = {0};
     double powa[DACE_STATIC_NOMAX+1];
@@ -335,7 +336,7 @@ void daceTranslateVariable(const DACEDA *ina, const unsigned int nvar, const dou
 
     dacePack(cc, inc);
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(cc);
     dacefree(p);
     dacefree(powa);
@@ -357,7 +358,7 @@ void daceTranslateVariable(const DACEDA *ina, const unsigned int nvar, const dou
 */
 void daceEvalTree(const DACEDA *das[], const unsigned int count, double ac[], unsigned int *nterm, unsigned int *nvar, unsigned int *nord)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     unsigned int nc[DACE_STATIC_NMMAX] = {0};
     unsigned int p[DACE_STATIC_NVMAX];
     unsigned int stack[DACE_STATIC_NOMAX];
@@ -465,7 +466,7 @@ void daceEvalTree(const DACEDA *das[], const unsigned int count, double ac[], un
         }
     }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(nc);
     dacefree(p);
     dacefree(stack);

@@ -20,24 +20,35 @@
 *******************************************************************************/
 
 /*
- *  dacecore.h
+ * dace.h
  *
- *  Created on: November 18, 2016
- *      Author: Politecnico di Milano
+ *  Created on: Jan 14, 2015
+ *      Author: Dinamica Srl
  */
 
-/*
-    Header for DACE 1 compatibility
-    Includes the actual DACE 2 function definitions and the compatibility header
-    to mimick DACE 1 dacecore.h behavior.
-*/
-/** \addtogroup DACE Core 
- *  @{
- */
+#ifndef DINAMICA_DACE_H_
+#define DINAMICA_DACE_H_
 
-#ifndef DINAMICA_DACECORE_H_
-#define DINAMICA_DACECORE_H_
+// This file just brings in all the headers of the DACE related classes and functions
+#include "dace/PromotionTrait.h"
+#include "dace/MathExtension.h"
+#include "dace/DACEException.h"
+#include "dace/Monomial.h"
+#include "dace/Interval.h"
+#include "dace/DAFormatter.h"
+#include "dace/compiledDA.h"
+#include "dace/DA.h"
+#include "dace/AlgebraicVector.h"
+#ifdef WITH_ALGEBRAICMATRIX
+#include "dace/AlgebraicMatrix.h"
+#endif /* WITH_ALGEBRAICMATRIX */
 
-#include "dacebase.h"
-/** @}*/
-#endif /* DINAMICA_DACECORE_H_ */
+// include the template implementations here at the end after everything is properly defined
+#include "dace/compiledDA_t.h"
+#include "dace/DA_t.h"
+#include "dace/AlgebraicVector_t.h"
+#ifdef WITH_ALGEBRAICMATRIX
+#include "dace/AlgebraicMatrix_t.h"
+#endif /* WITH_ALGEBRAICMATRIX */
+
+#endif /* DINAMICA_DACE_H_ */

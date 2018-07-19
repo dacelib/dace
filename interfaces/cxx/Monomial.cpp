@@ -31,8 +31,8 @@
 #include <iomanip>
 
 // DACE classes
-#include "DA/Monomial.h"
-#include "DA/DA.h"
+#include "dace/Monomial.h"
+#include "dace/DA.h"
 
 namespace DACE{
 

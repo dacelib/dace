@@ -39,8 +39,8 @@
 #include <vector>
 #include <stack>
 
-#include "DA/Def.h"
-#include "DA/dacecore.h"
+#include "dace/Def.h"
+#include "dace/dacecore.h"
 
 namespace DACE{
 

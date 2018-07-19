@@ -31,8 +31,8 @@
 #include <iostream>
 
 // DACE classes
-#include "DA/DACEException.h"
-#include <DA/dacecore.h>
+#include "dace/DACEException.h"
+#include "dace/dacecore.h"
 
 namespace DACE{
 

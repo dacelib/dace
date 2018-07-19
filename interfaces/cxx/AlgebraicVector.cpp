@@ -30,11 +30,11 @@
 #include <algorithm>
 
 // DACE classes
-#include "DA/DA.h"
-#include "DA/compiledDA.h"
-#include "DA/compiledDA_t.h"
-#include "DA/AlgebraicVector.h"
-#include "DA/AlgebraicVector_t.h"
+#include "dace/DA.h"
+#include "dace/compiledDA.h"
+#include "dace/compiledDA_t.h"
+#include "dace/AlgebraicVector.h"
+#include "dace/AlgebraicVector_t.h"
 
 namespace DACE{
 
