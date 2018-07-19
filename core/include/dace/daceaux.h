@@ -43,7 +43,7 @@
 
 // XXX: This should probably be more intelligent, e.g. also Intel C on Win will use the MSVC syntax
 // There is also the C11 standard (not C++11), but that seems not widely spread
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     #ifdef _WIN32
     //#ifdef _MSC_VER
         #define DACE_THREAD_LOCAL __declspec(thread)
@@ -55,7 +55,7 @@
     #define DACE_THREAD_LOCAL
 #endif
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
 
     // choose these constants carefully!
     // Maximum order and maximum variables supported independently of each other
@@ -90,7 +90,7 @@
     #endif
     } dacecom_t;
 
-#else   // ifdef DACE_STATIC_MEMORY
+#elif DACE_MEMORY_MODEL == DACE_MEMORY_HYBRID || DACE_MEMORY_MODEL == DACE_MEMORY_DYNAMIC
 
     // DACE internal data structure
     typedef struct dcom {
@@ -166,7 +166,7 @@ double pown(double a, unsigned int b);
 int npown(int a, unsigned int b);
 
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_HYBRID || DACE_MEMORY_MODEL == DACE_MEMORY_DYNAMIC
     // dynamic memory allocation wrappers
     void* dacecalloc(size_t count, size_t size);
     void* dacemalloc(size_t size);

@@ -30,8 +30,8 @@
 #define DINAMICA_DA_T_H_
 
 // DACE classes
-#include "DA/compiledDA.h"
-#include "DA/DA.h"
+#include "dace/compiledDA.h"
+#include "dace/DA.h"
 
 namespace DACE{
 

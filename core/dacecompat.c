@@ -30,9 +30,10 @@
  *  @{
  */
 
-#include "DA/dacebase.h"
-#include "DA/dacecompat.h"
-#include "DA/daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/dacecompat.h"
+#include "dace/daceaux.h"
 
 /********************************************************************************
  *     Compatibility shims to bridge old and new interface
@@ -96,7 +97,7 @@ void dacenorm(const DACEDA *ina, const unsigned int ityp, double *anorm)
 */
 void dacetree(const DACEDA das[], const unsigned int count, double ac[],  unsigned int *nterm, unsigned int *nvar, unsigned int *nord)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     if(count > 10*DACE_STATIC_NVMAX)
     {
         daceSetError("dacetree: number of DAs too high", DACE_ERROR, 111);
@@ -108,7 +109,7 @@ void dacetree(const DACEDA das[], const unsigned int count, double ac[],  unsign
 #endif
     for(unsigned int i = 0; i < count; i++) temp[i] = &das[i];
     daceEvalTree(temp, count, ac, nterm, nvar, nord);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree((void*)temp);
 #endif
 }

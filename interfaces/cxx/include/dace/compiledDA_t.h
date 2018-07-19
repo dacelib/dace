@@ -30,7 +30,7 @@
 #define DINAMICA_COMPILEDDA_T_H_
 
 // DACE classes
-#include "DA/compiledDA.h"
+#include "dace/compiledDA.h"
 
 namespace DACE{
 
