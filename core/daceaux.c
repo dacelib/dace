@@ -40,6 +40,16 @@
 #include "dace/daceaux.h"
 
 
+/*! Return the minimum between two unsigned integer.
+   \return Minimum between a and b
+*/
+unsigned int umin(const unsigned int a, const unsigned int b) { return (a > b)? b : a; }
+
+/*! Return the maximum between two unsigned integer.
+   \return Maximum between a and b
+*/
+unsigned int umax(const unsigned int a, const unsigned int b) { return (a < b)? b : a; }
+
 /*! Raise double a to positive integer power b.
    \param[in] a base value
    \param[in] b power

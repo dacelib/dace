@@ -39,6 +39,9 @@
 #include "dace/dacebase.h"
 #include "dace/daceaux.h"
 
+#ifdef WITH_PTHREAD
+    #include <pthread.h>
+#endif
 
 /*! Set up the ordering and addressing arrays in the common data structure
     and initialize DA memory.
@@ -91,6 +94,13 @@ void daceInitialize(unsigned int no, unsigned int nv)
          daceSetError(__func__, DACE_SEVERE, 11);
          return;
     }
+    // use static local memory for addressing arrays
+    static unsigned int ie1[DACE_STATIC_NMMAX], ie2[DACE_STATIC_NMMAX], ieo[DACE_STATIC_NMMAX], ia1[DACE_STATIC_LIAMAX+1], ia2[DACE_STATIC_LIAMAX+1];
+    DACECom.ie1 = ie1;
+    DACECom.ie2 = ie2;
+    DACECom.ieo = ieo;
+    DACECom.ia1 = ia1;
+    DACECom.ia2 = ia2;
 #else
     // (re)allocate addressing arrays
     dacefree(DACECom.ie1);
@@ -183,6 +193,21 @@ void daceInitializeThread()
     daceInitializeThread0();
 }
 
+/*! Clean up thread local data structures at the end of thread's life time.
+ \note Each spawned thread (except for the main thread) should call daceCleanupThread
+ before exitting to ensure any thread local memory is properly release. No DACE operations
+ must be performed after calling daceCleanupThread.
+ \sa daceInitializeThread
+ */
+void daceCleanupThread()
+{
+#ifdef DACE_FILTERING
+    #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+        dacefree(DACECom_t.ifi);
+    #endif
+#endif
+}
+
 /*! Set up thread local data structures without resetting error.
  */
 void daceInitializeThread0()
@@ -194,7 +219,10 @@ void daceInitializeThread0()
     DACECom_t.nocut = DACECom.nomax;
 
 #ifdef DACE_FILTERING
-    #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+        DACE_THREAD_LOCAL static unsigned int ifi[DACE_STATIC_NMMAX];
+        DACECom_t.ifi = ifi;
+    #else
         dacefree(DACECom_t.ifi);
         DACECom_t.ifi = dacecalloc(DACECom.nmmax, sizeof(unsigned int));
     #endif
