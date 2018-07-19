@@ -38,8 +38,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "DA/dacebase.h"
-#include "DA/daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 
 // Global DACE data structure allocation
@@ -48,11 +49,14 @@ DACE_THREAD_LOCAL dacecom_t DACECom_t = { 0 };  // !< DACE common block with loc
 DACE_THREAD_LOCAL dacedbg DACEDbg = { 0 };  // !< DACE common block for error handling
 
 
-// The DACE has three types of memory allocators: system malloc (default), DACE_DYNAMIC_MEMORY, and DACE_STATIC_MEMORY
+// The DACE has three types of memory allocators
+//   * DACE_MEMORY_HYBRID: malloc/free a block of DAs (default)
+//   * DACE_MEMORY_DYNAMIC: malloc/free each individual DA
+//   * DACE_MEMORY_STATIC: compile time allocation of a fixed size block of DAs
 
-#ifdef DACE_DYNAMIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_HYBRID
 
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     #include <pthread.h>
 
     // mutexes to protect memory management in case of multihreaded execution with pthreads
@@ -120,7 +124,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
     if(ilen == 0) 
         ilen = DACECom.nmmax;
 
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_lock(&dace_memory_mutex);
 #endif
     // Update mda to point to the lowest free variable
@@ -136,7 +140,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
             DACEMem.var[i].max *= -1;
             DACEMem.var[i].len = 0;
             if(i == DACEMem.mda) DACEMem.mda++;
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
             pthread_mutex_unlock(&dace_memory_mutex);
 #endif
             return;
@@ -156,7 +160,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
     DACEMem.nst += ilen;
     if(DACEMem.mda == DACEMem.nda) DACEMem.mda++;
     DACEMem.nda++;
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_unlock(&dace_memory_mutex);
 #endif
 }
@@ -178,14 +182,14 @@ void daceFreeDA(DACEDA *inc)
         return;
     }
 
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_lock(&dace_memory_mutex);
 #endif
     // Check for sane argument
     if((*inc < 0) || (*inc >= (int)DACEMem.nda) || (DACEMem.var[*inc].max <= 0))
     {
         daceSetError(__func__, DACE_INFO, 61);
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
         pthread_mutex_unlock(&dace_memory_mutex);
 #endif
         return;
@@ -213,7 +217,7 @@ void daceFreeDA(DACEDA *inc)
     }
 
     *inc = -1;
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_unlock(&dace_memory_mutex);
 #endif
 }
@@ -331,10 +335,10 @@ void daceFreeMemory()
 }
 
 
-#elif defined(DACE_STATIC_MEMORY)   // ifdef(DACE_DYNAMIC_MEMORY)
+#elif DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
 
 
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     #include <pthread.h>
 
     // mutexes to protect memory management in case of multihreaded execution with pthreads
@@ -376,7 +380,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
     if(ilen == 0) 
         ilen = DACECom.nmmax;
 
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_lock(&dace_memory_mutex);
 #endif
     // Update mda to point to the lowest free variable
@@ -392,7 +396,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
             DACEMem.var[i].max *= -1;
             DACEMem.var[i].len = 0;
             if(i == DACEMem.mda) DACEMem.mda++;
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
             pthread_mutex_unlock(&dace_memory_mutex);
 #endif
             return;
@@ -416,7 +420,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
     DACEMem.nst += ilen;
     if(DACEMem.mda == DACEMem.nda) DACEMem.mda++;
     DACEMem.nda++;
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_unlock(&dace_memory_mutex);
 #endif
 }
@@ -438,14 +442,14 @@ void daceFreeDA(DACEDA *inc)
         return;
     }
 
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_lock(&dace_memory_mutex);
 #endif
     // Check for sane argument
     if((*inc < 0) || (*inc >= (int)DACEMem.nda) || (DACEMem.var[*inc].max <= 0))
     {
         daceSetError(__func__, DACE_INFO, 61);
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
         pthread_mutex_unlock(&dace_memory_mutex);
 #endif
         return;
@@ -473,7 +477,7 @@ void daceFreeDA(DACEDA *inc)
     }
 
     *inc = -1;
-#ifdef DACE_PTHREAD
+#ifdef WITH_PTHREAD
     pthread_mutex_unlock(&dace_memory_mutex);
 #endif
 }
@@ -583,12 +587,8 @@ void daceFreeMemory()
 }
 
 
-#else   // ifdef(DACE_DYNAMIC_MEMORY)
+#elif DACE_MEMORY_MODEL == DACE_MEMORY_DYNAMIC
 
-
-#ifdef DACE_STATIC_MEMORY
-#error Both static and dynamic memory are requested. You can only have one.
-#endif
 
 /*! Allocate storage for a DA vector with memory length len.
    \param[out] inc Index of the newly created variable
@@ -694,6 +694,7 @@ void daceFreeMemory()
     return;
 }
 
-
- #endif // ifdef(DACE_DYNAMIC_MEMORY)
+#else
+#error Invalid DACE memory model selected!
+#endif // DACE_MEMORY_MODEL
 /** @}*/

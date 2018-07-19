@@ -33,14 +33,13 @@
 #include <cmath>
 
 // DACE classes
-//#include "DA/libdace.h"
-#include "DA/compiledDA.h"
-#include "DA/DACEException.h"
-#include "DA/Monomial.h"
-#include "DA/Interval.h"
-#include "DA/DA.h"
-#include "DA/AlgebraicVector.h"
-#include "DA/AlgebraicVector_t.h"
+#include "dace/compiledDA.h"
+#include "dace/DACEException.h"
+#include "dace/Monomial.h"
+#include "dace/Interval.h"
+#include "dace/DA.h"
+#include "dace/AlgebraicVector.h"
+#include "dace/AlgebraicVector_t.h"
 
 namespace DACE{
 

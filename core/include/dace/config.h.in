@@ -20,26 +20,30 @@
 *******************************************************************************/
 
 /*
- * Interval.h
+ *  daceaux.h
  *
- *  Created on: Mar 14, 2014
- *      Author: Dinamica Srl
+ *  Created on: July 19, 2018
+ *      Author: University of Southampton
  */
 
-#ifndef DINAMICA_INTERVAL_H_
-#define DINAMICA_INTERVAL_H_
+/*
+    This file contains the build time configuration options used for building the DACE library.
+*/
+/** \addtogroup DACE Core 
+ *  @{
+ */
 
-#include "DA/Def.h"
+#ifndef DINAMICA_CONFIG_H_
+#define DINAMICA_CONFIG_H_
 
-namespace DACE{
+#define DACE_MEMORY_HYBRID 1
+#define DACE_MEMORY_STATIC 2
+#define DACE_MEMORY_DYNAMIC 3
 
-/*! Class representing an interval. */
-class DACE_API Interval
-{
-public:
-    double m_lb;            //!< Lower bound.
-    double m_ub;            //!< Upper bound.
-};
+#cmakedefine WITH_DEBUG
+#cmakedefine WITH_ALGEBRAICMATRIX
+#cmakedefine WITH_PTHREAD
+#cmakedefine DACE_MEMORY_MODEL DACE_MEMORY_@DACE_MEMORY_MODEL_U@
 
-}
-#endif /* DINAMICA_INTERVAL_H_ */
+/** @}*/
+#endif /* DINAMICA_DACEAUX_H_ */

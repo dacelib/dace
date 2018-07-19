@@ -19,13 +19,43 @@ elseif(APPLE)
 endif(WIN32)
 
 
+# Set platform dependent C compiler flags for various compilers and build types
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
+elseif(CMAKE_C_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /fp:strict")
+set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2")
+endif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+
+# Set platform dependent C++ compiler flags for various compilers and build types
+if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:strict")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+endif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+
+
 # Boolean options
-option(ALGEBRAICMATRIX "Include the AlgebraicMatrix type (experimental)" OFF)
-option(DACEPTHREAD "Enable threading via pthread library" OFF)
+option(WITH_ALGEBRAICMATRIX "Include the AlgebraicMatrix type (experimental)" OFF)
+option(WITH_PTHREAD "Enable threading via pthread library" OFF)
 
 # Tri-state option for memory model and the associated choices
-set(DACEMEMORY HYBRID CACHE STRING "DACE memory model")
-set_property(CACHE DACEMEMORY PROPERTY STRINGS DYNAMIC STATIC HYBRID)
+set(DACE_MEMORY_MODEL HYBRID CACHE STRING "DACE memory model")
+set_property(CACHE DACE_MEMORY_MODEL PROPERTY STRINGS DYNAMIC STATIC HYBRID)
+string(TOUPPER "${DACE_MEMORY_MODEL}" DACE_MEMORY_MODEL_U)
 
 # Default build type option if not set already
 if(NOT CMAKE_BUILD_TYPE)
@@ -35,64 +65,19 @@ if(NOT CMAKE_BUILD_TYPE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)  # options shown in CMake GUI
 endif(NOT CMAKE_BUILD_TYPE)
 
+# Debug flag
+string(TOUPPER "${CMAKE_BUILD_TYPE}" CMAKE_BUILD_TYPE_U)
+if(CMAKE_BUILD_TYPE_U STREQUAL "DEBUG")
+  set(WITH_DEBUG 1)
+endif(CMAKE_BUILD_TYPE_U STREQUAL "DEBUG")
 
-# Handle options by building list of flags to append to targets later
-unset(DACE_OPT_FLAGS)
-
-if(ALGEBRAICMATRIX)
-  list(APPEND DACE_OPT_FLAGS WITH_ALGEBRAICMATRIX=1)
-endif(ALGEBRAICMATRIX)
-
-if(DACEPTHREAD)
-  list(APPEND DACE_OPT_FLAGS DACE_PTHREAD=1)
-endif(DACEPTHREAD)
-
-if(DACEMEMORY STREQUAL "STATIC")
-  list(APPEND DACE_OPT_FLAGS DACE_STATIC_MEMORY=1)
-elseif(DACEMEMORY STREQUAL "DYNAMIC")
-  list(APPEND DACE_OPT_FLAGS DACE_DYNAMIC_MEMORY=1)
-endif(DACEMEMORY STREQUAL "STATIC")
-
-
-# Set platform dependent C compiler flags for various compilers and build types
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
-  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D WITH_DEBUG")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
-elseif(CMAKE_C_COMPILER_ID MATCHES ".*Clang")		# Also catch IDs like "AppleClang"
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
-  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D WITH_DEBUG")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
-elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
-  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} -D WITH_DEBUG")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
-elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /fp:strict /D MSDOS")
-  set(CMAKE_C_FLAGS_DEBUG "${CMAKE_C_FLAGS_DEBUG} /D WITH_DEBUG")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2")
-endif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-
-# Set platform dependent C++ compiler flags for various compilers and build types
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D WITH_DEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")		# Also catch IDs like "AppleClang"
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D WITH_DEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -D WITH_DEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:strict /D MSDOS")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} /D WITH_DEBUG")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
-endif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+# Pass options to source by configuring config.h file in core
+configure_file(core/include/dace/config.h.in core/include/dace/config.h)
 
 
 # globally set the include directory for the C core headers
 include_directories("core/include")
+include_directories("${CMAKE_BINARY_DIR}/core/include")
 # globally set the include directory for the C++ interface headers
 include_directories("interfaces/cxx/include")
 

@@ -37,9 +37,9 @@
 #include <string>
 
 // DACE classes
-#include "DA/PromotionTrait.h"
-#include "DA/AlgebraicVector.h"
-#include "DA/AlgebraicMatrix.h"
+#include "dace/PromotionTrait.h"
+#include "dace/AlgebraicVector.h"
+#include "dace/AlgebraicMatrix.h"
 
 namespace DACE{
 

@@ -36,13 +36,13 @@
 #include <string>
 
 // DACE classes
-#include "DA/PromotionTrait.h"
-#include "DA/MathExtension.h"
-#include "DA/compiledDA.h"
-#include "DA/AlgebraicVector.h"
+#include "dace/PromotionTrait.h"
+#include "dace/MathExtension.h"
+#include "dace/compiledDA.h"
+#include "dace/AlgebraicVector.h"
 #ifdef WITH_ALGEBRAICMATRIX
-#include "DA/AlgebraicMatrix.h"
-#include "DA/AlgebraicMatrix_t.h"
+#include "dace/AlgebraicMatrix.h"
+#include "dace/AlgebraicMatrix_t.h"
 #endif /* WITH_ALGEBRAICMATRIX */
 
 namespace DACE{

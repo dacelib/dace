@@ -66,11 +66,10 @@
 #define DACE_SEVERE     9
 #define DACE_PANIC     10
 
-// a bit hacky: the core should be compiled as one thing or the other, but the interface should always be one?
-#if DACE_STATIC_MEMORY || DACE_DYNAMIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_HYBRID || DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     // Type of a DACE DA object
     typedef int DACEDA;
-#else
+#elif DACE_MEMORY_MODEL == DACE_MEMORY_DYNAMIC
     // A DACE variable
     typedef struct dvariable {
         unsigned int len, max;
@@ -79,6 +78,8 @@
 
     // Type of a DACE DA object
     typedef variable DACEDA;
+#else
+#error Invalid DACE memory model selected!
 #endif
 /// @cond
 /********************************************************************************
