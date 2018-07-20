@@ -3,8 +3,9 @@ include_directories(include)
 
 add_library(c_core OBJECT ${SRCCCORE})
 set_target_properties(c_core PROPERTIES POSITION_INDEPENDENT_CODE True)
-target_compile_definitions(c_core PRIVATE DACE_DLL=1)
-target_compile_definitions(c_core PRIVATE DACE_DLL_EXPORTS=1)
+if(WIN32)
+  target_compile_definitions(c_core PRIVATE "DACE_API=__declspec(dllexport)")
+endif(WIN32)
 
 add_library(c_core_s OBJECT ${SRCCCORE})
 

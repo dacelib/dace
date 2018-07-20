@@ -27,6 +27,7 @@
  */
 
 // DACE classes
+#include "dace/config.h"
 #include "dace/compiledDA.h"
 #include "dace/DA.h"
 #include "dace/DACEException.h"

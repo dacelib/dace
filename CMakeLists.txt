@@ -3,9 +3,9 @@ include(CMakeDependentOption)
 
 project(DACE C CXX)
 
-set(DACE_VERSION_MAJOR "2")
-set(DACE_VERSION_MINOR "0")
-set(DACE_VERSION_PATCH "0")
+set(DACE_MAJOR_VERSION 2)
+set(DACE_MINOR_VERSION 0)
+set(DACE_PATCH_VERSION 0)
 
 
 # global OS specific settings
@@ -71,6 +71,21 @@ if(CMAKE_BUILD_TYPE_U STREQUAL "DEBUG")
   set(WITH_DEBUG 1)
 endif(CMAKE_BUILD_TYPE_U STREQUAL "DEBUG")
 
+# Static memory management default sizes
+# If you do not know what these values are, you probably do not want to touch them!
+if(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
+  # Pick any maximum NO, NV combination to support, then set these values like this:
+  # NMMAX = (NO+NV)!/NO!/NV!         LIAMAX = (NO+1)^((NV+1)/2)
+  # For example, for NO=10 and NV=10 set DACE_STATIC_NMMAX=184756 and DACE_STATIC_LIAMAX=161051
+  # The following default values are sized for NO=10 and NV=7
+  set(DACE_STATIC_NOMAX 10 CACHE STRING "(EXPERT) Maximum order." FORCE)
+  set(DACE_STATIC_NVMAX 10 CACHE STRING "(EXPERT) Maximum number of variables." FORCE)
+  set(DACE_STATIC_NMMAX 19448 CACHE STRING "(EXPERT) Maximum number of monomials [(NO+NV)!/NO!/NV!]." FORCE)
+  set(DACE_STATIC_LIAMAX 161051 CACHE STRING "(EXPERT) Maximum addressing array size [(NO+1)^((NV+1)/2)]." FORCE)
+  set(DACE_STATIC_VAR_SIZE 100 CACHE STRING "(EXPERT) Maximum number of DA variables." FORCE)
+  set(DACE_STATIC_MEM_SIZE 1944800 CACHE STRING "(EXPERT) Maximum stack size [NMMAX*VAR_SIZE]." FORCE)
+endif(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
+
 # Pass options to source by configuring config.h file in core
 configure_file(core/include/dace/config.h.in core/include/dace/config.h)
 
@@ -91,13 +106,13 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DACE Library")
 set(CPACK_PACKAGE_NAME "DACE")
 set(CPACK_PACKAGE_VENDOR "DACE Development Group")
 set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_PACKAGE_VERSION "${DACE_VERSION_MAJOR}.${DACE_VERSION_MINOR}.${DACE_VERSION_PATCH}")
-set(CPACK_PACKAGE_VERSION_MAJOR "${DACE_VERSION_MAJOR}")
-set(CPACK_PACKAGE_VERSION_MINOR "${DACE_VERSION_MINOR}")
-set(CPACK_PACKAGE_VERSION_PATCH "${DACE_VERSION_PATCH}")
+set(CPACK_PACKAGE_VERSION "${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}.${DACE_PATCH_VERSION}")
+set(CPACK_PACKAGE_VERSION_MAJOR "${DACE_MAJOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_MINOR "${DACE_MINOR_VERSION}")
+set(CPACK_PACKAGE_VERSION_PATCH "${DACE_PATCH_VERSION}")
 set(CPACK_PACKAGE_CONTACT "dace@dinamicatech.com")
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local)
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "DACE ${DACE_VERSION_MAJOR}.${DACE_VERSION_MINOR}")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "DACE ${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}")
 set(CPACK_COMPONENTS_ALL libraries headers)
 set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "DACE C++ Library")

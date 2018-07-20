@@ -33,6 +33,7 @@
 #include <cmath>
 
 // DACE classes
+#include "dace/config.h"
 #include "dace/compiledDA.h"
 #include "dace/DACEException.h"
 #include "dace/Monomial.h"
@@ -82,16 +83,16 @@ bool DA::isInitialized() {
     return initialized;
 }
 
-void DA::version(int &maj, int &min, int &cosy_flag) {
+void DA::version(int &maj, int &min, int &patch) {
 /*! Return the major and minor version number of the DACE
       along with the "COSY flag" indicating if the core library
     is COSY or DACE.
    \param[out] maj major DACE version number;
    \param[out] min minor DACE version number;
-   \param[out] cosy_flag zero for DACE backend, non-zero value (ASCII sequence spelling "COSY") if COSY backend is used.
+   \param[out] patch patch level of DACE version.
    \sa DA::checkVersion
  */
-    daceGetVersion(maj,min,cosy_flag);
+    daceGetVersion(maj, min, patch);
     if(daceGetError()) DACEException();
 }
 
@@ -103,13 +104,9 @@ void DA::checkVersion() {
    \note This routine is called automatically by DA::init
     to ensure compatibility with the current runtime environment.
  */
-    int maj, min, cosy_flag;
-    version(maj, min, cosy_flag);
-#if DACE_MAJOR_VERSION==2
+    int maj, min, patch;
+    version(maj, min, patch);
     if((maj!=DACE_CPP_MAJOR)||(min!=DACE_CPP_MINOR)||(maj!=DACE_MAJOR_VERSION)||(min!=DACE_MINOR_VERSION)) DACEException(20,99);
-#else
-    if((maj!=DACE_CPP_MAJOR)||(min!=DACE_CPP_MINOR)) DACEException(20,99);
-#endif
 }
 
 unsigned int DA::getMaxOrder() {
@@ -648,7 +645,7 @@ DA DA::operator-() const {
     return temp;
 }
 
-DA DACE_API operator+(const DA &da1, const DA &da2){
+DA operator+(const DA &da1, const DA &da2){
 /*! Compute the addition between two DA objects.
     The result is copied in a new DA object.
    \param[in] da1 first DA object.
@@ -663,7 +660,7 @@ DA DACE_API operator+(const DA &da1, const DA &da2){
     return temp;
 }
 
-DA DACE_API operator + (const DA &da, const double c){
+DA operator + (const DA &da, const double c){
 /*! Compute the addition between a DA object and a given constant.
     The result is copied in a new DA object.
    \param[in] da DA object.
@@ -678,7 +675,7 @@ DA DACE_API operator + (const DA &da, const double c){
     return temp;
 }
 
-DA DACE_API operator + (const double c, const DA &da){
+DA operator + (const double c, const DA &da){
 /*! Compute the addition between a given constant and a DA object.
     The result is copied in a new DA object.
    \param[in] c given constant.
@@ -693,7 +690,7 @@ DA DACE_API operator + (const double c, const DA &da){
     return temp;
 }
 
-DA DACE_API operator-(const DA &da1, const DA &da2){
+DA operator-(const DA &da1, const DA &da2){
 /*! Compute the subtraction between two DA objects.
     The result is copied in a new DA object.
    \param[in] da1 first DA object.
@@ -708,7 +705,7 @@ DA DACE_API operator-(const DA &da1, const DA &da2){
     return temp;
 }
 
-DA DACE_API operator-(const DA &da, const double c){
+DA operator-(const DA &da, const double c){
 /*! Compute the subtraction between a DA object and a given constant.
     The result is copied in a new DA object.
    \param[in] da DA object.
@@ -723,7 +720,7 @@ DA DACE_API operator-(const DA &da, const double c){
     return temp;
 }
 
-DA DACE_API operator-(const double c, const DA &da){
+DA operator-(const double c, const DA &da){
 /*! Compute the subtraction between a given constant and a DA object.
     The result is copied in a new DA object.
    \param[in] c given constant.
@@ -738,7 +735,7 @@ DA DACE_API operator-(const double c, const DA &da){
     return temp;
 }
 
-DA DACE_API operator*(const DA &da1, const DA &da2){
+DA operator*(const DA &da1, const DA &da2){
 /*! Compute the multiplication between two DA objects.
     The result is copied in a new DA object.
    \param[in] da1 first DA object.
@@ -753,7 +750,7 @@ DA DACE_API operator*(const DA &da1, const DA &da2){
     return temp;
 }
 
-DA DACE_API operator*(const DA &da, const double c){
+DA operator*(const DA &da, const double c){
 /*! Compute the multiplication between a DA object and a given constant.
     The result is copied in a new DA object.
    \param[in] da DA object.
@@ -768,7 +765,7 @@ DA DACE_API operator*(const DA &da, const double c){
     return temp;
 }
 
-DA DACE_API operator*(const double c, const DA &da){
+DA operator*(const double c, const DA &da){
 /*! Compute the multiplication between a given constant and a DA object.
     The result is copied in a new DA object.
    \param[in] c given constant.
@@ -783,7 +780,7 @@ DA DACE_API operator*(const double c, const DA &da){
     return temp;
 }
 
-DA DACE_API operator/(const DA &da1, const DA &da2){
+DA operator/(const DA &da1, const DA &da2){
 /*! Compute the division between two DA objects.
     The result is copied in a new DA object.
    \param[in] da1 first DA object.
@@ -798,7 +795,7 @@ DA DACE_API operator/(const DA &da1, const DA &da2){
     return temp;
 }
 
-DA DACE_API operator/(const DA &da, const double c){
+DA operator/(const DA &da, const double c){
 /*! Compute the division between a DA object and a given constant.
     The result is copied in a new DA object.
    \param[in] da DA object.
@@ -813,7 +810,7 @@ DA DACE_API operator/(const DA &da, const double c){
     return temp;
 }
 
-DA DACE_API operator/(const double c, const DA &da){
+DA operator/(const double c, const DA &da){
 /*! Compute the division between a given constant and a DA object.
     The result is copied in a new DA object.
    \param[in] c given constant.
@@ -1669,7 +1666,7 @@ std::string DA::toString() const{
     return s;
 }
 
-DACE_API std::ostream& operator<<(std::ostream &out, const DA &da){
+std::ostream& operator<<(std::ostream &out, const DA &da){
 /*! Overload of std::operator<< in iostream.
    \param[in] out standard output stream.
    \param[in] da DA object to be printed in the stream
@@ -1683,7 +1680,7 @@ DACE_API std::ostream& operator<<(std::ostream &out, const DA &da){
 }
 
 
-DACE_API std::istream& operator>>(std::istream &in, DA &da){
+std::istream& operator>>(std::istream &in, DA &da){
 /*! Overload of std::operator>> in iostream. Reads both string and binary
     DA representations from a file.
    \param[in] in standard input stream.
@@ -2585,7 +2582,7 @@ storedDA::operator DA() const{
 }
 
 // write binary data to ostream
-DACE_API std::ostream& operator<<(std::ostream &out, const storedDA &sda) {
+std::ostream& operator<<(std::ostream &out, const storedDA &sda) {
     out.write(sda.data(), sda.size());
 
     return out;

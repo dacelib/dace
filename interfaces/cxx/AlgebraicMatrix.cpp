@@ -31,6 +31,7 @@
 #include <sstream>
 
 // DACE classes
+#include "dace/config.h"
 #include "dace/DA.h"
 #include "dace/AlgebraicMatrix.h"
 #include "dace/AlgebraicMatrix_t.h"
