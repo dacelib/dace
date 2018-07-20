@@ -9,8 +9,9 @@ endif(WITH_ALGEBRAICMATRIX)
 add_library(dacecxx_s OBJECT ${SRCCXXIF})
 add_library(dacecxx OBJECT ${SRCCXXIF})
 set_target_properties(dacecxx PROPERTIES POSITION_INDEPENDENT_CODE True)
-target_compile_definitions(dacecxx PRIVATE DACE_DLL=1)
-target_compile_definitions(dacecxx PRIVATE DACE_DLL_EXPORTS=1)
+if(WIN32)
+  target_compile_definitions(c_core PRIVATE "DACE_API=__declspec(dllexport)")
+endif(WIN32)
 
 # statically and dynamically linked C++ interface library with the corresponding c core object files compiled in
 add_library(dace SHARED $<TARGET_OBJECTS:c_core> $<TARGET_OBJECTS:dacecxx>)

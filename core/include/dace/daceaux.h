@@ -41,37 +41,7 @@
 #include <stdbool.h>    // for bool
 #include <string.h>
 
-// XXX: This should probably be more intelligent, e.g. also Intel C on Win will use the MSVC syntax
-// There is also the C11 standard (not C++11), but that seems not widely spread
-#ifdef WITH_PTHREAD
-    #ifdef _WIN32
-    //#ifdef _MSC_VER
-        #define DACE_THREAD_LOCAL __declspec(thread)
-    #else
-        #define DACE_THREAD_LOCAL __thread
-    #endif
-#else
-    // just treat thread local stuff as normal global variables
-    #define DACE_THREAD_LOCAL
-#endif
-
-#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
-    // choose these constants carefully at library compile time!
-    // Maximum order and maximum variables supported independently of each other
-    #define DACE_STATIC_NOMAX 10
-    #define DACE_STATIC_NVMAX 10
-    // pick any maximum NO, NV combination to support, then set these values like this:
-    // NMMAX = (NO+NV)!/NO!/NV!         LIAMAX = (NO+1)^((NV+1)/2)
-    // These values are for NO=10 and NV=10
-    //#define DACE_STATIC_NMMAX 184756
-    //#define DACE_STATIC_LIAMAX 161051
-    // These values are for NO=10 and NV=7 (i.e. just enough to run the test cases)
-    #define DACE_STATIC_NMMAX 19448
-    #define DACE_STATIC_LIAMAX 14641
-    // maximum number of DA variables and memory size
-    #define DACE_STATIC_VAR_SIZE 100
-    #define DACE_STATIC_MEM_SIZE (DACE_STATIC_NMMAX*DACE_STATIC_VAR_SIZE)
-#endif
+#include "dace/config.h"
 
 // DACE internal data structure
 typedef struct dcom {
@@ -136,7 +106,6 @@ unsigned int umin(const unsigned int a, const unsigned int b);
 unsigned int umax(const unsigned int a, const unsigned int b);
 double pown(double a, unsigned int b);
 int npown(int a, unsigned int b);
-
 
 #if DACE_MEMORY_MODEL == DACE_MEMORY_HYBRID || DACE_MEMORY_MODEL == DACE_MEMORY_DYNAMIC
     // dynamic memory allocation wrappers

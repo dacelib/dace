@@ -29,8 +29,6 @@
 #ifndef DINAMICA_MATHEXTENSION_H_
 #define DINAMICA_MATHEXTENSION_H_
 
-#include "dace/Def.h"
-
 namespace DACE{
 
 DACE_API double cons(const double x);                            //!< Constant part (i.e. the value x)

@@ -31,6 +31,7 @@
 #include <iomanip>
 
 // DACE classes
+#include "dace/config.h"
 #include "dace/Monomial.h"
 #include "dace/DA.h"
 

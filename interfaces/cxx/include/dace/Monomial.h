@@ -34,8 +34,6 @@
 #include <string>
 #include <ostream>
 
-#include "dace/Def.h"
-
 namespace DACE{
 
 /*! Monomial class */

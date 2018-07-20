@@ -30,6 +30,7 @@
 #include <algorithm>
 
 // DACE classes
+#include "dace/config.h"
 #include "dace/DA.h"
 #include "dace/compiledDA.h"
 #include "dace/compiledDA_t.h"
