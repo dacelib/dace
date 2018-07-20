@@ -33,8 +33,6 @@
 #include <vector>
 #include <string>
 
-#include "dace/Def.h"
-
 namespace DACE{
 
 // forward declaration

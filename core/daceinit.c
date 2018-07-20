@@ -234,13 +234,13 @@ void daceInitializeThread0()
     These values can be checked by the interface to ensure compatibility.
    \param[out] imaj Major version number
    \param[out] imin Minor version number
-   \param[out] icos COSY flag (always zero for DACE)
+   \param[out] ipat Patch version number
  */
-void daceGetVersion(int *imaj, int *imin, int *icos)
+void daceGetVersion(int *imaj, int *imin, int *ipat)
 {
     *imaj = DACE_MAJOR_VERSION;
     *imin = DACE_MINOR_VERSION;
-    *icos = DACE_COSY;
+    *ipat = DACE_PATCH_VERSION;
 }
 
 /*! Set cutoff value to eps and return the previous value.

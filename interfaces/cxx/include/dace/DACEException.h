@@ -34,8 +34,6 @@
 #include <string>
 #include <ostream>
 
-#include "dace/Def.h"
-
 namespace DACE{
 
 /*! DACEException class containing methods for error handling within the DACE C++ interface. */
@@ -47,8 +45,8 @@ private:
 	std::string msg;            //!< Error message
     static int severity;        //!< Default severity code
     static bool warning;        //!< Default warning status
-    DACE_LOCAL void execute() const;       //!< Execute the exception
-    DACE_LOCAL void updateMessage();       //!< Update the error message
+    void execute() const;       //!< Execute the exception
+    void updateMessage();       //!< Update the error message
 
 public:
     DACEException();                                    //!< Default constructor

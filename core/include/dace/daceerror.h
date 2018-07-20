@@ -38,7 +38,7 @@ typedef struct {
 } errstrings;
 
 
-static const errstrings DACEerr[] = {
+DACE_API static const errstrings DACEerr[] = {
     {   0, "Unknown DACE error. Contact Dinamica SRL for filing a bug report."},
     {1001, "Dynamic memory allocation failure"},
     {1002, "Out of memory"},

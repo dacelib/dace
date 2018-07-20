@@ -30,6 +30,7 @@
 #include <cmath>
 
 // DACE classes
+#include "dace/config.h"
 #include "dace/MathExtension.h"
 
 namespace DACE{

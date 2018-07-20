@@ -22,21 +22,24 @@
 /*
  *  dacecore.h
  *
- *  Created on: November 18, 2016
- *      Author: Politecnico di Milano
+ *  Created on: Jul 20, 2018
+ *      Author: University of Southampton
  */
 
 /*
-    User interface header for DACE core library.
-    Includes all relevant headers with public interfaces to the DACE core.
+    User interface header for DACE core library using static linking.
+    Includes all relevant headers with public interfaces to the DACE core
+    with the correct API decorations for Windows static linking.
 */
 /** \addtogroup DACE Core 
  *  @{
  */
 
-#ifndef DINAMICA_DACECORE_H_
-#define DINAMICA_DACECORE_H_
+#ifndef DINAMICA_DACECORE_S_H_
+#define DINAMICA_DACECORE_S_H_
 
-#include "dace/dacebase.h"
+// explicitly define DACE_API to be empty for static linking
+#define DACE_API
+#include "dace/dacecore.h"
 /** @}*/
-#endif /* DINAMICA_DACECORE_H_ */
+#endif /* DINAMICA_DACECORE_S_H_ */

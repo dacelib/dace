@@ -30,6 +30,7 @@
 #include <sstream>
 
 // DACE classes
+#include "dace/config.h"
 #include "dace/DAFormatter.h"
 #include "dace/Monomial.h"
 #include "dace/DA.h"

@@ -29,8 +29,6 @@
 #ifndef DINAMICA_INTERVAL_H_
 #define DINAMICA_INTERVAL_H_
 
-#include "dace/Def.h"
-
 namespace DACE{
 
 /*! Class representing an interval. */

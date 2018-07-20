@@ -20,7 +20,7 @@
 *******************************************************************************/
 
 /*
- *  daceaux.h
+ *  config.h
  *
  *  Created on: July 19, 2018
  *      Author: University of Southampton
@@ -36,6 +36,10 @@
 #ifndef DINAMICA_CONFIG_H_
 #define DINAMICA_CONFIG_H_
 
+#define DACE_MAJOR_VERSION @DACE_MAJOR_VERSION@
+#define DACE_MINOR_VERSION @DACE_MINOR_VERSION@
+#define DACE_PATCH_VERSION @DACE_PATCH_VERSION@
+
 #define DACE_MEMORY_HYBRID 1
 #define DACE_MEMORY_STATIC 2
 #define DACE_MEMORY_DYNAMIC 3
@@ -46,5 +50,41 @@
 #cmakedefine WITH_ALGEBRAICMATRIX
 #cmakedefine WITH_PTHREAD
 
+// The following limits are only used when *building* the DACE library with DACE_MEMORY_STATIC memory model.
+// They are repeated here merely for reference and do not change the available memory in the library
+// unless the library is recompiled.
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    // Maximum order and maximum variables supported independently of each other
+    #cmakedefine DACE_STATIC_NOMAX @DACE_STATIC_NOMAX@
+    #cmakedefine DACE_STATIC_NVMAX @DACE_STATIC_NVMAX@
+    // Maximum number of monomials supported in any NO, NV pair
+    #cmakedefine DACE_STATIC_NMMAX @DACE_STATIC_NMMAX@
+    #cmakedefine DACE_STATIC_LIAMAX @DACE_STATIC_LIAMAX@
+    // maximum number of DA variables and memory size
+    #cmakedefine DACE_STATIC_VAR_SIZE @DACE_STATIC_VAR_SIZE@
+    #cmakedefine DACE_STATIC_MEM_SIZE @DACE_STATIC_MEM_SIZE@
+#endif
+
+// On Windows, set the default DACE_API to import from a DLL for dynamic linking
+#ifndef DACE_API
+    #if defined _WIN32 || defined __CYGWIN__
+        #define DACE_API __declspec(dllimport)
+    #else
+        #define DACE_API
+    #endif
+#endif
+
+// Define DACE_THREAD_LOCAL decorator for thread local variable storage
+#ifdef WITH_PTHREAD
+    #ifdef _WIN32
+        #define DACE_THREAD_LOCAL __declspec(thread)
+    #else
+        #define DACE_THREAD_LOCAL __thread
+    #endif
+#else
+    // just treat thread local stuff as normal variables
+    #define DACE_THREAD_LOCAL
+#endif
+
 /** @}*/
-#endif /* DINAMICA_DACEAUX_H_ */
+#endif /* DINAMICA_CONFIG_H_ */

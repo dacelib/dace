@@ -30,6 +30,7 @@
 #define DINAMICA_DACE_H_
 
 // This file just brings in all the headers of the DACE related classes and functions
+#include "dace/config.h"
 #include "dace/PromotionTrait.h"
 #include "dace/MathExtension.h"
 #include "dace/DACEException.h"

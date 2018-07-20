@@ -69,22 +69,22 @@
 #define daceconst(ina) daceGetConstant(ARG(ina))
 #define dacelinear(ina, c) daceGetLinear(ARG(ina), c)
 #define dacepok(ina, jj, cjj) daceSetCoefficient(ARG(ina), jj, cjj)
-void dacepek(const DACEDA REF(ina), const unsigned int jj[], double REF(cjj));
+DACE_API void dacepek(const DACEDA REF(ina), const unsigned int jj[], double REF(cjj));
 #define dacelist(ina, npos, jj, cjj) daceGetCoefficientAt(ARG(ina), npos, jj, cjj)
-void dacesize(const DACEDA REF(ina), unsigned int REF(size));
+DACE_API void dacesize(const DACEDA REF(ina), unsigned int REF(size));
 
 #define dacecop(ina, inb) daceCopy(ARG(ina), ARG(inb))
 
 #define dacetrim(ina, imin, imax, inc) daceTrim(ARG(ina), imin, imax, ARG(inc))
 
-void daceabs(const DACEDA REF(ina), double REF(anorm));
-void dacenorm(const DACEDA REF(ina), const unsigned int ityp, double REF(anorm));
+DACE_API void daceabs(const DACEDA REF(ina), double REF(anorm));
+DACE_API void dacenorm(const DACEDA REF(ina), const unsigned int ityp, double REF(anorm));
 #define daceonorm(ina, ivar, ityp, onorm) daceOrderedNorm(ARG(ina), ivar, ityp, onorm)
 #define daceest(ina, ivar, ityp, c, nc) daceEstimate(ARG(ina), ivar, ityp, c, NULL, nc)
 #define dacebound(ina, alo, aup) daceGetBounds(ARG(ina), alo, aup)
 
 #define daceplug(ina, nvar, val, inc) daceEvalVariable(ARG(ina), nvar, val, ARG(inc))
-void dacetree(const DACEDA das[], const unsigned int count, double ac[], unsigned int REF(nterm), unsigned int REF(nvar), unsigned int REF(nord));
+DACE_API void dacetree(const DACEDA das[], const unsigned int count, double ac[], unsigned int REF(nterm), unsigned int REF(nvar), unsigned int REF(nord));
 #define dacewrite(ina, strs, nstrs) daceWrite(ARG(ina), strs, nstrs)
 #define daceread(ina, strs, nstrs) daceRead(ARG(ina), strs, nstrs)
 
