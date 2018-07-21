@@ -43,6 +43,15 @@
 
 #include "dace/config.h"
 
+// macro to help tell supported compiler which branch is most likely
+#if __GNUC__ || __clang__
+    #define UNLIKELY(expr) __builtin_expect(!!(expr), 0)
+    #define LIKELY(expr) __builtin_expect(!!(expr), 1)
+#else
+    #define UNLIKELY(expr) expr
+    #define LIKELY(expr) expr
+#endif
+
 // DACE internal data structure
 typedef struct dcom {
     unsigned int *ie1, *ie2, *ieo, *ia1, *ia2;
