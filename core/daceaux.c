@@ -345,7 +345,7 @@ void dacePack(double cc[], DACEDA *inc)
     if(DACECom.lfi == 0)
 #endif
     {
-        if(ilmc >= DACECom.nmmax)
+        if(UNLIKELY(ilmc >= DACECom.nmmax))
         {
             for(unsigned int i = 0; i < DACECom.nmmax; i++)
             {

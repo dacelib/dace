@@ -132,7 +132,7 @@ void daceReallocateMemory(const unsigned int nvar, const unsigned int nmem)
 void daceAllocateDA(DACEDA *inc, const unsigned int len)
 {
     // sanity check to see if daceini has been called before
-    if(DACECom.nmmax == 0)
+    if(UNLIKELY(DACECom.nmmax == 0))
     {
         daceSetError(__func__, DACE_PANIC, 3);
         exit(1);
@@ -140,7 +140,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
 
     // check for sane length or autosize
     unsigned int ilen = len;
-    if(ilen == 0) 
+    if(LIKELY(ilen == 0))
         ilen = DACECom.nmmax;
 
 #ifdef WITH_PTHREAD
@@ -169,7 +169,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
     // No appropriate variable found, allocate new one
 
     // Reallocate more memory if we ran out of variables or stack
-    if(((DACEMem.nda+1) > DACEMem.lda) || ((DACEMem.nst+ilen) > DACEMem.lst)) daceReallocateMemory(1, ilen);
+    if(UNLIKELY(((DACEMem.nda+1) > DACEMem.lda) || ((DACEMem.nst+ilen) > DACEMem.lst))) daceReallocateMemory(1, ilen);
 
     // Allocate new variable
     *inc = DACEMem.nda;
@@ -190,12 +190,12 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
 void daceFreeDA(DACEDA *inc)
 {
     // sanity check to see if daceini has been called before
-    if(DACECom.nmmax == 0)
+    if(UNLIKELY(DACECom.nmmax == 0))
     {
         daceSetError(__func__, DACE_PANIC, 3);
         exit(1);
     }
-    else if(*inc == -1)
+    else if(UNLIKELY(*inc == -1))
     {
         // already free or otherwise reallocated
         return;
@@ -205,7 +205,7 @@ void daceFreeDA(DACEDA *inc)
     pthread_mutex_lock(&dace_memory_mutex);
 #endif
     // Check for sane argument
-    if((*inc < 0) || (*inc >= (int)DACEMem.nda) || (DACEMem.var[*inc].max <= 0))
+    if(UNLIKELY((*inc < 0) || (*inc >= (int)DACEMem.nda) || (DACEMem.var[*inc].max <= 0)))
     {
         daceSetError(__func__, DACE_INFO, 61);
 #ifdef WITH_PTHREAD
@@ -225,7 +225,7 @@ void daceFreeDA(DACEDA *inc)
          DACEMem.nda--;
          while((DACEMem.nda > 0) && (DACEMem.var[DACEMem.nda-1].max <= 0))
             DACEMem.nda--;
-         if(DACEMem.nda == 0)
+         if(UNLIKELY(DACEMem.nda == 0))
          {
             DACEMem.nst = 0;
          }
@@ -295,7 +295,7 @@ void daceMemoryDump()
 */
 void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *ilmc, unsigned int *illc)
 {
-    if(*inc >= 0 && *inc < (int)DACEMem.nda)
+    if(UNLIKELY(*inc >= 0 && *inc < (int)DACEMem.nda))
     {
         *ipoc = DACEMem.mem+DACEMem.var[*inc].mem;
         *ilmc = DACEMem.var[*inc].max;
@@ -316,7 +316,7 @@ void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *i
 */
 void daceSetLength(DACEDA *inc, const unsigned int len)
 {
-    if(DACEMem.var[*inc].max < (int)len)
+    if(UNLIKELY(DACEMem.var[*inc].max < (int)len))
     {
         daceSetError(__func__, DACE_PANIC, 7);
         exit(1);
@@ -367,7 +367,7 @@ void daceFreeMemory()
 void daceAllocateDA(DACEDA *inc, const unsigned int len)
 {
     // sanity check to see if daceini has been called before
-    if(DACECom.nmmax == 0)
+    if(UNLIKELY(DACECom.nmmax == 0))
     {
         daceSetError(__func__, DACE_PANIC, 3);
         exit(1);
@@ -375,7 +375,7 @@ void daceAllocateDA(DACEDA *inc, const unsigned int len)
 
     // check for sane length or autosize
     unsigned int ilen = len;
-    if(ilen == 0) 
+    if(LIKELY(ilen == 0))
         ilen = DACECom.nmmax;
 
     // just allocate memory dynamically
@@ -423,7 +423,7 @@ void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *i
     *ilmc = inc->max;
     *illc = inc->len;
 
-    if(inc->mem == NULL)
+    if(UNLIKELY(inc->mem == NULL))
     {
         daceSetError(__func__, DACE_PANIC, 4);
         exit(1);
@@ -436,7 +436,7 @@ void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *i
 */
 void daceSetLength(DACEDA *inc, const unsigned int len)
 {
-    if(inc->max < len)
+    if(UNLIKELY(inc->max < len))
     {
         daceSetError(__func__, DACE_PANIC, 7);  
         exit(1);

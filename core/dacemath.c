@@ -51,7 +51,6 @@
 #define M_PI_2 (1.57079632679489661923)
 #endif
 
-
 /********************************************************************************
  *     Basic DACE arithmetic operations
  *********************************************************************************/
@@ -119,7 +118,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 	static DACE_THREAD_LOCAL unsigned int nvmax = 0;
 
     // make sure static memory is correctly allocated
-    if(nomax != DACECom.nomax || nvmax != DACECom.nvmax)
+    if(UNLIKELY(nomax != DACECom.nomax || nvmax != DACECom.nvmax))
     {
 		nomax = DACECom.nomax;
 		nvmax = DACECom.nvmax;
@@ -136,7 +135,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 	static DACE_THREAD_LOCAL unsigned int nvmax = 0;
 
     // make sure static memory is correctly allocated
-	if(nomax != DACECom.nomax || nvmax != DACECom.nvmax)
+	if(UNLIKELY(nomax != DACECom.nomax || nvmax != DACECom.nvmax))
 	{
 		nomax = DACECom.nomax;
 		nvmax = DACECom.nvmax;
@@ -189,8 +188,18 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
         const unsigned int i1ia = DACECom.ie1[ia->ii];
         const unsigned int i2ia = DACECom.ie2[ia->ii];
         const double ccia = ia->cc;
+#if __GNUC__ || __clang__
+        #pragma ivdep
+#elif _MSC_VER
+        #pragma loop ivdep
+#endif
         for(int noib = DACECom_t.nocut-DACECom.ieo[ia->ii]; noib >= 0; noib--)
         {
+#if __GNUC__ || __clang__
+            #pragma ivdep
+#elif _MSC_VER
+            #pragma loop ivdep
+#endif
             for(extended_monomial *ib = ipbeg[noib]; ib < ipend[noib]; ib++)
             {
                 const unsigned int ic = DACECom.ia1[i1ia+ib->i1] + DACECom.ia2[i2ia+ib->i2];
