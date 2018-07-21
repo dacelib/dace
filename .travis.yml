@@ -17,7 +17,7 @@ matrix:
     - os: linux
       compilers: clang
       env:
-         - MATRIX_EVAL="PKG_PREFIX=linux-clang-"
+         - MATRIX_EVAL="CC=clang CXX=clang++ PKG_PREFIX=linux-clang-"
 
     - os: linux
       compilers: gcc
