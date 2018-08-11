@@ -342,13 +342,15 @@ void dacePack(double cc[], DACEDA *inc)
 
     monomial* ic = ipoc;
 #ifdef DACE_FILTERING
-    if(DACECom.lfi == 0)
+    if(LIKELY(DACECom.lfi == 0))
 #endif
     {
-        if(UNLIKELY(ilmc >= DACECom.nmmax))
+        if(LIKELY(ilmc >= DACECom.nmmax))
         {
             for(unsigned int i = 0; i < DACECom.nmmax; i++)
             {
+//#define OPTIMIZE  // not clear if this actually helps in any way
+#ifndef OPTIMIZE
                 if(fabs(cc[i]) >= DACECom_t.eps)  //  && (DACECom.ieo[i] <= DACECom_t.nocut) is avoided for performance
                 {
                     ic->ii = i;
@@ -356,6 +358,12 @@ void dacePack(double cc[], DACEDA *inc)
                     ic++;
                 }
                 cc[i] = 0.0;
+#else
+                ic->ii = i;
+                ic->cc = cc[i];
+                ic += (fabs(cc[i]) >= DACECom_t.eps);
+                cc[i] = 0.0;
+#endif
             }
         }
         else
