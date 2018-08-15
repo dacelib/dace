@@ -3,6 +3,7 @@
 using namespace std;
 using namespace DACE;
 
+#warning This example only works if the DACE was built with support for the (non-default) AlgebraicMatrix type!
 
 double min( double a, double b ) {
     
