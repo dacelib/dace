@@ -1,6 +1,6 @@
 #!/bin/sh
 cd ${TRAVIS_BUILD_DIR}/build
-  git clone -b pkg-latest https://abgandar:${GITHUB_TOKEN}@github.com/abgandar/dace.git pkg-latest >/dev/null 2>&1
+git clone -b pkg-latest https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/${GITHUB_USER}/dace.git pkg-latest >/dev/null 2>&1
 cd pkg-latest
 cp ${TRAVIS_BUILD_DIR}/build/packages/* .
 git add *
