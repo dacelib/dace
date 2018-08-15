@@ -20,63 +20,24 @@
 *******************************************************************************/
 
 /*
- * MathExtension.cpp
+ * MathExtension.h
  *
  *  Created on: Sep. 22, 2014
  *      Author: Dinamica Srl
  */
 
-// C++ stdlib classes
-#include <cmath>
-
-// DACE classes
-#include "dace/config.h"
-#include "dace/MathExtension.h"
+#ifndef DINAMICA_MATHEXTENSION_H_
+#define DINAMICA_MATHEXTENSION_H_
 
 namespace DACE{
 
-double cons(const double x){
-/*! Constant part. For double type this is just x.
-   \param[in] x Function argument.
- */
-    return x;
-}
-
-double logb(const double x, const double b){
-/*! Logarithm relative to base b.
-   \param[in] x Function argument.
-   \param[in] b Base of the logarithm (must be positive).
- */
-    return std::log(x)/std::log(b);
-}
-
-double isrt(const double x){
-/*! Inverse square root 1/sqrt(x).
-   \param[in] x Function argument.
- */
-    return 1.0/std::sqrt(x);
-}
-
-double sqr(const double x){
-/*! Square of x.
-   \param[in] x Function argument.
- */
-    return x*x;
-}
-
-double minv(const double x){
-/*! Multiplicative inverse 1/x.
-   \param[in] x Function argument.
- */
-    return 1.0/x;
-}
-
-double root(const double x, const int p){
-/*! p-th root of x.
-   \param[in] x Function argument.
-   \param[in] p Root to take.
- */
-    return std::pow(x, 1.0/p);
-}
+DACE_API double cons(const double x);                            //!< Constant part (i.e. the value x)
+DACE_API double logb(const double x, const double b = 10.0);     //!< Logarithm relative to base b
+DACE_API double isrt(const double x);                            //!< Inverse square root
+DACE_API double sqr(const double x);                             //!< Square
+DACE_API double minv(const double x);                            //!< Multiplicative inverse
+DACE_API double root(const double x, const int p = 2);           //!< p-th root
 
 }
+
+#endif /* DINAMICA_MATHEXTENSION_H_ */

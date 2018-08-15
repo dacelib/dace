@@ -32,9 +32,10 @@
 
 #include <stdio.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
-#include "daceerror.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
+#include "dace/daceerror.h"
 
 
 /********************************************************************************

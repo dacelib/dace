@@ -35,8 +35,9 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 
 /********************************************************************************
@@ -233,7 +234,7 @@ double daceGetConstant(const DACEDA *ina)
 */
 void daceGetLinear(const DACEDA *ina, double c[])
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     unsigned int jj[DACE_STATIC_NVMAX] = {0};
 #else
     unsigned int *jj = (unsigned int*) dacecalloc(DACECom.nvmax, sizeof(unsigned int));
@@ -246,7 +247,7 @@ void daceGetLinear(const DACEDA *ina, double c[])
         jj[i] = 0;
     }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(jj);
 #endif
 }

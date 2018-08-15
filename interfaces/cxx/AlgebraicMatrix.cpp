@@ -31,9 +31,10 @@
 #include <sstream>
 
 // DACE classes
-#include "DA/DA.h"
-#include "DA/AlgebraicMatrix.h"
-#include "DA/AlgebraicMatrix_t.h"
+#include "dace/config.h"
+#include "dace/DA.h"
+#include "dace/AlgebraicMatrix.h"
+#include "dace/AlgebraicMatrix_t.h"
 
 namespace DACE {
 

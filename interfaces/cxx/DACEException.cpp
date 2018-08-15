@@ -31,8 +31,9 @@
 #include <iostream>
 
 // DACE classes
-#include "DA/DACEException.h"
-#include <dacecore.h>
+#include "dace/config.h"
+#include "dace/DACEException.h"
+#include "dace/dacecore.h"
 
 namespace DACE{
 
@@ -229,7 +230,7 @@ namespace DACE{
     /********************************************************************************
     *     Friend functions
     *********************************************************************************/
-	DACE_API std::ostream& operator<< (std::ostream &out, const DACEException &ex){
+	std::ostream& operator<< (std::ostream &out, const DACEException &ex){
     /*! Overload of std::operator<< in iostream.
        \param[in] out standard output stream.
        \param[in] ex Exception to be printed in the stream
