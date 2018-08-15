@@ -20,63 +20,62 @@
 *******************************************************************************/
 
 /*
- * MathExtension.cpp
+ * DAFormatter.h
  *
- *  Created on: Sep. 22, 2014
+ *  Created on: Oct 18, 2014
  *      Author: Dinamica Srl
  */
 
-// C++ stdlib classes
-#include <cmath>
+#ifndef DINAMICA_DAFORMATTER_H_
+#define DINAMICA_DAFORMATTER_H_
 
-// DACE classes
-#include "dace/config.h"
-#include "dace/MathExtension.h"
+// C++ stdlib classes used in this public interface
+#include <vector>
+#include <string>
 
 namespace DACE{
 
-double cons(const double x){
-/*! Constant part. For double type this is just x.
-   \param[in] x Function argument.
- */
-    return x;
-}
+// forward declaration
+class DA;
 
-double logb(const double x, const double b){
-/*! Logarithm relative to base b.
-   \param[in] x Function argument.
-   \param[in] b Base of the logarithm (must be positive).
- */
-    return std::log(x)/std::log(b);
-}
+/*! Abstract class providing a DA formatter to output DA vectors in some advanced format. */
+class DACE_API DAFormatter
+{
+public:
+    virtual std::string format(const DA &da) = 0;
+    virtual std::string format(const std::vector<DA> &da) = 0;
+};
 
-double isrt(const double x){
-/*! Inverse square root 1/sqrt(x).
-   \param[in] x Function argument.
- */
-    return 1.0/std::sqrt(x);
-}
+/*! Class containing the elements of a simple format as used by the DASimpleFormatter.
+   \sa DASimpleFormatter
+*/
+struct DASimpleFormat {
+    std::string pos, neg, mul, pre_pow, var, pre_var, post_var, pow, post_pow, linebreak;
+    int first_var, first_pow;
+    unsigned int monperline;
+    bool shorten;
+};
 
-double sqr(const double x){
-/*! Square of x.
-   \param[in] x Function argument.
- */
-    return x*x;
-}
+/*! DASimpleFormatter class which formats a DA vector using simple rules to output code suitable for various programming languages. */
+class DACE_API DASimpleFormatter : public DAFormatter
+{
+public:
+    static const DASimpleFormat C;
+    static const DASimpleFormat C_POW;
+    static const DASimpleFormat FORTRAN;
+    static const DASimpleFormat FORTRAN_POW;
+    static const DASimpleFormat MATLAB;
+    static const DASimpleFormat MATLAB_POW;
+    static const DASimpleFormat LATEX;
 
-double minv(const double x){
-/*! Multiplicative inverse 1/x.
-   \param[in] x Function argument.
- */
-    return 1.0/x;
-}
+    DASimpleFormat sf;
 
-double root(const double x, const int p){
-/*! p-th root of x.
-   \param[in] x Function argument.
-   \param[in] p Root to take.
- */
-    return std::pow(x, 1.0/p);
-}
+    DASimpleFormatter() : sf(C) {};
+    DASimpleFormatter(const DASimpleFormat& isf) : sf(isf) {};
+
+    std::string format(const DA &da);
+    std::string format(const std::vector<DA> &da);
+};
 
 }
+#endif /* DINAMICA_DAFORMATTER_H_ */

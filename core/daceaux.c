@@ -35,9 +35,20 @@
 #include <math.h>
 #include <string.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
+
+/*! Return the minimum between two unsigned integer.
+   \return Minimum between a and b
+*/
+unsigned int umin(const unsigned int a, const unsigned int b) { return (a > b)? b : a; }
+
+/*! Return the maximum between two unsigned integer.
+   \return Maximum between a and b
+*/
+unsigned int umax(const unsigned int a, const unsigned int b) { return (a < b)? b : a; }
 
 /*! Raise double a to positive integer power b.
    \param[in] a base value
@@ -75,7 +86,7 @@ int npown(int a, unsigned int b)
     return res;
 }
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     /*! Wrapper for C calloc function (allocate memory and zero it) with DACE error handling
        \param[in] count number of elements to allocate
        \param[in] size size of each element
@@ -142,7 +153,7 @@ int npown(int a, unsigned int b)
     {
         if(ptr) free(ptr);
     }
-#endif      // DACE_STATIC_MEMORY
+#endif      // DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
 
 /*! Return a single integer containing all nv exponents in p[] with maximum order no
    \param[in] p C array of nv exponents
@@ -331,13 +342,15 @@ void dacePack(double cc[], DACEDA *inc)
 
     monomial* ic = ipoc;
 #ifdef DACE_FILTERING
-    if(DACECom.lfi == 0)
+    if(LIKELY(DACECom.lfi == 0))
 #endif
     {
-        if(ilmc >= DACECom.nmmax)
+        if(LIKELY(ilmc >= DACECom.nmmax))
         {
             for(unsigned int i = 0; i < DACECom.nmmax; i++)
             {
+//#define OPTIMIZE  // not clear if this actually helps in any way
+#ifndef OPTIMIZE
                 if(fabs(cc[i]) >= DACECom_t.eps)  //  && (DACECom.ieo[i] <= DACECom_t.nocut) is avoided for performance
                 {
                     ic->ii = i;
@@ -345,6 +358,12 @@ void dacePack(double cc[], DACEDA *inc)
                     ic++;
                 }
                 cc[i] = 0.0;
+#else
+                ic->ii = i;
+                ic->cc = cc[i];
+                ic += (fabs(cc[i]) >= DACECom_t.eps);
+                cc[i] = 0.0;
+#endif
             }
         }
         else

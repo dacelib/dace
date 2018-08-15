@@ -35,9 +35,13 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
+#ifdef WITH_PTHREAD
+    #include <pthread.h>
+#endif
 
 /*! Set up the ordering and addressing arrays in the common data structure
     and initialize DA memory.
@@ -84,12 +88,19 @@ void daceInitialize(unsigned int no, unsigned int nv)
     const unsigned int lia = (unsigned int)clia;  // length of reverse lookup array
     const unsigned int lea = daceCountMonomials(no, nv);     // number of monomials = length of forward lookup array
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     if(no > DACE_STATIC_NOMAX || nv > DACE_STATIC_NVMAX || lea > DACE_STATIC_NMMAX || lia > DACE_STATIC_LIAMAX)
     {
          daceSetError(__func__, DACE_SEVERE, 11);
          return;
     }
+    // use static local memory for addressing arrays
+    static unsigned int ie1[DACE_STATIC_NMMAX], ie2[DACE_STATIC_NMMAX], ieo[DACE_STATIC_NMMAX], ia1[DACE_STATIC_LIAMAX+1], ia2[DACE_STATIC_LIAMAX+1];
+    DACECom.ie1 = ie1;
+    DACECom.ie2 = ie2;
+    DACECom.ieo = ieo;
+    DACECom.ia1 = ia1;
+    DACECom.ia2 = ia2;
 #else
     // (re)allocate addressing arrays
     dacefree(DACECom.ie1);
@@ -113,7 +124,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
     unsigned int no1 = 0, no2 = 0;
 
     // allocate and set exponents to zero
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
 	unsigned int p1[DACE_STATIC_NVMAX] = {0}, p2[DACE_STATIC_NVMAX] = {0}; // array of powers of first and second part of monomial
 #else
     unsigned int *p1, *p2;                                    // array of powers of first and second part of monomial
@@ -137,7 +148,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
     } while((no1 = daceNextOrderedMonomial(p1, no, nv1)) > 0);
     
     // free memory
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(p1);
     dacefree(p2);
 #endif
@@ -182,6 +193,21 @@ void daceInitializeThread()
     daceInitializeThread0();
 }
 
+/*! Clean up thread local data structures at the end of thread's life time.
+ \note Each spawned thread (except for the main thread) should call daceCleanupThread
+ before exitting to ensure any thread local memory is properly release. No DACE operations
+ must be performed after calling daceCleanupThread.
+ \sa daceInitializeThread
+ */
+void daceCleanupThread()
+{
+#ifdef DACE_FILTERING
+    #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+        dacefree(DACECom_t.ifi);
+    #endif
+#endif
+}
+
 /*! Set up thread local data structures without resetting error.
  */
 void daceInitializeThread0()
@@ -193,7 +219,10 @@ void daceInitializeThread0()
     DACECom_t.nocut = DACECom.nomax;
 
 #ifdef DACE_FILTERING
-    #ifndef DACE_STATIC_MEMORY
+    #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+        DACE_THREAD_LOCAL static unsigned int ifi[DACE_STATIC_NMMAX];
+        DACECom_t.ifi = ifi;
+    #else
         dacefree(DACECom_t.ifi);
         DACECom_t.ifi = dacecalloc(DACECom.nmmax, sizeof(unsigned int));
     #endif
@@ -205,13 +234,13 @@ void daceInitializeThread0()
     These values can be checked by the interface to ensure compatibility.
    \param[out] imaj Major version number
    \param[out] imin Minor version number
-   \param[out] icos COSY flag (always zero for DACE)
+   \param[out] ipat Patch version number
  */
-void daceGetVersion(int *imaj, int *imin, int *icos)
+void daceGetVersion(int *imaj, int *imin, int *ipat)
 {
     *imaj = DACE_MAJOR_VERSION;
     *imin = DACE_MINOR_VERSION;
-    *icos = DACE_COSY;
+    *ipat = DACE_PATCH_VERSION;
 }
 
 /*! Set cutoff value to eps and return the previous value.

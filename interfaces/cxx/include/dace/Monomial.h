@@ -20,63 +20,37 @@
 *******************************************************************************/
 
 /*
- * MathExtension.cpp
+ * Monomial.h
  *
- *  Created on: Sep. 22, 2014
+ *  Created on: Mar 10, 2014
  *      Author: Dinamica Srl
  */
 
-// C++ stdlib classes
-#include <cmath>
+#ifndef DINAMICA_MONOMIAL_H_
+#define DINAMICA_MONOMIAL_H_
 
-// DACE classes
-#include "dace/config.h"
-#include "dace/MathExtension.h"
+// C++ stdlib classes used in this public interface
+#include <vector>
+#include <string>
+#include <ostream>
 
 namespace DACE{
 
-double cons(const double x){
-/*! Constant part. For double type this is just x.
-   \param[in] x Function argument.
- */
-    return x;
-}
+/*! Monomial class */
+class DACE_API Monomial
+{
+public:
+    std::vector<unsigned int> m_jj;     /*!< Vector of exponents.               */
+    double m_coeff;                     /*!< Coefficient.                       */
 
-double logb(const double x, const double b){
-/*! Logarithm relative to base b.
-   \param[in] x Function argument.
-   \param[in] b Base of the logarithm (must be positive).
- */
-    return std::log(x)/std::log(b);
-}
+    Monomial();                         /*!< Default constructor.               */
 
-double isrt(const double x){
-/*! Inverse square root 1/sqrt(x).
-   \param[in] x Function argument.
- */
-    return 1.0/std::sqrt(x);
-}
+    unsigned int order() const;         /*!< Return the order of the Monomial.  */
+    std::string toString() const;       /*!< Convert current monomial to string.*/
+};
 
-double sqr(const double x){
-/*! Square of x.
-   \param[in] x Function argument.
- */
-    return x*x;
-}
-
-double minv(const double x){
-/*! Multiplicative inverse 1/x.
-   \param[in] x Function argument.
- */
-    return 1.0/x;
-}
-
-double root(const double x, const int p){
-/*! p-th root of x.
-   \param[in] x Function argument.
-   \param[in] p Root to take.
- */
-    return std::pow(x, 1.0/p);
-}
+DACE_API std::ostream& operator<< (std::ostream &out, const Monomial &m);    /*!< Overload output stream operator. */
 
 }
+
+#endif /* DINAMICA_MONOMIAL_H_ */

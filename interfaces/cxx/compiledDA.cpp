@@ -27,10 +27,10 @@
  */
 
 // DACE classes
-#include "DA/compiledDA.h"
-#include "DA/DA.h"
-#include "DA/DACEException.h"
-//#include <dacecore.h>
+#include "dace/config.h"
+#include "dace/compiledDA.h"
+#include "dace/DA.h"
+#include "dace/DACEException.h"
 
 namespace DACE{
 

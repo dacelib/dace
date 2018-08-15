@@ -20,63 +20,45 @@
 *******************************************************************************/
 
 /*
- * MathExtension.cpp
+ * DACEException.h
  *
- *  Created on: Sep. 22, 2014
+ *  Created on: Mar 11, 2014
  *      Author: Dinamica Srl
  */
 
-// C++ stdlib classes
-#include <cmath>
+#ifndef DINAMICA_DACEEXCEPTION_H_
+#define DINAMICA_DACEEXCEPTION_H_
 
-// DACE classes
-#include "dace/config.h"
-#include "dace/MathExtension.h"
+// C++ stdlib classes used in this public interface
+#include <exception>
+#include <string>
+#include <ostream>
 
 namespace DACE{
 
-double cons(const double x){
-/*! Constant part. For double type this is just x.
-   \param[in] x Function argument.
- */
-    return x;
-}
+/*! DACEException class containing methods for error handling within the DACE C++ interface. */
+class DACE_API DACEException : public std::exception
+{
+private:
+    int m_x;                    //!< Severity code
+    int m_yy;                   //!< Error code
+	std::string msg;            //!< Error message
+    static int severity;        //!< Default severity code
+    static bool warning;        //!< Default warning status
+    void execute() const;       //!< Execute the exception
+    void updateMessage();       //!< Update the error message
 
-double logb(const double x, const double b){
-/*! Logarithm relative to base b.
-   \param[in] x Function argument.
-   \param[in] b Base of the logarithm (must be positive).
- */
-    return std::log(x)/std::log(b);
-}
+public:
+    DACEException();                                    //!< Default constructor
+    DACEException(const int exc_sv, const int exc_id);  //!< Constructor
+    ~DACEException() throw();                           //!< Destructor
 
-double isrt(const double x){
-/*! Inverse square root 1/sqrt(x).
-   \param[in] x Function argument.
- */
-    return 1.0/std::sqrt(x);
-}
+    const char* what() const throw();                   //!< Convert exception to string
+    static void setSeverity(const int n);               //!< Select the desired severity code
+    static void setWarning(const bool w);               //!< Select the warning status
 
-double sqr(const double x){
-/*! Square of x.
-   \param[in] x Function argument.
- */
-    return x*x;
-}
-
-double minv(const double x){
-/*! Multiplicative inverse 1/x.
-   \param[in] x Function argument.
- */
-    return 1.0/x;
-}
-
-double root(const double x, const int p){
-/*! p-th root of x.
-   \param[in] x Function argument.
-   \param[in] p Root to take.
- */
-    return std::pow(x, 1.0/p);
-}
+	friend DACE_API std::ostream& operator<< (std::ostream &out, const DACEException &ex); //!< Overload output stream operator
+};
 
 }
+#endif /* DINAMICA_DACEEXCEPTION_H_ */

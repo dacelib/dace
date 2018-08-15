@@ -1,0 +1,140 @@
+language: cpp
+script: 
+   - mkdir build && cd build
+   - cmake ..
+   - make
+   - make package
+   - mkdir packages && for f in DACE-2.0*; do mv $f packages/${PKG_PREFIX}${f}; done
+   - ls -la packages
+dist: trusty
+sudo: false
+git:
+  depth: 1
+
+
+matrix:
+  include:
+    - os: linux
+      compilers: clang
+      env:
+         - MATRIX_EVAL="CC=clang CXX=clang++ PKG_PREFIX=linux-clang-"
+
+    - os: linux
+      compilers: gcc
+      env:
+         - MATRIX_EVAL="PKG_PREFIX=linux-gcc-"
+
+#    - os: linux
+#      addons:
+#        apt:
+#          update: true
+#          sources:
+#          - "ubuntu-toolchain-r-test"
+#          packages:
+#          - "g++-4.9"
+#      env:
+#         - MATRIX_EVAL="CC=gcc-4.9 && CXX=g++-4.9 && PKG_PREFIX=linux-gcc-4.9-"
+
+#    - os: linux
+#      addons:
+#        apt:
+#          update: true
+#          sources:
+#            - "ubuntu-toolchain-r-test"
+#          packages:
+#            - "g++-5"
+#      env:
+#         - MATRIX_EVAL="CC=gcc-5 && CXX=g++-5 && PKG_PREFIX=linux-gcc-5-"
+
+#    - os: linux
+#      addons:
+#        apt:
+#          update: true
+#          sources:
+#            - "ubuntu-toolchain-r-test"
+#          packages:
+#            - "g++-6"
+#      env:
+#        - MATRIX_EVAL="CC=gcc-6 && CXX=g++-6 && PKG_PREFIX=linux-gcc-6-"
+
+    - os: linux
+      addons:
+        apt:
+          update: true
+          sources:
+            - "ubuntu-toolchain-r-test"
+          packages:
+            - "g++-7"
+      env:
+        - MATRIX_EVAL="CC=gcc-7 && CXX=g++-7 && PKG_PREFIX=linux-gcc-7-"
+
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - "ubuntu-toolchain-r-test"
+#            - "llvm-toolchain-trusty-4.0"
+#          packages:
+#            - "clang-4.0"
+#      env:
+#        - MATRIX_EVAL="CC=clang-4.0 && CXX=clang++-4.0 && PKG_PREFIX=linux-clang-4-"
+
+#    - os: linux
+#      addons:
+#        apt:
+#          sources:
+#            - "ubuntu-toolchain-r-test"
+#            - "llvm-toolchain-trusty-5.0"
+#          packages:
+#            - "clang-5.0"
+#      env:
+#        - MATRIX_EVAL="CC=clang-5.0 && CXX=clang++-5.0 && PKG_PREFIX=linux-clang-5-"
+
+    - os: linux
+      addons:
+        apt:
+          sources:
+            - "ubuntu-toolchain-r-test"
+            - "llvm-toolchain-trusty-6.0"
+          packages:
+            - "clang-6.0"
+      env:
+        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0 && PKG_PREFIX=linux-clang-6-"
+
+    - os: osx
+      osx_image: xcode9
+      env:
+        - MATRIX_EVAL="PKG_PREFIX=osx-xcode9-"
+
+deploy:
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: packages/*
+    skip_cleanup: true
+    on:
+      tags: true                    # only upload tagged builds (= releases)
+
+#  - provider: pages
+#    target-branch: pkg-latest
+#    github-token: $GITHUB_TOKEN
+#    keep-history: true
+#    local-dir: build/packages
+#    skip_cleanup: true
+#    on:
+#      branch: master
+#      tags: false
+#      condition: $TRAVIS_EVENT_TYPE != pull_request
+
+  - provider: script
+    script: sh ${TRAVIS_BUILD_DIR}/deploy.sh
+    skip_cleanup: true
+    on:
+      branch: master
+      tags: false
+      condition: $TRAVIS_EVENT_TYPE != pull_request
+
+before_install:
+    - eval "${MATRIX_EVAL}"
+    - eval "${CC} --version"
+    - eval "${CXX} --version"
