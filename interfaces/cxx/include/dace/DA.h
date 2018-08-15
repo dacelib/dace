@@ -39,9 +39,7 @@
 #include <vector>
 #include <stack>
 
-#include "DA/Def.h"
-//#include "DA/libdace.h"
-#include "dacecore.h"
+#include "dace/dacecore.h"
 
 namespace DACE{
 
@@ -324,7 +322,6 @@ DACE_API void write(const DA &da, std::ostream &os);
 
 
 
-#if DACE_MAJOR_VERSION==2
 /*! Stored DA class representing a DA vector in a binary, setup independent format. */
 class DACE_API storedDA : std::vector<char>
 {
@@ -343,7 +340,6 @@ public:
 
 	friend DACE_API std::ostream& operator<<(std::ostream &out, const storedDA &sda);      //!< Output to C++ stream in binary form
 };
-#endif
 
 }
 

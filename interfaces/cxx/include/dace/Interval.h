@@ -20,35 +20,24 @@
 *******************************************************************************/
 
 /*
- * dace.h
+ * Interval.h
  *
- *  Created on: Jan 14, 2015
+ *  Created on: Mar 14, 2014
  *      Author: Dinamica Srl
  */
 
-#ifndef DINAMICA_DACE_H_
-#define DINAMICA_DACE_H_
+#ifndef DINAMICA_INTERVAL_H_
+#define DINAMICA_INTERVAL_H_
 
-// This file just brings in all the headers of the DACE related classes and functions
-#include "DA/PromotionTrait.h"
-#include "DA/MathExtension.h"
-#include "DA/DACEException.h"
-#include "DA/Monomial.h"
-#include "DA/Interval.h"
-#include "DA/DAFormatter.h"
-#include "DA/compiledDA.h"
-#include "DA/DA.h"
-#include "DA/AlgebraicVector.h"
-#ifdef WITH_ALGEBRAICMATRIX
-#include "DA/AlgebraicMatrix.h"
-#endif /* WITH_ALGEBRAICMATRIX */
+namespace DACE{
 
-// include the template implementations here at the end after everything is properly defined
-#include "DA/compiledDA_t.h"
-#include "DA/DA_t.h"
-#include "DA/AlgebraicVector_t.h"
-#ifdef WITH_ALGEBRAICMATRIX
-#include "DA/AlgebraicMatrix_t.h"
-#endif /* WITH_ALGEBRAICMATRIX */
+/*! Class representing an interval. */
+class DACE_API Interval
+{
+public:
+    double m_lb;            //!< Lower bound.
+    double m_ub;            //!< Upper bound.
+};
 
-#endif /* DINAMICA_DACE_H_ */
+}
+#endif /* DINAMICA_INTERVAL_H_ */

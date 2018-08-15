@@ -20,39 +20,26 @@
 *******************************************************************************/
 
 /*
- * Monomial.h
+ *  dacecore.h
  *
- *  Created on: Mar 10, 2014
- *      Author: Dinamica Srl
+ *  Created on: Jul 20, 2018
+ *      Author: University of Southampton
  */
 
-#ifndef DINAMICA_MONOMIAL_H_
-#define DINAMICA_MONOMIAL_H_
+/*
+    User interface header for DACE core library using static linking.
+    Includes all relevant headers with public interfaces to the DACE core
+    with the correct API decorations for Windows static linking.
+*/
+/** \addtogroup DACE Core 
+ *  @{
+ */
 
-// C++ stdlib classes used in this public interface
-#include <vector>
-#include <string>
-#include <ostream>
+#ifndef DINAMICA_DACECORE_S_H_
+#define DINAMICA_DACECORE_S_H_
 
-#include "DA/Def.h"
-
-namespace DACE{
-
-/*! Monomial class */
-class DACE_API Monomial
-{
-public:
-    std::vector<unsigned int> m_jj;     /*!< Vector of exponents.               */
-    double m_coeff;                     /*!< Coefficient.                       */
-
-    Monomial();                         /*!< Default constructor.               */
-
-    unsigned int order() const;         /*!< Return the order of the Monomial.  */
-    std::string toString() const;       /*!< Convert current monomial to string.*/
-};
-
-DACE_API std::ostream& operator<< (std::ostream &out, const Monomial &m);    /*!< Overload output stream operator. */
-
-}
-
-#endif /* DINAMICA_MONOMIAL_H_ */
+// explicitly define DACE_API to be empty for static linking
+#define DACE_API
+#include "dace/dacecore.h"
+/** @}*/
+#endif /* DINAMICA_DACECORE_S_H_ */

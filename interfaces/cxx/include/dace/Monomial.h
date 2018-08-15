@@ -20,26 +20,37 @@
 *******************************************************************************/
 
 /*
- * Interval.h
+ * Monomial.h
  *
- *  Created on: Mar 14, 2014
+ *  Created on: Mar 10, 2014
  *      Author: Dinamica Srl
  */
 
-#ifndef DINAMICA_INTERVAL_H_
-#define DINAMICA_INTERVAL_H_
+#ifndef DINAMICA_MONOMIAL_H_
+#define DINAMICA_MONOMIAL_H_
 
-#include "DA/Def.h"
+// C++ stdlib classes used in this public interface
+#include <vector>
+#include <string>
+#include <ostream>
 
 namespace DACE{
 
-/*! Class representing an interval. */
-class DACE_API Interval
+/*! Monomial class */
+class DACE_API Monomial
 {
 public:
-    double m_lb;            //!< Lower bound.
-    double m_ub;            //!< Upper bound.
+    std::vector<unsigned int> m_jj;     /*!< Vector of exponents.               */
+    double m_coeff;                     /*!< Coefficient.                       */
+
+    Monomial();                         /*!< Default constructor.               */
+
+    unsigned int order() const;         /*!< Return the order of the Monomial.  */
+    std::string toString() const;       /*!< Convert current monomial to string.*/
 };
 
+DACE_API std::ostream& operator<< (std::ostream &out, const Monomial &m);    /*!< Overload output stream operator. */
+
 }
-#endif /* DINAMICA_INTERVAL_H_ */
+
+#endif /* DINAMICA_MONOMIAL_H_ */

@@ -20,64 +20,23 @@
 *******************************************************************************/
 
 /*
- * DAFormatter.h
+ *  dacecore.h
  *
- *  Created on: Oct 18, 2014
- *      Author: Dinamica Srl
+ *  Created on: November 18, 2016
+ *      Author: Politecnico di Milano
  */
 
-#ifndef DINAMICA_DAFORMATTER_H_
-#define DINAMICA_DAFORMATTER_H_
-
-// C++ stdlib classes used in this public interface
-#include <vector>
-#include <string>
-
-#include "DA/Def.h"
-
-namespace DACE{
-
-// forward declaration
-class DA;
-
-/*! Abstract class providing a DA formatter to output DA vectors in some advanced format. */
-class DACE_API DAFormatter
-{
-public:
-    virtual std::string format(const DA &da) = 0;
-    virtual std::string format(const std::vector<DA> &da) = 0;
-};
-
-/*! Class containing the elements of a simple format as used by the DASimpleFormatter.
-   \sa DASimpleFormatter
+/*
+    User interface header for DACE core library.
+    Includes all relevant headers with public interfaces to the DACE core.
 */
-struct DASimpleFormat {
-    std::string pos, neg, mul, pre_pow, var, pre_var, post_var, pow, post_pow, linebreak;
-    int first_var, first_pow;
-    unsigned int monperline;
-    bool shorten;
-};
+/** \addtogroup DACE Core 
+ *  @{
+ */
 
-/*! DASimpleFormatter class which formats a DA vector using simple rules to output code suitable for various programming languages. */
-class DACE_API DASimpleFormatter : public DAFormatter
-{
-public:
-    static const DASimpleFormat C;
-    static const DASimpleFormat C_POW;
-    static const DASimpleFormat FORTRAN;
-    static const DASimpleFormat FORTRAN_POW;
-    static const DASimpleFormat MATLAB;
-    static const DASimpleFormat MATLAB_POW;
-    static const DASimpleFormat LATEX;
+#ifndef DINAMICA_DACECORE_H_
+#define DINAMICA_DACECORE_H_
 
-    DASimpleFormat sf;
-
-    DASimpleFormatter() : sf(C) {};
-    DASimpleFormatter(const DASimpleFormat& isf) : sf(isf) {};
-
-    std::string format(const DA &da);
-    std::string format(const std::vector<DA> &da);
-};
-
-}
-#endif /* DINAMICA_DAFORMATTER_H_ */
+#include "dace/dacebase.h"
+/** @}*/
+#endif /* DINAMICA_DACECORE_H_ */

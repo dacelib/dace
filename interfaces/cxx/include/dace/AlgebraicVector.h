@@ -33,9 +33,8 @@
 #include <vector>
 
 // DACE classes required for interface definition (DA.h needed for DA::getMaxOrder(), DA::getMaxVariables() default arguments)
-#include "DA/PromotionTrait.h"
-#include "DA/DA.h"
-#include "DA/Def.h"
+#include "dace/PromotionTrait.h"
+#include "dace/DA.h"
 
 namespace DACE{
 

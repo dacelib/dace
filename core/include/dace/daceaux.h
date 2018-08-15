@@ -41,75 +41,33 @@
 #include <stdbool.h>    // for bool
 #include <string.h>
 
-// XXX: This should probably be more intelligent, e.g. also Intel C on Win will use the MSVC syntax
-// There is also the C11 standard (not C++11), but that seems not widely spread
-#ifdef DACE_PTHREAD
-    #ifdef _WIN32
-    //#ifdef _MSC_VER
-        #define DACE_THREAD_LOCAL __declspec(thread)
-    #else
-        #define DACE_THREAD_LOCAL __thread
-    #endif
+#include "dace/config.h"
+
+// macro to help tell supported compiler which branch is most likely
+#if __GNUC__ || __clang__
+    #define UNLIKELY(expr) __builtin_expect(!!(expr), 0)
+    #define LIKELY(expr) __builtin_expect(!!(expr), 1)
 #else
-    // just treat thread local stuff as normal global variables
-    #define DACE_THREAD_LOCAL
+    #define UNLIKELY(expr) expr
+    #define LIKELY(expr) expr
 #endif
 
-#ifdef DACE_STATIC_MEMORY
+// DACE internal data structure
+typedef struct dcom {
+    unsigned int *ie1, *ie2, *ieo, *ia1, *ia2;
+    unsigned int nomax, nvmax, nv1, nv2, nmmax;
+    double epsmac;
+} dacecom;
 
-    // choose these constants carefully!
-    // Maximum order and maximum variables supported independently of each other
-    #define DACE_STATIC_NOMAX 10
-    #define DACE_STATIC_NVMAX 10
-    // pick any maximum NO, NV combination to support, then set these values like this:
-    // NMMAX = (NO+NV)!/NO!/NV!         LIAMAX = (NO+1)^((NV+1)/2)
-    // These values are for NO=10 and NV=10
-    //#define DACE_STATIC_NMMAX 184756
-    //#define DACE_STATIC_LIAMAX 161051
-    // These values are for NO=10 and NV=7 (i.e. just enough to run the test cases)
-    #define DACE_STATIC_NMMAX 19448
-    #define DACE_STATIC_LIAMAX 14641
-    // maximum number of DA variables and memory size
-    #define DACE_STATIC_VAR_SIZE 100
-    #define DACE_STATIC_MEM_SIZE (DACE_STATIC_NMMAX*DACE_STATIC_VAR_SIZE)
-
-    // DACE internal data structure
-    typedef struct dcom {
-        unsigned int ie1[DACE_STATIC_NMMAX], ie2[DACE_STATIC_NMMAX], ieo[DACE_STATIC_NMMAX], ia1[DACE_STATIC_LIAMAX+1], ia2[DACE_STATIC_LIAMAX+1];
-        unsigned int nomax, nvmax, nv1, nv2, nmmax;
-        double epsmac;
-    } dacecom;
-
-    // DACE thread local data structure
-    typedef struct dcom_t {
-        unsigned int nocut;
-        double eps;
-    #ifdef DACE_FILTERING
-        unsigned int ifi[DACE_STATIC_NMMAX];
-        unsigned int lfi;
-    #endif
-    } dacecom_t;
-
-#else   // ifdef DACE_STATIC_MEMORY
-
-    // DACE internal data structure
-    typedef struct dcom {
-        unsigned int *ie1, *ie2, *ieo, *ia1, *ia2;
-        unsigned int nomax, nvmax, nv1, nv2, nmmax;
-        double epsmac;
-    } dacecom;
-
-    // DACE thread local data structure
-    typedef struct dcom_t {
-        unsigned int nocut;
-        double eps;
-    #ifdef DACE_FILTERING
-        unsigned int *ifi;
-        unsigned int lfi;
-    #endif
-    } dacecom_t;
-
+// DACE thread local data structure
+typedef struct dcom_t {
+    unsigned int nocut;
+    double eps;
+#ifdef DACE_FILTERING
+    unsigned int *ifi;
+    unsigned int lfi;
 #endif
+} dacecom_t;
 
 #define ERROR_FUN_SIZE 64
 #define ERROR_MSG_SIZE 256
@@ -151,22 +109,14 @@ extern dacecom DACECom;
 extern DACE_THREAD_LOCAL dacecom_t DACECom_t;
 extern DACE_THREAD_LOCAL dacedbg DACEDbg;
 
-// math utility routines
-/*! Return the minimum between two unsigned integer.
-   \return Minimum between a and b
-*/
-inline unsigned int umin(const unsigned int a, const unsigned int b) { return (a > b)? b : a; }
-
-/*! Return the maximum between two unsigned integer.
-   \return Maximum between a and b
-*/
-inline unsigned int umax(const unsigned int a, const unsigned int b) { return (a < b)? b : a; }
 /// @cond
+// math utility routines
+unsigned int umin(const unsigned int a, const unsigned int b);
+unsigned int umax(const unsigned int a, const unsigned int b);
 double pown(double a, unsigned int b);
 int npown(int a, unsigned int b);
 
-
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_HYBRID || DACE_MEMORY_MODEL == DACE_MEMORY_DYNAMIC
     // dynamic memory allocation wrappers
     void* dacecalloc(size_t count, size_t size);
     void* dacemalloc(size_t size);

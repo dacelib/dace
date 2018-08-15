@@ -20,26 +20,45 @@
 *******************************************************************************/
 
 /*
- * MathExtension.h
+ * DACEException.h
  *
- *  Created on: Sep. 22, 2014
+ *  Created on: Mar 11, 2014
  *      Author: Dinamica Srl
  */
 
-#ifndef DINAMICA_MATHEXTENSION_H_
-#define DINAMICA_MATHEXTENSION_H_
+#ifndef DINAMICA_DACEEXCEPTION_H_
+#define DINAMICA_DACEEXCEPTION_H_
 
-#include "DA/Def.h"
+// C++ stdlib classes used in this public interface
+#include <exception>
+#include <string>
+#include <ostream>
 
 namespace DACE{
 
-DACE_API double cons(const double x);                            //!< Constant part (i.e. the value x)
-DACE_API double logb(const double x, const double b = 10.0);     //!< Logarithm relative to base b
-DACE_API double isrt(const double x);                            //!< Inverse square root
-DACE_API double sqr(const double x);                             //!< Square
-DACE_API double minv(const double x);                            //!< Multiplicative inverse
-DACE_API double root(const double x, const int p = 2);           //!< p-th root
+/*! DACEException class containing methods for error handling within the DACE C++ interface. */
+class DACE_API DACEException : public std::exception
+{
+private:
+    int m_x;                    //!< Severity code
+    int m_yy;                   //!< Error code
+	std::string msg;            //!< Error message
+    static int severity;        //!< Default severity code
+    static bool warning;        //!< Default warning status
+    void execute() const;       //!< Execute the exception
+    void updateMessage();       //!< Update the error message
+
+public:
+    DACEException();                                    //!< Default constructor
+    DACEException(const int exc_sv, const int exc_id);  //!< Constructor
+    ~DACEException() throw();                           //!< Destructor
+
+    const char* what() const throw();                   //!< Convert exception to string
+    static void setSeverity(const int n);               //!< Select the desired severity code
+    static void setWarning(const bool w);               //!< Select the warning status
+
+	friend DACE_API std::ostream& operator<< (std::ostream &out, const DACEException &ex); //!< Overload output stream operator
+};
 
 }
-
-#endif /* DINAMICA_MATHEXTENSION_H_ */
+#endif /* DINAMICA_DACEEXCEPTION_H_ */

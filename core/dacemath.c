@@ -32,11 +32,14 @@
 
 // MS C library needs this to trigger it to define math constants
 #define _USE_MATH_DEFINES
+// Glibc needs this to expose the jn() and yn() Bessel functions under that name
+#define _XOPEN_SOURCE
 #include <math.h>
 #include <stdlib.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 // define various math constants in case they have not been defined by math.h
 // these are non-standard C, but most C libraries have them
@@ -47,7 +50,6 @@
 #ifndef M_PI_2
 #define M_PI_2 (1.57079632679489661923)
 #endif
-
 
 /********************************************************************************
  *     Basic DACE arithmetic operations
@@ -107,7 +109,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 {
 // These should use thread local storage (TLS) for multithread safe implementations
 // see https://en.wikipedia.org/wiki/Thread-local_storage
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     static DACE_THREAD_LOCAL double cc[DACE_STATIC_NMMAX] = {0};
     static DACE_THREAD_LOCAL extended_monomial emb[DACE_STATIC_NMMAX];
     static DACE_THREAD_LOCAL extended_monomial *ipbeg[DACE_STATIC_NOMAX+1];
@@ -116,7 +118,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 	static DACE_THREAD_LOCAL unsigned int nvmax = 0;
 
     // make sure static memory is correctly allocated
-    if(nomax != DACECom.nomax || nvmax != DACECom.nvmax)
+    if(UNLIKELY(nomax != DACECom.nomax || nvmax != DACECom.nvmax))
     {
 		nomax = DACECom.nomax;
 		nvmax = DACECom.nvmax;
@@ -133,7 +135,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 	static DACE_THREAD_LOCAL unsigned int nvmax = 0;
 
     // make sure static memory is correctly allocated
-	if(nomax != DACECom.nomax || nvmax != DACECom.nvmax)
+	if(UNLIKELY(nomax != DACECom.nomax || nvmax != DACECom.nvmax))
 	{
 		nomax = DACECom.nomax;
 		nvmax = DACECom.nvmax;
@@ -186,6 +188,8 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
         const unsigned int i1ia = DACECom.ie1[ia->ii];
         const unsigned int i2ia = DACECom.ie2[ia->ii];
         const double ccia = ia->cc;
+        // Note: all of these inner loops can safely be run in parallel
+        //#pragma omp parallel for
         for(int noib = DACECom_t.nocut-DACECom.ieo[ia->ii]; noib >= 0; noib--)
         {
             for(extended_monomial *ib = ipbeg[noib]; ib < ipend[noib]; ib++)
@@ -710,7 +714,7 @@ void dacePowerDouble(const DACEDA *ina, const double p, DACEDA *inc)
         return;
     }
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double *xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -722,7 +726,7 @@ void dacePowerDouble(const DACEDA *ina, const double p, DACEDA *inc)
 
     daceDivideDouble(ina, a0, inc);     // more accurate than including a0 in series (uses non-linear part in EvaluateSeries)
     daceEvaluateSeries(inc, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
    dacefree(xf);
 #endif
 }
@@ -826,7 +830,7 @@ void daceRoot(const DACEDA *ina, const int np, DACEDA *inc)
     }
 
     double cr = 1.0/np;
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double *xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -841,7 +845,7 @@ void daceRoot(const DACEDA *ina, const int np, DACEDA *inc)
 
     daceDivideDouble(ina, a0, inc);     // more accurate than including a0 in series (uses non-linear part in EvaluateSeries)
     daceEvaluateSeries(inc, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
    dacefree(xf);
 #endif
 }
@@ -896,7 +900,7 @@ void daceMultiplicativeInverse0(const DACEDA *ina, DACEDA *inc, const double a0)
 {
     daceDivideDouble(ina, a0, inc);
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double *xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -907,7 +911,7 @@ void daceMultiplicativeInverse0(const DACEDA *ina, DACEDA *inc, const double a0)
         xf[i] = -xf[i-1];
 
     daceEvaluateSeries(inc, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -979,7 +983,7 @@ void daceHypotenuse(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
  */
 void daceExponential(const DACEDA *ina, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -990,7 +994,7 @@ void daceExponential(const DACEDA *ina, DACEDA *inc)
         xf[i] = xf[i-1]/i;
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1010,7 +1014,7 @@ void daceLogarithm(const DACEDA *ina, DACEDA *inc)
         return;
     }
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1025,7 +1029,7 @@ void daceLogarithm(const DACEDA *ina, DACEDA *inc)
     }
 
     daceEvaluateSeries(inc, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1076,7 +1080,7 @@ void daceLogarithm2(const DACEDA *ina, DACEDA *inc)
  */
 void daceSine(const DACEDA *ina, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1091,7 +1095,7 @@ void daceSine(const DACEDA *ina, DACEDA *inc)
     }
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1103,7 +1107,7 @@ void daceSine(const DACEDA *ina, DACEDA *inc)
  */
 void daceCosine(const DACEDA *ina, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1118,7 +1122,7 @@ void daceCosine(const DACEDA *ina, DACEDA *inc)
     }
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1196,7 +1200,7 @@ void daceArcCosine(const DACEDA *ina, DACEDA *inc)
 void daceArcTangent(const DACEDA *ina, DACEDA *inc)
 {
     DACEDA iarg;
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1] = {0};
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1219,7 +1223,7 @@ void daceArcTangent(const DACEDA *ina, DACEDA *inc)
 
     daceEvaluateSeries(&iarg, xf, inc);
     daceFreeDA(&iarg);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1281,7 +1285,7 @@ void daceArcTangent2(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
  */
 void daceHyperbolicSine(const DACEDA *ina, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1297,7 +1301,7 @@ void daceHyperbolicSine(const DACEDA *ina, DACEDA *inc)
     }
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1309,7 +1313,7 @@ void daceHyperbolicSine(const DACEDA *ina, DACEDA *inc)
  */
 void daceHyperbolicCosine(const DACEDA *ina, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1325,7 +1329,7 @@ void daceHyperbolicCosine(const DACEDA *ina, DACEDA *inc)
     }
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1421,7 +1425,7 @@ void daceHyperbolicArcTangent(const DACEDA *ina, DACEDA *inc)
  */
 void daceErrorFunction(const DACEDA *ina, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1444,7 +1448,7 @@ void daceErrorFunction(const DACEDA *ina, DACEDA *inc)
     }
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1456,7 +1460,7 @@ void daceErrorFunction(const DACEDA *ina, DACEDA *inc)
  */
 void daceComplementaryErrorFunction(const DACEDA *ina, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
 #else
     double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
@@ -1479,7 +1483,7 @@ void daceComplementaryErrorFunction(const DACEDA *ina, DACEDA *inc)
     }
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }
@@ -1491,7 +1495,7 @@ void daceComplementaryErrorFunction(const DACEDA *ina, DACEDA *inc)
  */
 void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double bz[2*DACE_STATIC_NOMAX+1];
 #else
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
@@ -1499,10 +1503,10 @@ void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
 
     const double a0 = daceGetConstant(ina);
     for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-        bz[i] = jn(n-DACECom_t.nocut+i, a0);		// XXX: Mauro: MSVC complains that "warning C4996: 'jn': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _jn. See online help for details." But at least on my Mac these don't seem to exist. I recommend we leave it as is (remove comment after fix).
+        bz[i] = jn(n-DACECom_t.nocut+i, a0);        // MSVC recommends using _jn, but not portable
 
     daceEvaluateBesselFunction(ina, bz, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
 #endif
 }
@@ -1522,17 +1526,17 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
         return;
     }
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double bz[2*DACE_STATIC_NOMAX+1];
 #else
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
     for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-        bz[i] = yn(n-DACECom_t.nocut+i, a0);		// XXX: Mauro, same here as above. MSVC recommends using _yn
+        bz[i] = yn(n-DACECom_t.nocut+i, a0);		// MSVC recommends using _yn, but not portable
 
     daceEvaluateBesselFunction(ina, bz, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
 #endif
 }
@@ -1545,7 +1549,7 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
  */
 void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], DACEDA *inc)
 {
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
     double binomial[DACE_STATIC_NOMAX+1];
 #else
@@ -1576,7 +1580,7 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], DACEDA *in
     }
 
     daceEvaluateSeries(ina, xf, inc);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(binomial);
     dacefree(xf);
 #endif

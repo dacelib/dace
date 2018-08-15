@@ -32,8 +32,6 @@
 // C++ stdlib classes used in this public interface
 #include <vector>
 
-#include "DA/Def.h"
-
 namespace DACE{
 
 class DA;   // forward declaration

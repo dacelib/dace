@@ -34,8 +34,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "dacebase.h"
-#include "daceaux.h"
+#include "dace/config.h"
+#include "dace/dacebase.h"
+#include "dace/daceaux.h"
 
 /********************************************************************************
  *     DACE input/output routines
@@ -79,7 +80,7 @@ void daceWrite(const DACEDA *ina, char *strs, unsigned int *nstrs)
         snprintf(s, DACE_STRLEN, "%s", BEGSTR);
         (*nstrs)++;
         s += DACE_STRLEN;
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
         unsigned int j[DACE_STATIC_NVMAX];
 #else
         unsigned int *j = dacecalloc(DACECom.nvmax, sizeof(unsigned int));
@@ -99,7 +100,7 @@ void daceWrite(const DACEDA *ina, char *strs, unsigned int *nstrs)
                 iout++;
             }
         }
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
         dacefree(j);
 #endif
     }
@@ -168,7 +169,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
             return;
         }
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
         double cc[DACE_STATIC_NMMAX] = {0};
         unsigned int j[DACE_STATIC_NVMAX];
 #else
@@ -186,7 +187,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
             if(len < 4)
             {
                 daceSetError(__func__, DACE_ERROR, 32);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
                 dacefree(cc);
                 dacefree(j);
 #endif
@@ -200,7 +201,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
             if(len < 6)
             {
                 daceSetError(__func__, DACE_ERROR, 32);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
                 dacefree(cc);
                 dacefree(j);
 #endif
@@ -217,7 +218,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
             if(len < 2)
             {
                 daceSetError(__func__, DACE_ERROR, 32);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
                 dacefree(cc);
                 dacefree(j);
 #endif
@@ -230,7 +231,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
             if(len < coefflen)
             {
                 daceSetError(__func__, DACE_ERROR, 32);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
                 dacefree(cc);
                 dacefree(j);
 #endif
@@ -247,7 +248,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
             if(len < 4)
             {
                 daceSetError(__func__, DACE_ERROR, 32);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
                 dacefree(cc);
                 dacefree(j);
 #endif
@@ -264,7 +265,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
             if(len < 1)
             {
                 daceSetError(__func__, DACE_ERROR, 32);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
                 dacefree(cc);
                 dacefree(j);
 #endif
@@ -321,7 +322,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
         }
 
         dacePack(cc, ina);
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
         dacefree(cc);
         dacefree(j);
 #endif
@@ -346,7 +347,7 @@ void dacePrint(const DACEDA *ina)
     else
     {
         printf("     I  COEFFICIENT              ORDER EXPONENTS\n");
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
         unsigned int j[DACE_STATIC_NVMAX];
 #else
         unsigned int *j = dacecalloc(DACECom.nvmax, sizeof(unsigned int));
@@ -365,7 +366,7 @@ void dacePrint(const DACEDA *ina)
                 iout++;
             }
         }
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
         dacefree(j);
 #endif
     }
@@ -475,13 +476,13 @@ void daceImportBlob(const void *blob, DACEDA *inc)
         return;
     }
 
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double cc[DACE_STATIC_NMMAX] = {0};
 #else
     double *cc = dacecalloc(DACECom.nmmax, sizeof(double));
 #endif
     const unsigned int nv = data->nv1 + data->nv2;
-#ifdef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     if(nv > DACE_STATIC_NVMAX)
     {
         daceSetError(__func__, DACE_ERROR, 23); 
@@ -492,7 +493,7 @@ void daceImportBlob(const void *blob, DACEDA *inc)
 #else
     unsigned int *p = dacecalloc(umax(nv, DACECom.nvmax), sizeof(unsigned int));
 #endif
-    bool truncated = false;
+    //bool truncated = false;
 
     for(unsigned int i = 0; i < data->len; i++)
     {
@@ -506,13 +507,13 @@ void daceImportBlob(const void *blob, DACEDA *inc)
 
         if(order <= DACECom.nomax && extravar == 0)
             cc[daceEncode(p)] = data->monomials[i].cc;
-        else
-            truncated = true;
+        //else
+        //    truncated = true;
     }
 
     dacePack(cc, inc);
 
-#ifndef DACE_STATIC_MEMORY
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(cc);
     dacefree(p);
 #endif
