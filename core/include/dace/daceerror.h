@@ -39,7 +39,7 @@ typedef struct {
 
 
 DACE_API static const errstrings DACEerr[] = {
-    {   0, "Unknown DACE error. Contact Dinamica SRL for filing a bug report."},
+    {   0, "Unknown DACE error. Contact DACE developers for filing a bug report."},
     {1001, "Dynamic memory allocation failure"},
     {1002, "Out of memory"},
     {1003, "DACE has not been initialized"},
@@ -47,6 +47,7 @@ DACE_API static const errstrings DACEerr[] = {
     {1005, "Incorrect number of monomials"},
     {1006, "Incorrect DA coding arrays"},
     {1007, "Requested length too long"},
+    {1008, "Error in monomial evaluation tree construction"},
     {   8, ""},
     {   9, ""},
     {  10, ""},

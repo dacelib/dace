@@ -461,11 +461,21 @@ void daceEvalTree(const DACEDA *das[], const unsigned int count, double ac[], un
         else
         {
             // step back
-            p[stack[sp]] = 0;
+            p[stack[sp]]--;
             sp--;
         }
     }
 
+#ifdef WITH_DEBUG
+    // check if all monomials were properly encoded (should never fail except if above algorithm is implemented incorrectly)
+    for(unsigned int i = 0; i < DACECom.nmmax; i++)
+        if(nc[i] != 3 && nc[i] != 0)
+        {
+            daceSetError(__func__, DACE_PANIC, 8);
+            exit(1);
+        }
+#endif
+    
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(nc);
     dacefree(p);
