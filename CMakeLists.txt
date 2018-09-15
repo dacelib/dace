@@ -23,78 +23,37 @@ elseif(APPLE)
 endif(WIN32)
 
 
-# Set C and C++ standards (adapted from Ceres,
-# https://github.com/ceres-solver/ceres-solver/blob/master/CMakeLists.txt)
-
-# Respect user-specified CMAKE_C_STANDARD or default to C99.
-set(DEFAULT_C_STANDARD ${CMAKE_C_STANDARD})
-if (NOT DEFAULT_C_STANDARD)
-  set(DEFAULT_C_STANDARD 99)
-endif(NOT DEFAULT_C_STANDARD)
-set(CMAKE_C_STANDARD ${DEFAULT_C_STANDARD} CACHE STRING "C standard (minimum 99)" FORCE)
-
-# Check C standard to be high enough
-set(ALLOWED_C_STANDARDS 99 11)
-set_property(CACHE CMAKE_C_STANDARD PROPERTY STRINGS ${ALLOWED_C_STANDARDS})
-list(FIND ALLOWED_C_STANDARDS ${CMAKE_C_STANDARD} POSITION)
-if (POSITION LESS 0)
-  message(FATAL_ERROR "Invalid CMAKE_C_STANDARD: ${CMAKE_C_STANDARD}. "    
-                      "Must be one of: ${ALLOWED_C_STANDARDS}")
-endif(POSITION LESS 0)
-
-# Standard is a hard requirement and option is hidden from CMake GUI
+# Set C/C++ standard (adapted https://github.com/ceres-solver/ceres-solver/blob/master/CMakeLists.txt)
+# Respect user-specified CMAKE_C/C++_STANDARD or default to C99/C++11.
+# Standard is a hard requirement and that option is hidden from CMake GUI
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99 CACHE STRING "C standard (minimum 99)" FORCE)
+  set_property(CACHE CMAKE_C_STANDARD PROPERTY STRINGS 99 11)  # options shown in CMake GUI
+endif(NOT CMAKE_C_STANDARD)
 set(CMAKE_C_STANDARD_REQUIRED ON CACHE BOOL "")
 mark_as_advanced(CMAKE_C_STANDARD_REQUIRED)
 
-
-# Respect user-specified CMAKE_CXX_STANDARD or default to C++11.
-set(DEFAULT_CXX_STANDARD ${CMAKE_CXX_STANDARD})
-if (NOT DEFAULT_CXX_STANDARD)
-  set(DEFAULT_CXX_STANDARD 11)
-endif(NOT DEFAULT_CXX_STANDARD)
-set(CMAKE_CXX_STANDARD ${DEFAULT_CXX_STANDARD} CACHE STRING "C++ standard (minimum 11)" FORCE)
-
-# Check C++ standard to be high enough
-set(ALLOWED_CXX_STANDARDS 11 14 17)
-set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS ${ALLOWED_CXX_STANDARDS})
-list(FIND ALLOWED_CXX_STANDARDS ${CMAKE_CXX_STANDARD} POSITION)
-if (POSITION LESS 0)
-  message(FATAL_ERROR "Invalid CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}. "
-                      "Must be one of: ${ALLOWED_CXX_STANDARDS}")
-endif(POSITION LESS 0)
-
-# Standard is a hard requirement and option is hidden from CMake GUI
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard (minimum 11)" FORCE)
+  set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS 11 14 17)  # options shown in CMake GUI
+endif(NOT CMAKE_CXX_STANDARD)
 set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE BOOL "")
 mark_as_advanced(CMAKE_CXX_STANDARD_REQUIRED)
 
+#message("-- Building with C${CMAKE_C_STANDARD} and C++${CMAKE_CXX_STANDARD}")
 
-# Set platform dependent C compiler flags for various compilers and build types
+
+# Set generally understood compiler flags (enforcing -O2)
+add_compile_options("$<$<CONFIG:Release>:-O2>" "$<$<CONFIG:RelWithDebInfo>:-O2>")
+
+# Set compiler specific flags
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
+  add_compile_options("-Wall" "$<$<CONFIG:Release>:-frounding-math>" "$<$<CONFIG:Release>:-fsignaling-nans>" "$<$<CONFIG:RelWithDebInfo>:-frounding-math>" "$<$<CONFIG:RelWithDebInfo>:-fsignaling-nans>")
 elseif(CMAKE_C_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
-elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
+  add_compile_options("-Wall")
 elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
-  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2 /fp:strict")
+  add_compile_options("/W4" "$<$<CONFIG:Release>:/fp:strict>" "$<$<CONFIG:RelWithDebInfo>:/fp:strict>")
 endif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-
-# Set platform dependent C++ compiler flags for various compilers and build types
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /fp:strict")
-endif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
 
 # Boolean options
@@ -102,13 +61,13 @@ option(WITH_ALGEBRAICMATRIX "Include the AlgebraicMatrix type (experimental)" OF
 option(WITH_PTHREAD "Enable threading via pthread library" OFF)
 
 # Tri-state option for memory model and the associated choices
-set(DACE_MEMORY_MODEL HYBRID CACHE STRING "DACE memory model")
+set(DACE_MEMORY_MODEL DYNAMIC CACHE STRING "DACE memory model")
 set_property(CACHE DACE_MEMORY_MODEL PROPERTY STRINGS DYNAMIC STATIC HYBRID)
 string(TOUPPER "${DACE_MEMORY_MODEL}" DACE_MEMORY_MODEL_U)
 
 # Default build type option if not set already
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release CACHE STRING
+  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
        "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
        FORCE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)  # options shown in CMake GUI
