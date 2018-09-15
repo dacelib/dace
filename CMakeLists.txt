@@ -8,6 +8,10 @@ set(DACE_MINOR_VERSION 0)
 set(DACE_PATCH_VERSION 0)
 
 
+# add our own CMake modules to path
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+
 # global OS specific settings
 if(WIN32)
   cmake_policy(SET CMP0054 NEW)
@@ -130,6 +134,12 @@ if(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
   set(DACE_STATIC_VAR_SIZE 100 CACHE STRING "(EXPERT) Maximum number of DA variables." FORCE)
   set(DACE_STATIC_MEM_SIZE 1944800 CACHE STRING "(EXPERT) Maximum stack size [NMMAX*VAR_SIZE]." FORCE)
 endif(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
+
+
+# Run checks for platform-specific functions
+include(CheckIfUnderscorePrefixedBesselFunctionsExist)
+check_if_underscore_prefixed_bessel_functions_exist(HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS)
+
 
 # Pass options to source by configuring config.h file in core
 configure_file(core/include/dace/config.h.in core/include/dace/config.h)
