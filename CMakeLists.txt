@@ -19,32 +19,77 @@ elseif(APPLE)
 endif(WIN32)
 
 
+# Set C and C++ standards (adapted from Ceres,
+# https://github.com/ceres-solver/ceres-solver/blob/master/CMakeLists.txt)
+
+# Respect user-specified CMAKE_C_STANDARD or default to C99.
+set(DEFAULT_C_STANDARD ${CMAKE_C_STANDARD})
+if (NOT DEFAULT_C_STANDARD)
+  set(DEFAULT_C_STANDARD 99)
+endif(NOT DEFAULT_C_STANDARD)
+set(CMAKE_C_STANDARD ${DEFAULT_C_STANDARD} CACHE STRING "C standard (minimum 99)" FORCE)
+
+# Check C standard to be high enough
+set(ALLOWED_C_STANDARDS 99 11)
+set_property(CACHE CMAKE_C_STANDARD PROPERTY STRINGS ${ALLOWED_C_STANDARDS})
+list(FIND ALLOWED_C_STANDARDS ${CMAKE_C_STANDARD} POSITION)
+if (POSITION LESS 0)
+  message(FATAL_ERROR "Invalid CMAKE_C_STANDARD: ${CMAKE_C_STANDARD}. "    
+                      "Must be one of: ${ALLOWED_C_STANDARDS}")
+endif(POSITION LESS 0)
+
+# Standard is a hard requirement and option is hidden from CMake GUI
+set(CMAKE_C_STANDARD_REQUIRED ON CACHE BOOL "")
+mark_as_advanced(CMAKE_C_STANDARD_REQUIRED)
+
+
+# Respect user-specified CMAKE_CXX_STANDARD or default to C++11.
+set(DEFAULT_CXX_STANDARD ${CMAKE_CXX_STANDARD})
+if (NOT DEFAULT_CXX_STANDARD)
+  set(DEFAULT_CXX_STANDARD 11)
+endif(NOT DEFAULT_CXX_STANDARD)
+set(CMAKE_CXX_STANDARD ${DEFAULT_CXX_STANDARD} CACHE STRING "C++ standard (minimum 11)" FORCE)
+
+# Check C++ standard to be high enough
+set(ALLOWED_CXX_STANDARDS 11 14 17)
+set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS ${ALLOWED_CXX_STANDARDS})
+list(FIND ALLOWED_CXX_STANDARDS ${CMAKE_CXX_STANDARD} POSITION)
+if (POSITION LESS 0)
+  message(FATAL_ERROR "Invalid CMAKE_CXX_STANDARD: ${CMAKE_CXX_STANDARD}. "
+                      "Must be one of: ${ALLOWED_CXX_STANDARDS}")
+endif(POSITION LESS 0)
+
+# Standard is a hard requirement and option is hidden from CMake GUI
+set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE BOOL "")
+mark_as_advanced(CMAKE_CXX_STANDARD_REQUIRED)
+
+
 # Set platform dependent C compiler flags for various compilers and build types
 if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
 elseif(CMAKE_C_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
 elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
 elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /fp:strict")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /W4")
+  set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2 /fp:strict")
 endif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
 
 # Set platform dependent C++ compiler flags for various compilers and build types
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:strict")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2 /fp:strict")
 endif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
 
 
