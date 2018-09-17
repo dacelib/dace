@@ -54,7 +54,7 @@ compiledDA::compiledDA(const std::vector<DA> &da){
    \param[in] da vector of DA objects.
    \throw DACE::DACEException
  */
-    dim = da.size();
+    dim = (unsigned int)da.size();
     if(dim<1) DACEException(16,04);
 
     ac = new double[DA::getMaxMonomials()*(dim+2)];
@@ -116,7 +116,7 @@ compiledDA& compiledDA::operator=(const compiledDA &cda){
 *********************************************************************************/
 // double evaluation
 template<> void compiledDA::eval(const std::vector<double> &args, std::vector<double> &res) const{
-    const unsigned int narg = args.size();
+    const size_t narg = args.size();
     double *p = ac+2;
     double *xm = new double[ord+1];
 
@@ -142,7 +142,7 @@ template<> void compiledDA::eval(const std::vector<double> &args, std::vector<do
 
 // DA evaluation
 template<> void compiledDA::eval(const std::vector<DA> &args, std::vector<DA> &res) const{
-    const unsigned int narg = args.size();
+    const size_t narg = args.size();
     unsigned int jlskip = ord+1;
     double *p = ac+2;
     DACEDA *xm = new DACEDA[ord+1];

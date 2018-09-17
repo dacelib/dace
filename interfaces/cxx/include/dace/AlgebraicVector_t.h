@@ -55,13 +55,13 @@ template<typename T> AlgebraicVector<T>::AlgebraicVector() : std::vector<T>(){
  */
 }
 
-template<typename T> AlgebraicVector<T>::AlgebraicVector(unsigned int size) : std::vector<T>(size){
+template<typename T> AlgebraicVector<T>::AlgebraicVector(size_t size) : std::vector<T>(size){
 /*! Constructor with size to allocate a vector of the given size with elements initialized using their default constructor.
    \param[in] size length of AlgebraicVector.
  */
 }
 
-template<typename T> AlgebraicVector<T>::AlgebraicVector(unsigned int size, const T &d) : std::vector<T>(size, d){
+template<typename T> AlgebraicVector<T>::AlgebraicVector(size_t size, const T &d) : std::vector<T>(size, d){
 /*! Constructor with size and elements value to allocate a vector of the given size with elements initialized as copies of d.
    \param[in] size length of AlgebraicVector
    \param[in] d    initial value for the elements
@@ -74,7 +74,7 @@ template<typename T> AlgebraicVector<T>::AlgebraicVector(const std::vector<T> &v
  */
 }
 
-template<typename T> AlgebraicVector<T>::AlgebraicVector(const std::vector<T> &v, unsigned int first, unsigned int last) : std::vector<T>(v.begin()+first, v.begin()+last+1){
+template<typename T> AlgebraicVector<T>::AlgebraicVector(const std::vector<T> &v, size_t first, size_t last) : std::vector<T>(v.begin()+first, v.begin()+last+1){
 /*! Extraction constructor to copy only a given range of elements from vector v.
    \param[in] v vector to be copied into AlgebraicVector
    \param[in] first index of the first element to be copied
@@ -98,15 +98,15 @@ template<typename T> AlgebraicVector<double> AlgebraicVector<T>::cons() const{
  */
     using DACE::cons;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<double> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = cons((*this)[i]);}
 
     return temp;
 }
 
-template<typename T> AlgebraicVector<T> AlgebraicVector<T>::extract(const unsigned int first, const unsigned int last) const
+template<typename T> AlgebraicVector<T> AlgebraicVector<T>::extract(const size_t first, const size_t last) const
 {
 /*! Extracts elements from AlgebraicVector.
    \param[in] first index of first element to be extracted
@@ -127,13 +127,13 @@ template<typename T> template<typename V> AlgebraicVector<typename PromotionTrai
    \return A new AlgebraicVector containing the elements of both vectors,
     cast upwards if necessary.
 */
-    const unsigned int size1 = this->size();
-    const unsigned int size2 = obj.size();
+    const size_t size1 = this->size();
+    const size_t size2 = obj.size();
     AlgebraicVector<typename PromotionTrait< T, V >::returnType> res(size1+size2);
 
-    for(unsigned int i=0; i<size1; i++)
+    for(size_t i=0; i<size1; i++)
         res[i] = (*this)[i];
-    for(unsigned int i=0; i<size2; i++)
+    for(size_t i=0; i<size2; i++)
         res[i+size1] = obj[i];
 
     return res;
@@ -155,11 +155,11 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \return A reference to ourselves.
    \throw std::runtime_error
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     if(size != obj.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator+=: Vectors must have the same length.");
 
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         (*this)[i] += obj[i];}
     return *this;
 }
@@ -169,8 +169,8 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \param[in] obj A scalar value.
    \return A reference to ourselves.
  */
-    const unsigned int size = this->size();
-    for(unsigned int i=0; i<size; i++){
+    const size_t size = this->size();
+    for(size_t i=0; i<size; i++){
         (*this)[i] += obj;}
     return *this;
 }
@@ -181,11 +181,11 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \return A reference to ourselves.
    \throw std::runtime_error
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     if(size != obj.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator-=: Vectors must have the same length.");
 
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         (*this)[i] -= obj[i];}
     return *this;
 }
@@ -195,8 +195,8 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \param[in] obj A scalar value.
    \return A reference to ourselves.
  */
-    const unsigned int size = this->size();
-    for(unsigned int i=0; i<size; i++){
+    const size_t size = this->size();
+    for(size_t i=0; i<size; i++){
         (*this)[i] -= obj;}
     return *this;
 }
@@ -206,11 +206,11 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \param[in] obj An AlgebraicVector.
    \return A reference to ourselves.
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     if(size != obj.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator*=: Vectors must have the same length.");
 
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         (*this)[i] *= obj[i];}
     return *this;
 }
@@ -220,8 +220,8 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \param[in] obj A scalar value.
    \return A reference to ourselves.
  */
-    const unsigned int size = this->size();
-    for(unsigned int i=0; i<size; i++){
+    const size_t size = this->size();
+    for(size_t i=0; i<size; i++){
         (*this)[i] *= obj;}
     return *this;
 }
@@ -232,11 +232,11 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \return A reference to ourselves.
    \throw std::runtime_error
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     if(size != obj.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator/=: Vectors must have the same length.");
 
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         (*this)[i] /= obj[i];}
     return *this;
 }
@@ -246,8 +246,8 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \param[in] obj A scalar value.
    \return A reference to ourselves.
  */
-    const unsigned int size = this->size();
-    for(unsigned int i=0; i<size; i++){
+    const size_t size = this->size();
+    for(size_t i=0; i<size; i++){
         (*this)[i] /= obj;}
     return *this;
 }
@@ -257,8 +257,8 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \param[in] obj Vector of elements to append.
    \return A reference to ourselves.
  */
-    const unsigned int size = this->size();
-    for(unsigned int i=0; i<size; i++){
+    const size_t size = this->size();
+    for(size_t i=0; i<size; i++){
         (*this).push_back((T)obj[i]);}
     return *this;
 }
@@ -273,9 +273,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
     if(obj1.size() != obj2.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator+: Vectors must have the same length.");
 
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] + obj2[i];}
     return temp;
 }
@@ -286,9 +286,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a scalar value.
    \return A new AlgebraicVector, containing the result of the operation (obj1+obj2).
  */
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] + obj2;}
     return temp;
 }
@@ -299,9 +299,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a AlgebraicVector.
    \return A new AlgebraicVector, containing the result of the operation (obj1+obj2).
  */
-    const unsigned int size = obj2.size();
+    const size_t size = obj2.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1 + obj2[i];}
     return temp;
 }
@@ -316,9 +316,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
     if(obj1.size() != obj2.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator-: Vectors must have the same length.");
 
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] - obj2[i];}
     return temp;
 }
@@ -329,9 +329,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a scalar value.
    \return A new AlgebraicVector, containing the result of the operation (obj1-obj2).
  */
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] - obj2;}
     return temp;
 }
@@ -342,9 +342,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a AlgebraicVector.
    \return A new AlgebraicVector, containing the result of the operation (obj1-obj2).
  */
-    const unsigned int size = obj2.size();
+    const size_t size = obj2.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1 - obj2[i];}
     return temp;
 }
@@ -359,9 +359,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
     if(obj1.size() != obj2.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator*: Vectors must have the same length.");
 
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] * obj2[i];}
     return temp;
 }
@@ -372,9 +372,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a scalar value.
    \return A new AlgebraicVector, containing the result of the operation (obj1*obj2).
  */
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] * obj2;}
     return temp;
 }
@@ -385,9 +385,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a AlgebraicVector.
    \return A new AlgebraicVector, containing the result of the operation (obj1*obj2).
  */
-    const unsigned int size = obj2.size();
+    const size_t size = obj2.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1 * obj2[i];}
     return temp;
 }
@@ -402,9 +402,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
     if(obj1.size() != obj2.size())
         throw std::runtime_error("DACE::AlgebraicVector<T>::operator/: Vectors must have the same length.");
 
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] / obj2[i];}
     return temp;
 }
@@ -415,9 +415,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a scalar value.
    \return A new AlgebraicVector, containing the result of the operation (obj1/obj2).
  */
-    const unsigned int size = obj1.size();
+    const size_t size = obj1.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1[i] / obj2;}
     return temp;
 }
@@ -428,9 +428,9 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
    \param[in] obj2 a AlgebraicVector.
    \return A new AlgebraicVector, containing the result of the operation (obj1/obj2).
  */
-    const unsigned int size = obj2.size();
+    const size_t size = obj2.size();
     AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = obj1 / obj2[i];}
     return temp;
 }
@@ -441,12 +441,12 @@ template<typename T> template<typename V> typename PromotionTrait<T,V>::returnTy
    \return A scalar value, containing the result of the operation.
    \throw std::runtime_error
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     if(size != obj.size())
           throw std::runtime_error("DACE::AlgebraicVector<T>::dot(): Vectors must have the same length.");
 
     typename PromotionTrait<T,V>::returnType temp = 0;
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp += (*this)[i] * obj[i];}
 
     return temp;
@@ -481,9 +481,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::pow(const int p) con
  */
     using std::pow;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = pow((*this)[i], p);}
 
     return temp;
@@ -496,9 +496,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::sqrt() const{
  */
     using std::sqrt;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = sqrt((*this)[i]);}
 
     return temp;
@@ -511,9 +511,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::exp() const{
  */
     using std::exp;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = exp((*this)[i]);}
 
     return temp;
@@ -526,9 +526,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::log() const{
  */
     using std::log;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = log((*this)[i]);}
 
     return temp;
@@ -541,9 +541,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::sin() const{
  */
     using std::sin;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = sin((*this)[i]);}
 
     return temp;
@@ -556,9 +556,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::cos() const{
  */
     using std::cos;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = cos((*this)[i]);}
 
     return temp;
@@ -571,9 +571,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::tan() const{
  */
     using std::tan;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = tan((*this)[i]);}
 
     return temp;
@@ -586,9 +586,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::asin() const{
  */
     using std::asin;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = asin((*this)[i]);}
 
     return temp;
@@ -601,9 +601,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::acos() const{
  */
     using std::acos;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = acos((*this)[i]);}
 
     return temp;
@@ -616,9 +616,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::atan() const{
  */
     using std::atan;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = atan((*this)[i]);}
 
     return temp;
@@ -634,12 +634,12 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::atan2(const Algebrai
 */
     using std::atan2;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     if(obj.size() != size)
         throw std::runtime_error("DACE::AlgebraicVector<T>::atan2(): Vectors must have the same length.");
 
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = atan2((*this)[i], obj[i]);}
 
     return temp;
@@ -652,9 +652,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::sinh() const{
  */
     using std::sinh;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = sinh((*this)[i]);}
 
     return temp;
@@ -667,9 +667,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::cosh() const{
  */
     using std::cosh;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = cosh((*this)[i]);}
 
     return temp;
@@ -682,9 +682,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::tanh() const{
  */
     using std::tanh;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = tanh((*this)[i]);}
 
     return temp;
@@ -698,9 +698,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::logb(const double b)
  */
     using DACE::logb;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = logb((*this)[i], b);}
 
     return temp;
@@ -713,9 +713,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::isrt() const{
  */
     using DACE::isrt;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = isrt((*this)[i]);}
 
     return temp;
@@ -728,9 +728,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::sqr() const{
  */
     using DACE::sqr;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = sqr((*this)[i]);}
 
     return temp;
@@ -743,9 +743,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::minv() const{
  */
     using DACE::minv;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = minv((*this)[i]);}
 
     return temp;
@@ -759,9 +759,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::root(const int p) co
  */
     using DACE::root;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = root((*this)[i],p);}
 
     return temp;
@@ -774,9 +774,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::asinh() const{
  */
     using DACE::asinh;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = asinh((*this)[i]);}
 
     return temp;
@@ -789,9 +789,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::acosh() const{
  */
     using DACE::acosh;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = acosh((*this)[i]);}
 
     return temp;
@@ -804,9 +804,9 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::atanh() const{
  */
     using DACE::atanh;
 
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = atanh((*this)[i]);}
 
     return temp;
@@ -822,9 +822,9 @@ template<typename T> T AlgebraicVector<T>::vnorm() const{
     using std::sqrt; using DACE::sqr;      // Implementational note: these using statements are very subtle and absolutely needed.
                                             // They force the compiler to perform argument dependent lookup (ADL) which then finds
                                             // the correct root() and pow() functions even if they are not in DACE:: or std::!
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     T norm = 0.0;
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         norm = norm + sqr((*this)[i]);}
 
     return sqrt(norm);
@@ -834,11 +834,11 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::normalize() const{
 /*! Normalize the vector.
    \return An AlgebraicVector<T> of unit length.
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<T> temp(size);
     T norm = 1.0/this->vnorm();
 
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = (*this)[i]*norm;}
 
     return temp;
@@ -887,10 +887,10 @@ template<typename U> std::ostream& operator<<(std::ostream &out, const Algebraic
    \param[in] obj AlgebraicVector<U> to be written to the stream
    \return Reference to output stream out.
  */
-    const unsigned int size = obj.size();
+    const size_t size = obj.size();
 
     out << "[[[ " << size << " vector" << std::endl;
-    for(unsigned int i=0; i<size;i++){
+    for(size_t i=0; i<size;i++){
         out << obj[i] << std::endl;}
     out << "]]]" << std::endl;
 
@@ -904,7 +904,7 @@ template<typename U> std::istream& operator>>(std::istream &in, AlgebraicVector<
    \return Reference to input stream in.
  */
     std::string init_line;
-    unsigned int vec_size;
+    size_t vec_size;
 
     // try to read the first line
     getline(in, init_line);
@@ -918,7 +918,7 @@ template<typename U> std::istream& operator>>(std::istream &in, AlgebraicVector<
         obj.resize(vec_size);
 
         // fill the AlgebraicVector
-        for(unsigned int i=0; in.good()&&(i<vec_size); i++){
+        for(size_t i=0; in.good()&&(i<vec_size); i++){
             in >> obj[i];}
 
         // check the next character

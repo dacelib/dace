@@ -30,6 +30,9 @@
  *  @{
  */
 
+// indicate that we want to use strXXX_s functions, if available
+#define __STDC_WANT_LIB_EXT1__ 1
+#include <string.h>
 #include <stdio.h>
 
 #include "dace/config.h"
@@ -99,8 +102,8 @@ void daceClearError()
     DACEDbg.ierr = 0;
     DACEDbg.ixerr = 0;
     DACEDbg.iyyerr = 0;
-    strncpy(DACEDbg.name,"",ERROR_FUN_SIZE);
-    strncpy(DACEDbg.msg,"",ERROR_MSG_SIZE);
+    *DACEDbg.name = '\0';
+    *DACEDbg.msg = '\0';
 }
 
 /*!   This subroutine serves as an error handler for errors within the dace.      
@@ -143,15 +146,22 @@ void daceSetError(const char *c, const unsigned int ix, const unsigned int iyy)
     }
     else
     {
-        if(ix>DACEDbg.ixerr)
+        if(ix > DACEDbg.ixerr)
         {
             DACEDbg.ierr = ix*100+iyy;      // set error code xyy
             DACEDbg.ixerr = ix;
             DACEDbg.iyyerr = iyy;
-            strncpy(DACEDbg.name,c,ERROR_FUN_SIZE);
-            strncpy(DACEDbg.msg,c,ERROR_FUN_SIZE);
-            strncat(DACEDbg.msg,": ",ERROR_MSG_SIZE-strlen(DACEDbg.name));
-            strncat(DACEDbg.msg,DACEerr[DACEDbg.iyyerr].msg,ERROR_MSG_SIZE-strlen(DACEDbg.name)-2);
+#ifdef HAVE_SAFE_STRINGS
+            strncpy_s(DACEDbg.name, ERROR_FUN_SIZE, c, ERROR_FUN_SIZE-1);
+            strncpy_s(DACEDbg.msg, ERROR_MSG_SIZE, c, ERROR_MSG_SIZE-1);
+            strncat_s(DACEDbg.msg, ERROR_MSG_SIZE, ": ", ERROR_MSG_SIZE-strnlen_s(DACEDbg.msg, ERROR_MSG_SIZE)-1);
+            strncat_s(DACEDbg.msg, ERROR_MSG_SIZE, DACEerr[DACEDbg.iyyerr].msg, ERROR_MSG_SIZE-strnlen_s(DACEDbg.msg, ERROR_MSG_SIZE)-1);
+#else
+            strncpy(DACEDbg.name, c, ERROR_FUN_SIZE-1); DACEDbg.name[ERROR_FUN_SIZE-1] = '\0';
+            strncpy(DACEDbg.msg, c, ERROR_MSG_SIZE-1); DACEDbg.msg[ERROR_MSG_SIZE-1] = '\0';
+            strncat(DACEDbg.msg, ": ", ERROR_MSG_SIZE-strnlen(DACEDbg.msg, ERROR_MSG_SIZE)-1);
+            strncat(DACEDbg.msg, DACEerr[DACEDbg.iyyerr].msg, ERROR_MSG_SIZE-strnlen(DACEDbg.msg, ERROR_MSG_SIZE)-1);
+#endif
         }
     }
 }

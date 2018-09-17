@@ -98,6 +98,8 @@ endif(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
 # Run checks for platform-specific functions
 include(CheckIfUnderscorePrefixedBesselFunctionsExist)
 check_if_underscore_prefixed_bessel_functions_exist(HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS)
+include(CheckSafeStrings)
+check_safe_strings(HAVE_SAFE_STRINGS)
 
 
 # Pass options to source by configuring config.h file in core

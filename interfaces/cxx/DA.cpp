@@ -1792,7 +1792,7 @@ DA DA::fromString(const std::vector<std::string> &str){
    \throw DACE::DACEException
  */
     // create 2D char array
-    const unsigned int nstr = str.size();
+    const unsigned int nstr = (unsigned int)str.size();
     char *ss = new char[nstr*DACE_STRLEN];
 
     // fill the array with blanks
@@ -2521,7 +2521,7 @@ storedDA::storedDA(std::istream &is) : std::vector<char>(storedDA::headerSize){
     is.read(data(), headerSize);
 	if(is.gcount() != headerSize)
 	{
-        resize(is.gcount());
+        resize((size_t)is.gcount());
         return;
 	}
 
@@ -2537,7 +2537,7 @@ storedDA::storedDA(std::istream &is) : std::vector<char>(storedDA::headerSize){
 		is.read(data()+headerSize, len-headerSize);
 		if(is.gcount() != (len-headerSize))
 		{
-            resize(headerSize+is.gcount());
+            resize((size_t)(headerSize+is.gcount()));
 			return;
 		}
 	}
@@ -2545,7 +2545,7 @@ storedDA::storedDA(std::istream &is) : std::vector<char>(storedDA::headerSize){
 
 // return if this storedDA data appears to be valid
 bool storedDA::isValid() const{
-    const unsigned int s1 = size();
+    const size_t s1 = size();
     // check first that we have the minimum amount of data for the DACE blob header
     if(s1 < headerSize)
         return false;
