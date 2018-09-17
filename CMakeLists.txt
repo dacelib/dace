@@ -8,6 +8,10 @@ set(DACE_MINOR_VERSION 0)
 set(DACE_PATCH_VERSION 0)
 
 
+# add our own CMake modules to path
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+
+
 # global OS specific settings
 if(WIN32)
   cmake_policy(SET CMP0054 NEW)
@@ -19,33 +23,37 @@ elseif(APPLE)
 endif(WIN32)
 
 
-# Set platform dependent C compiler flags for various compilers and build types
-if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
-elseif(CMAKE_C_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -std=c99")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
-elseif(CMAKE_C_COMPILER_ID STREQUAL "Intel")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} -O2")
-elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} /fp:strict")
-set(CMAKE_C_FLAGS_RELEASE "${CMAKE_C_FLAGS_RELEASE} /O2")
-endif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+# Set C/C++ standard (adapted https://github.com/ceres-solver/ceres-solver/blob/master/CMakeLists.txt)
+# Respect user-specified CMAKE_C/C++_STANDARD or default to C99/C++11.
+# Standard is a hard requirement and that option is hidden from CMake GUI
+if(NOT CMAKE_C_STANDARD)
+  set(CMAKE_C_STANDARD 99 CACHE STRING "C standard (minimum 99)" FORCE)
+  set_property(CACHE CMAKE_C_STANDARD PROPERTY STRINGS 99 11)  # options shown in CMake GUI
+endif(NOT CMAKE_C_STANDARD)
+set(CMAKE_C_STANDARD_REQUIRED ON CACHE BOOL "")
+mark_as_advanced(CMAKE_C_STANDARD_REQUIRED)
 
-# Set platform dependent C++ compiler flags for various compilers and build types
-if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2 -frounding-math -fsignaling-nans")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Intel")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O2")
-elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /fp:strict")
-set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} /O2")
-endif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard (minimum 11)" FORCE)
+  set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS 11 14 17)  # options shown in CMake GUI
+endif(NOT CMAKE_CXX_STANDARD)
+set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE BOOL "")
+mark_as_advanced(CMAKE_CXX_STANDARD_REQUIRED)
+
+#message("-- Building with C${CMAKE_C_STANDARD} and C++${CMAKE_CXX_STANDARD}")
+
+
+# Set generally understood compiler flags (enforcing -O2)
+add_compile_options("$<$<CONFIG:Release>:-O2>" "$<$<CONFIG:RelWithDebInfo>:-O2>")
+
+# Set compiler specific flags
+if(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+  add_compile_options("-Wall" "$<$<CONFIG:Release>:-frounding-math>" "$<$<CONFIG:Release>:-fsignaling-nans>" "$<$<CONFIG:RelWithDebInfo>:-frounding-math>" "$<$<CONFIG:RelWithDebInfo>:-fsignaling-nans>")
+elseif(CMAKE_C_COMPILER_ID MATCHES ".*Clang")        # Also catch IDs like "AppleClang"
+  add_compile_options("-Wall")
+elseif(CMAKE_C_COMPILER_ID STREQUAL "MSVC")
+  add_compile_options("/W4" "$<$<CONFIG:Release>:/fp:strict>" "$<$<CONFIG:RelWithDebInfo>:/fp:strict>")
+endif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
 
 
 # Boolean options
@@ -53,13 +61,13 @@ option(WITH_ALGEBRAICMATRIX "Include the AlgebraicMatrix type (experimental)" OF
 option(WITH_PTHREAD "Enable threading via pthread library" OFF)
 
 # Tri-state option for memory model and the associated choices
-set(DACE_MEMORY_MODEL HYBRID CACHE STRING "DACE memory model")
+set(DACE_MEMORY_MODEL DYNAMIC CACHE STRING "DACE memory model")
 set_property(CACHE DACE_MEMORY_MODEL PROPERTY STRINGS DYNAMIC STATIC HYBRID)
 string(TOUPPER "${DACE_MEMORY_MODEL}" DACE_MEMORY_MODEL_U)
 
 # Default build type option if not set already
 if(NOT CMAKE_BUILD_TYPE)
-  set(CMAKE_BUILD_TYPE Release CACHE STRING
+  set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING
        "Choose the type of build, options are: None Debug Release RelWithDebInfo MinSizeRel."
        FORCE)
   set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release RelWithDebInfo MinSizeRel)  # options shown in CMake GUI
@@ -85,6 +93,12 @@ if(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
   set(DACE_STATIC_VAR_SIZE 100 CACHE STRING "(EXPERT) Maximum number of DA variables." FORCE)
   set(DACE_STATIC_MEM_SIZE 1944800 CACHE STRING "(EXPERT) Maximum stack size [NMMAX*VAR_SIZE]." FORCE)
 endif(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
+
+
+# Run checks for platform-specific functions
+include(CheckIfUnderscorePrefixedBesselFunctionsExist)
+check_if_underscore_prefixed_bessel_functions_exist(HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS)
+
 
 # Pass options to source by configuring config.h file in core
 configure_file(core/include/dace/config.h.in core/include/dace/config.h)

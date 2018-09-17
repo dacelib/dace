@@ -1503,7 +1503,11 @@ void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
 
     const double a0 = daceGetConstant(ina);
     for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-        bz[i] = jn(n-DACECom_t.nocut+i, a0);        // MSVC recommends using _jn, but not portable
+#ifdef HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS
+        bz[i] = _jn(n-DACECom_t.nocut+i, a0);        // MSVC wants _jn
+#else
+        bz[i] = jn(n-DACECom_t.nocut+i, a0);
+#endif
 
     daceEvaluateBesselFunction(ina, bz, inc);
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
@@ -1533,7 +1537,11 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
 #endif
 
     for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-        bz[i] = yn(n-DACECom_t.nocut+i, a0);		// MSVC recommends using _yn, but not portable
+#ifdef HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS 
+        bz[i] = _yn(n-DACECom_t.nocut+i, a0);		// MSVC wants _yn
+#else
+        bz[i] = yn(n-DACECom_t.nocut+i, a0);
+#endif
 
     daceEvaluateBesselFunction(ina, bz, inc);
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
