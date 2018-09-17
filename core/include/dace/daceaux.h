@@ -128,7 +128,7 @@ int npown(int a, unsigned int b);
 // internal memory related routines
 void daceFreeMemory();
 void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *ilmc, unsigned int *illc);
-void daceSetLength(DACEDA *inc, const unsigned int len);
+void daceSetLength(DACEDA *inc, const size_t len);
 bool daceIsSameObject(const DACEDA *ina, const DACEDA *inb);
 
 // basic monomial coding integer related routines

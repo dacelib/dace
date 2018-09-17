@@ -50,17 +50,17 @@ std::string DASimpleFormatter::format(const DA &da){
    \param[in] da The DA to be printed.
  */
     const std::vector<Monomial> monomials = da.getMonomials();
-    const unsigned int size = monomials.size();
+    const size_t size = monomials.size();
     std::ostringstream res;
 
     res.precision(16);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         if(monomials[i].m_coeff < 0)
             res << sf.neg << -monomials[i].m_coeff;
         else
             res << sf.pos << monomials[i].m_coeff;
 
-        for(unsigned int j=0; j<monomials[i].m_jj.size(); j++){
+        for(size_t j=0; j<monomials[i].m_jj.size(); j++){
             if(monomials[i].m_jj[j] <= 0)
                 continue;
             else if(sf.shorten && monomials[i].m_jj[j] == 1)

@@ -314,15 +314,15 @@ void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *i
    \param[in] inc The DACE DA object to operate on
    \param[in] len The new length of the object
 */
-void daceSetLength(DACEDA *inc, const unsigned int len)
+void daceSetLength(DACEDA *inc, const size_t len)
 {
-    if(UNLIKELY(DACEMem.var[*inc].max < (int)len))
+    if(UNLIKELY(DACEMem.var[*inc].max < len))
     {
         daceSetError(__func__, DACE_PANIC, 7);
         exit(1);
         // catastrophic error because we may have written past the end of the variable and contaminated memory there
     }
-    DACEMem.var[*inc].len = len;
+    DACEMem.var[*inc].len = (int)len;
 }
 
 /*! Compare if two DACE DA objects refer to the same underlying memory (i.e. are the same object).
@@ -434,7 +434,7 @@ void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *i
    \param[in] inc The DACE DA object to operate on
    \param[in] len The new length of the object
 */
-void daceSetLength(DACEDA *inc, const unsigned int len)
+void daceSetLength(DACEDA *inc, const size_t len)
 {
     if(UNLIKELY(inc->max < len))
     {
@@ -442,7 +442,7 @@ void daceSetLength(DACEDA *inc, const unsigned int len)
         exit(1);
         // catastrophic error because we may have written past the end of the variable and contaminated memory there
     }
-    inc->len = len;
+    inc->len = (int)len;
 }
 
 /*! Compare if two DACE DA objects refer to the same underlying memory (i.e. are the same object).

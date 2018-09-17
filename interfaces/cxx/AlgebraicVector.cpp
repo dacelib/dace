@@ -53,11 +53,11 @@ template<> AlgebraicMatrix<double> AlgebraicVector<DA>::linear() const{
     When called on AlgebraicVectors of other types (e.g. double), a compiler
     error will be the result.
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     const int nvar = DA::getMaxVariables();
 
     AlgebraicMatrix<double> out(size, nvar);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
           out.setrow( i, (*this)[i].linear() );
     }
     return out;
@@ -71,10 +71,10 @@ template<> std::vector< std::vector<double> > AlgebraicVector<DA>::linear() cons
     When called on AlgebraicVectors of other types (e.g. double), a compiler
     error will be the result.
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
 
     std::vector< std::vector<double> > out(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
           out[i] = (*this)[i].linear();
     }
     return out;
@@ -93,7 +93,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::trim(const unsigned int min,
 */
     AlgebraicVector<DA> tmp(this->size());
 
-    for(unsigned int i=0; i<this->size(); i++)
+    for(size_t i=0; i<this->size(); i++)
         tmp[i] = (*this)[i].trim(min, max);
 
     return tmp;
@@ -111,9 +111,9 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::deriv(const unsigned int p) 
     When called on AlgebraicVectors of other types (e.g. double), a compiler
     error will be the result.
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<DA> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = (*this)[i].deriv(p);}
 
     return temp;
@@ -128,9 +128,9 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::integ(const unsigned int p) 
     When called on AlgebraicVectors of other types (e.g. double), a compiler
     error will be the result.
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<DA> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = (*this)[i].integ(p);}
 
     return temp;
@@ -160,9 +160,9 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::plug(const unsigned int var,
     When called on AlgebraicVectors of other types (e.g. double), a compiler
     error will be the result.
  */
-    const unsigned int size = this->size();
+    const size_t size = this->size();
     AlgebraicVector<DA> temp(size);
-    for(unsigned int i=0; i<size; i++){
+    for(size_t i=0; i<size; i++){
         temp[i] = (*this)[i].plug(var,val);}
 
     return temp;
@@ -180,15 +180,15 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::plug(const unsigned int var,
 template<> void AlgebraicVector<DA>::matrix_inverse(std::vector< std::vector<double> > &A){
     using std::abs;
 
-    const unsigned int n = A.size();
-    std::vector<unsigned int> indexc(n), indexr(n), ipiv(n, 0);
+    const size_t n = A.size();
+    std::vector<size_t> indexc(n), indexr(n), ipiv(n, 0);
 
-    for (unsigned int i=0; i<n; i++){
-        unsigned int icol = 0, irow = 0;
+    for (size_t i=0; i<n; i++){
+        size_t icol = 0, irow = 0;
         double big = 0.0;
-        for (unsigned int j=0; j<n; j++)
+        for (size_t j=0; j<n; j++)
             if (ipiv[j] == 0)
-                for (unsigned int k=0; k<n; k++)
+                for (size_t k=0; k<n; k++)
                     if (ipiv[k] == 0)
                         if (abs(A[j][k]) >= big){
                             big = abs(A[j][k]);
@@ -196,24 +196,24 @@ template<> void AlgebraicVector<DA>::matrix_inverse(std::vector< std::vector<dou
                             icol = k;}
         ipiv[icol] = 1;
         if (irow != icol)
-            for (unsigned int l=0; l<n; l++) std::swap(A[irow][l], A[icol][l]);
+            for (size_t l=0; l<n; l++) std::swap(A[irow][l], A[icol][l]);
         indexr[i] = irow;
         indexc[i] = icol;
         if (A[icol][icol] == 0.0) throw std::runtime_error("DACE::AlgebraicVector<DA>::inverse: linear matrix inverse does not exist.");
         const double pivinv = 1.0/A[icol][icol];
         A[icol][icol] = 1.0;
-        for (unsigned int l=0; l<n; l++) A[icol][l] *= pivinv;
-        for (unsigned int ll=0; ll<n; ll++)
+        for (size_t l=0; l<n; l++) A[icol][l] *= pivinv;
+        for (size_t ll=0; ll<n; ll++)
             if (ll != icol){
                 const double temp = A[ll][icol];
                 A[ll][icol] = 0.0;
-                for (unsigned int l=0; l<n; l++) A[ll][l] -= A[icol][l]*temp;}
+                for (size_t l=0; l<n; l++) A[ll][l] -= A[icol][l]*temp;}
     }
 
-    for (int i=n-1; i>=0; i--)
-        if (indexr[i] != indexc[i])
-            for (unsigned int k=0; k<n; k++)
-                std::swap(A[k][indexr[i]], A[k][indexc[i]]);
+    for (size_t i=n; i>0; i--)
+        if (indexr[i-1] != indexc[i-1])
+            for (size_t k=0; k<n; k++)
+                std::swap(A[k][indexr[i-1]], A[k][indexc[i-1]]);
 }
 /*! \endcond */
 #endif /* WITH_ALGEBRAICMATRIX */
@@ -227,7 +227,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const{
     error will be the result.
 */
     const unsigned int ord = DA::getTO();
-    const unsigned int nvar = this->size();
+    const size_t nvar = this->size();
 
     if(nvar>DA::getMaxVariables())
         throw std::runtime_error("DACE::AlgebraicVector<DA>::inverse: dimension of vector exceeds maximum number of DA variables.");
@@ -258,15 +258,15 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const{
     // Compute DA representation of the inverse of the linear part of the map and its composition with non-linear part AN
     AlgebraicVector<DA> Linv(nvar);
     // Linv = AI*AN
-    for(unsigned int i=0; i<nvar; i++){
+    for(size_t i=0; i<nvar; i++){
         Linv[i] = 0.0;
-        for(unsigned int j=0; j<nvar; j++)
+        for(size_t j=0; j<nvar; j++)
             Linv[i] += AI[i][j]*AN[j];}
     compiledDA AIoAN(Linv);
     // Linv = AI*DDA
-    for(unsigned int i=0; i<nvar; i++){
+    for(size_t i=0; i<nvar; i++){
         Linv[i] = 0.0;
-        for(unsigned int j=0; j<nvar; j++)
+        for(size_t j=0; j<nvar; j++)
             Linv[i] += AI[i][j]*DDA[j];}
 #endif /* WITH_ALGEBRAICMATRIX */
 
@@ -282,7 +282,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const{
 /********************************************************************************
 *     Static factory routines
 *********************************************************************************/
-template<> AlgebraicVector<DA> AlgebraicVector<DA>::identity(const unsigned int n){
+template<> AlgebraicVector<DA> AlgebraicVector<DA>::identity(const size_t n){
 /*! Return the DA identity of dimension n.
    \param[in] n The dimendion of the identity.
    \return AlgebraicVector<DA> containing the DA identity in n dimensions
@@ -291,7 +291,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::identity(const unsigned int 
     error will be the result.
  */
     AlgebraicVector<DA> temp(n);
-    for(unsigned int i=0; i < n; i++){
+    for(size_t i=0; i < n; i++){
         temp[i] = DA((int)(i+1));}
 
     return temp;

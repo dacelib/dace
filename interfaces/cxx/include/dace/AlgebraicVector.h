@@ -51,15 +51,15 @@ public:
     *     Constructors
     ************************************************************************************/
     AlgebraicVector();                                                                              //!< Default constructor
-    explicit AlgebraicVector(const unsigned int size);                                              //!< Constructor with size
-    AlgebraicVector(const unsigned int size, const T &d);                                           //!< Constructor with size and elements value
+    explicit AlgebraicVector(const size_t size);                                              //!< Constructor with size
+    AlgebraicVector(const size_t size, const T &d);                                           //!< Constructor with size and elements value
     AlgebraicVector(const std::vector<T> &v);                                                       //!< Copy constructor
-    AlgebraicVector(const std::vector<T> &v, const unsigned int first, const unsigned int last);    //!< Extraction constructor
+    AlgebraicVector(const std::vector<T> &v, const size_t first, const size_t last);    //!< Extraction constructor
 
     /***********************************************************************************
     *     Element and coefficient access / extraction routines
     ************************************************************************************/
-    AlgebraicVector<T> extract(const unsigned int first, const unsigned int last) const;            //!< Return the subvector containing the elements between first and last, inclusively
+    AlgebraicVector<T> extract(const size_t first, const size_t last) const;            //!< Return the subvector containing the elements between first and last, inclusively
     template<typename U> AlgebraicVector<typename PromotionTrait<T,U>::returnType> concat(const std::vector<U> &obj) const;
                                                                                                     //!< Return a new vector containing the elements of this vector followed by those of obj
     AlgebraicVector<double> cons() const;                                                           //!< Return vector containing only the costant parts of each element
@@ -152,7 +152,7 @@ public:
     /********************************************************************************
     *     Static factory routines
     *********************************************************************************/
-    static AlgebraicVector<DA> identity(const unsigned int n = DA::getMaxVariables());              //!< Create an AlgebraicVector<DA> containing the identity in n dimensions. DA only.
+    static AlgebraicVector<DA> identity(const size_t n = DA::getMaxVariables());              //!< Create an AlgebraicVector<DA> containing the identity in n dimensions. DA only.
 
     /***********************************************************************************
     *     Input/Output routines
@@ -241,7 +241,7 @@ template<> DACE_API AlgebraicVector<DA> AlgebraicVector<DA>::integ(const unsigne
 template<> DACE_API compiledDA AlgebraicVector<DA>::compile() const;
 template<> DACE_API AlgebraicVector<DA> AlgebraicVector<DA>::plug(const unsigned int var, const double val) const;
 template<> DACE_API AlgebraicVector<DA> AlgebraicVector<DA>::invert() const;
-template<> DACE_API AlgebraicVector<DA> AlgebraicVector<DA>::identity(const unsigned int n);
+template<> DACE_API AlgebraicVector<DA> AlgebraicVector<DA>::identity(const size_t n);
 template<> DACE_API AlgebraicVector<DA> trim(const AlgebraicVector<DA> &obj, unsigned int min, unsigned int max);
 template<> DACE_API AlgebraicVector<DA> deriv(const AlgebraicVector<DA> &obj, const unsigned int p);
 template<> DACE_API AlgebraicVector<DA> integ(const AlgebraicVector<DA> &obj, const unsigned int p);

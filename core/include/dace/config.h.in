@@ -52,6 +52,7 @@
 
 // automatically detected function availability at library build time
 #cmakedefine HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS
+#cmakedefine HAVE_SAFE_STRINGS
 
 // The following limits are only used when *building* the DACE library with DACE_MEMORY_STATIC memory model.
 // They are repeated here merely for reference and do not change the available memory in the library

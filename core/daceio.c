@@ -180,7 +180,7 @@ void daceRead(DACEDA *ina, char* strs, unsigned int nstrs)
         for(unsigned int iin = 1; iin < nstrs; iin++, str += DACE_STRLEN)
         {
             char *s = str;
-            unsigned int len = strlen(s);
+            size_t len = strlen(s);
             char temp;
 
             // check if it's the end of data line by comparing characters 5-35 (works for both COSY and DACE format)
