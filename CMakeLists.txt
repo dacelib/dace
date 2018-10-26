@@ -170,7 +170,7 @@ elseif(UNIX)
   set(CPACK_GENERATOR "TGZ;DEB")
   set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
   # dependencies are set to default libraries on trusty (Ubuntu 14.04 LTS). Should be set to actual versions on build system.
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.19), libstdc++ (>= 4.8.4)")
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.19), libstdc++6 (>= 4.8.4)")
   set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README-LINUX")
   install(FILES README-LINUX DESTINATION share/libdace/ )
 endif(WIN32)
