@@ -1,6 +1,14 @@
 cmake_minimum_required (VERSION 2.8.4)
 include(CMakeDependentOption)
 
+# since MacOS 10.14 (XCode 10.0), default includes are no longer installed to /usr/include or /usr/local/include
+# the SDK to use must be specified explicitly in CMAKE_OSX_SYSROOT as it seems at least cmake 3.12.4 does not find it automatically if left empty
+# this must happen before project()
+if(APPLE AND NOT DEFINED ENV{SDKROOT})
+  execute_process(COMMAND xcodebuild -sdk macosx -version Path OUTPUT_VARIABLE RES OUTPUT_STRIP_TRAILING_WHITESPACE)
+  set(CMAKE_OSX_SYSROOT "${RES}" CACHE PATH "The product will be built against the headers and libraries located inside the indicated SDK.")
+endif(APPLE AND NOT DEFINED ENV{SDKROOT})
+
 project(DACE C CXX)
 
 set(DACE_MAJOR_VERSION 2)
