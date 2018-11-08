@@ -54,6 +54,25 @@ template<class V> V compiledDA::eval(const V &args) const{
     return res;
 }
 
+template<class T> std::vector<T> compiledDA::eval(const std::initializer_list<T> l) const{
+/*! Evaluate the compiled polynomial with a braced initializer list of any arithmetic type
+    (such as DA or double) and return vector of results.
+   \param[in] l the values of the independent DA variables to evaluate
+    with. Must be a braced initializer list of an arithmetic
+    type. If less than the number of independent DA variables defined
+    during the DACE initialization are given, the missing entries are
+    assumed to be zero.
+   \return std::vector with the result of the evaluation.
+   \note C++ is not able to derive the type of elements of an initializer list automatically.
+    That means eval() must be called explicitly as e.g. eval<double>({1.0, 2.0, 3.0}) when
+    used with initializer lists.
+ */
+    std::vector<T> res(dim);
+    eval(std::vector<T>(l), res);
+
+    return res;
+}
+
 template<class T> std::vector<T> compiledDA::eval(const T args[], const unsigned int length) const{
 /*! Evaluate the compiled polynomial with an array of any arithmetic type
     (such as DA or double) and return vector of results.

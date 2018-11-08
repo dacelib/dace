@@ -31,6 +31,7 @@
 
 // C++ stdlib classes used in this public interface
 #include <vector>
+#include <initializer_list>
 
 namespace DACE{
 
@@ -64,6 +65,7 @@ public:
     *     Evaluation
     *********************************************************************************/
     template<class V> V eval(const V &args) const;                                          //!< Evaluate the compiled polynomial with a vector of any arithmetic type and return vector of results.
+    template<class T> std::vector<T> eval(const std::initializer_list<T> l) const;          //!<Evaluate the compiled polynomial with a braced initializer list and return a vector of results.
     template<class T> std::vector<T> eval(const T args[], const unsigned int length) const; //!< Evaluate the compiled polynomial with an array of any arithmetic type and return vector of results.
     template<class T> std::vector<T> evalScalar(const T &arg) const;                        //!< Evaluate the compiled polynomial with a single variable of arithmetic type and return vector of results.
     template<class T> void eval(const std::vector<T> &args, std::vector<T> &res) const;     //!< Evaluate the compiled polynomial with a vector of any arithmetic type and store results in provided vector.
