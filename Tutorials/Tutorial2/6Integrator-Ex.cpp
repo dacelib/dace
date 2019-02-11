@@ -84,7 +84,7 @@ template<class T> AlgebraicVector<T> f( AlgebraicVector<T> x, double t )
 {
     const double alpha = 0.1;
     AlgebraicVector<T> res(2);
-    
+
     res[0] = -x[1];
     res[1] =  x[0];
     return (1.0 + alpha*x.vnorm())*res;
@@ -119,9 +119,9 @@ void ex6_1_3( )
     file.precision( 16 );
 
     x[0] = 2.0 + DA(1); x[1] = DA(2);  // initial condition box
+    t = 0;
     plot( x, t, 7, file );
 
-    t = 0;
     for( int i = 0; i < 6; i++ )
     {
         x = midpoint( x, t, t+dt, f );    // propagate forward for dt seconds
@@ -142,7 +142,7 @@ void ex6_1_4( )
 
     x[0] = 1.0 + DA(1); x[1] = 1.0 + DA(2);  // initial condition around (1,1)
     x = midpoint( x, 0, 2*pi, f );
-    
+
     cout << "Exercise 6.1.4: State Transition Matrix" << endl;
     cout.precision( 7 );
     cout << x[0].deriv(1).cons() << "    " << x[0].deriv(2).cons() << endl;
@@ -220,9 +220,9 @@ void ex6_2_2( )
     // initial condition (c.f. 5Vectors-Ex.cpp)
     x[0] = DA(1);
     x[1] = ((1.0-DA(1)*DA(1))*(DA(2)+1.0)+(DA(1)*DA(1)*DA(1)-DA(1))*(1.0-DA(2)))/2.0;
+    t = 0;
     plot( x, t, 7, file );
 
-    t = 0;
     for( int i = 0; i < 6; i++ )
     {
         x = midpoint( x, t, t+dt, f );    // propagate forward for dt seconds
@@ -253,7 +253,7 @@ template<typename T> AlgebraicVector<T> CR3BP( AlgebraicVector<T> x, double t )
     res[3] = x[0] + 2.0*x[4] - d1*(1-MU)*(x[0]+MU) - d2*MU*(x[0]+MU-1.0);
     res[4] = x[1] - 2.0*x[3] - d1*(1-MU)*x[1]      - d2*MU*x[1];
     res[5] =                 - d1*(1-MU)*x[2]      - d2*MU*x[2];
-    
+
     return res;
 }
 
@@ -298,9 +298,9 @@ void ex6_2_4( )
 
     // initial condition box, in polar coordinates
     x[0] = cos(0.3*DA(2))*(2.0 + DA(1)); x[1] = sin(0.3*DA(2))*(2.0 + DA(1));
+    t = 0;
     plot( x, t, 40, file );
 
-    t = 0;
     for( int i = 0; i < 6; i++ )
     {
         x = midpoint( x, t, t+dt, f );    // propagate forward for dt seconds
