@@ -46,10 +46,13 @@ template<class T> T DA::eval(const std::vector<T> &args) const{
    \note To be used only for single polynomial evaluation. For multiple
     evaluations of the same polynomial use the corresponding method in class
     compiledDA.
+   \note This function can be called with a braced initializer list. However, C++
+    is not able to derive the type of elements of an initializer list automatically.
+    That means eval() must be called explicitly as e.g. eval<double>({1.0, 2.0, 3.0}) when
+    used with initializer lists.
    \sa compiledDA::eval
  */
-    compiledDA cda(*this);
-    return cda.eval(args)[0];
+    return compiledDA(*this).eval(args)[0];
 }
 
 template<class T> T DA::eval(const T args[], const unsigned int length) const{
@@ -63,8 +66,7 @@ template<class T> T DA::eval(const T args[], const unsigned int length) const{
     compiledDA.
    \sa compiledDA::eval
  */
-    compiledDA cda(*this);
-    return cda.eval(args,length)[0];
+    return compiledDA(*this).eval(args,length)[0];
 }
 
 template<class T> T DA::evalScalar(const T &arg) const{
@@ -76,8 +78,7 @@ template<class T> T DA::evalScalar(const T &arg) const{
     compiledDA.
    \sa compiledDA::evalScalar
  */
-    compiledDA cda(*this);
-    return cda.evalScalar(arg)[0];
+    return compiledDA(*this).evalScalar(arg)[0];
 }
 
 template<class T> T eval(const DA &da, const std::vector<T> &args) {
@@ -89,6 +90,10 @@ template<class T> T eval(const DA &da, const std::vector<T> &args) {
    \note To be used only for single polynomial evaluation. For multiple
     evaluations of the same polynomial use the corresponding method in class
     compiledDA.
+   \note This function can be called with a braced initializer list. However, C++
+    is not able to derive the type of elements of an initializer list automatically.
+    That means eval() must be called explicitly as e.g. eval<double>(x, {1.0, 2.0, 3.0}) when
+    used with initializer lists.
    \sa compiledDA
  */
     return da.eval(args);

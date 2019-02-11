@@ -1,6 +1,14 @@
 cmake_minimum_required (VERSION 2.8.4)
 include(CMakeDependentOption)
 
+# since MacOS 10.14 (XCode 10.0), default includes are no longer installed to /usr/include or /usr/local/include
+# the SDK to use must be specified explicitly in CMAKE_OSX_SYSROOT as it seems at least cmake 3.12.4 does not find it automatically if left empty
+# this must happen before project()
+if(APPLE AND NOT DEFINED ENV{SDKROOT})
+  execute_process(COMMAND xcodebuild -sdk macosx -version Path OUTPUT_VARIABLE RES OUTPUT_STRIP_TRAILING_WHITESPACE)
+  set(CMAKE_OSX_SYSROOT "${RES}" CACHE PATH "The product will be built against the headers and libraries located inside the indicated SDK.")
+endif(APPLE AND NOT DEFINED ENV{SDKROOT})
+
 project(DACE C CXX)
 
 set(DACE_MAJOR_VERSION 2)
@@ -130,13 +138,15 @@ set(CPACK_PACKAGE_CONTACT "dace@dinamicatech.com")
 set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local)
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "DACE ${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}")
 set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
-set(CPACK_COMPONENTS_ALL libraries headers)
+set(CPACK_COMPONENTS_ALL libraries headers cmake)
 set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "DACE C++ Library")
 set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "DACE C++ Headers")
+set(CPACK_COMPONENT_CMAKE_DISPLAY_NAME "DACE CMake Package")
 set(CPACK_COMPONENT_LIBRARIES_DESCRIPTION "DACE C++ shared library")
 set(CPACK_COMPONENT_HEADERS_DESCRIPTION "DACE C++ headers files")
+set(CPACK_COMPONENT_CMAKE_DESCRIPTION "DACE CMake package for easy integration into CMake infrastructure")
 set(CPACK_COMPONENT_HEADERS_DEPENDS libraries)
-#set(CPACK_MONOLITHIC_INSTALL 1)
+set(CPACK_COMPONENT_CMAKE_DEPENDS headers)
 
 # OS specific packager settings
 if(WIN32)

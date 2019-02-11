@@ -74,6 +74,12 @@ template<typename T> AlgebraicVector<T>::AlgebraicVector(const std::vector<T> &v
  */
 }
 
+template<typename T> AlgebraicVector<T>::AlgebraicVector(std::initializer_list<T> l) : std::vector<T>(l){
+/*! Constructor to create a vector from an initializer list.
+   \param[in] l braced initializer list to be copied into the AlgebraicVector
+ */
+}
+
 template<typename T> AlgebraicVector<T>::AlgebraicVector(const std::vector<T> &v, size_t first, size_t last) : std::vector<T>(v.begin()+first, v.begin()+last+1){
 /*! Extraction constructor to copy only a given range of elements from vector v.
    \param[in] v vector to be copied into AlgebraicVector
@@ -861,6 +867,18 @@ template<> template<typename V> V AlgebraicVector<DA>::eval(const V &args) const
     return compiledDA(*this).eval(args);
 }
 
+template<> template<typename U> AlgebraicVector<U> AlgebraicVector<DA>::eval(const std::initializer_list<U> l) const{
+/*! Evaluate a vector of polynomials with an braced initializer list of type U
+    and return an AlgebraicVector of type U with the results.
+   \param[in] args Braced initializer list containing the arguments.
+   \return A new AlgebraicVector of type U containing the results of the evaluation.
+   \note C++ is not able to derive the type of elements of an initializer list automatically.
+    That means eval() must be called explicitly as e.g. eval<double>({1.0, 2.0, 3.0}) when
+    used with initializer lists.
+ */
+    return compiledDA(*this).eval<U>(l);
+}
+
 template<> template<typename U> AlgebraicVector<U> AlgebraicVector<DA>::evalScalar(const U &arg) const{
 /*! Evaluate a vector of polynomials with a single arithmetic type U argument.
    \param[in] arg single variable of arithmetic type T of the first independent DA variable.
@@ -874,8 +892,7 @@ template<> template<typename U> AlgebraicVector<U> AlgebraicVector<DA>::evalScal
    \sa compiledDA
    \sa AlgebraicVector::compile()
  */
-    compiledDA cda(*this);
-    return cda.evalScalar(arg);
+    return compiledDA(*this).evalScalar(arg);
 }
 
 /***********************************************************************************
@@ -1223,6 +1240,20 @@ template<typename V> V eval(const AlgebraicVector<DA> &obj, const V &args){
    \sa AlgebraicVector<T>::eval()
  */
     return obj.eval(args);
+}
+
+template<typename T> AlgebraicVector<T> eval(const AlgebraicVector<DA> &obj, const std::initializer_list<T> l){
+/*! Evaluate an AlgebraicVector<DA> with an braced initializer list of type T
+    and return an AlgebraicVector of type T with the results.
+   \param[in] obj An AlgebraicVector<DA>.
+   \param[in] args Braced initializer list containing the arguments.
+   \return A new AlgebraicVector of type T containing the results of the evaluation.
+   \note C++ is not able to derive the type of elements of an initializer list automatically.
+    That means eval() must be called explicitly as e.g. eval<double>(x, {1.0, 2.0, 3.0}) when
+    used with initializer lists.
+   \sa AlgebraicVector<T>::eval()
+ */
+    return obj.eval<T>(l);
 }
 
 template<typename U> AlgebraicVector<U> evalScalar(const AlgebraicVector<DA> &obj, const U &arg){

@@ -31,6 +31,7 @@
 
 // C++ stdlib classes required for interface definition
 #include <vector>
+#include <initializer_list>
 
 // DACE classes required for interface definition (DA.h needed for DA::getMaxOrder(), DA::getMaxVariables() default arguments)
 #include "dace/PromotionTrait.h"
@@ -50,11 +51,12 @@ public:
     /***********************************************************************************
     *     Constructors
     ************************************************************************************/
-    AlgebraicVector();                                                                              //!< Default constructor
+    AlgebraicVector();                                                                        //!< Default constructor
     explicit AlgebraicVector(const size_t size);                                              //!< Constructor with size
     AlgebraicVector(const size_t size, const T &d);                                           //!< Constructor with size and elements value
-    AlgebraicVector(const std::vector<T> &v);                                                       //!< Copy constructor
-    AlgebraicVector(const std::vector<T> &v, const size_t first, const size_t last);    //!< Extraction constructor
+    AlgebraicVector(const std::vector<T> &v);                                                 //!< Copy constructor
+    AlgebraicVector(const std::vector<T> &v, const size_t first, const size_t last);          //!< Extraction constructor
+    AlgebraicVector(std::initializer_list<T> l);                                              //!< Constructor from braced initializer list
 
     /***********************************************************************************
     *     Element and coefficient access / extraction routines
@@ -130,6 +132,7 @@ public:
     AlgebraicVector<T> deriv(const unsigned int p) const;                                           //!< Derivative of each element with respect to given variable. DA only.
     AlgebraicVector<T> integ(const unsigned int p) const;                                           //!< Integration of each element with respect to given variable. DA only.
     template<typename V> V eval(const V &args) const;                                               //!< Generic evaluation of a AlgebraicVector<DA> with arguments. DA only.
+    template<typename U> AlgebraicVector<U> eval(const std::initializer_list<U> l) const;           //!< Generic evaluation of an AlgebraicVector<DA> with braced initializer list. DA only.
     template<typename U> AlgebraicVector<U> evalScalar(const U &arg) const;                         //!< Generic evaluation of a AlgebraicVector<DA> with single argument.  DA only.
     compiledDA compile() const;                                                                     //!< Compile current DA for efficient repeated evaluation. DA only.
     AlgebraicVector<T> plug(const unsigned int var, const double val = 0.0) const;                  //!< Partial evaluation to replace given independent DA variable by value val. DA only.
@@ -222,6 +225,7 @@ template<typename T> T vnorm(const AlgebraicVector<T> &obj);
 template<typename T> AlgebraicVector<T> normalize(const AlgebraicVector<T> &obj);
 template<typename T> AlgebraicVector<T> trim(const AlgebraicVector<T> &obj, unsigned int min, unsigned int max = DA::getMaxOrder());
 template<typename T, typename V> V eval(const AlgebraicVector<T> &obj, const V &args);
+template<typename T, typename U> AlgebraicVector<U> eval(const AlgebraicVector<T> &obj, const std::initializer_list<U> l);
 template<typename T, typename U> AlgebraicVector<U> evalScalar(const AlgebraicVector<T> &obj, const U &arg);
 template<typename T> compiledDA compile(const AlgebraicVector<T> &obj);
 template<typename T> AlgebraicVector<T> plug(const AlgebraicVector<T> &obj, const unsigned int var, const double val = 0.0);

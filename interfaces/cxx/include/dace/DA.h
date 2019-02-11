@@ -38,6 +38,7 @@
 #include <string>
 #include <vector>
 #include <stack>
+#include <initializer_list>
 
 #include "dace/dacecore.h"
 
@@ -105,7 +106,7 @@ public:
 	double getCoefficient(const std::vector<unsigned int> &jj) const;                //!< Get specific coefficient
     void setCoefficient(const std::vector<unsigned int> &jj, const double coeff);    //!< Set specific coefficient
 	Monomial getMonomial(const unsigned int npos) const;                    //!< Get the Monomial at given position
-	void getMonomial(const unsigned int npos, Monomial & m) const;			//!< Extract the Monomial at given position
+	void getMonomial(const unsigned int npos, Monomial &m) const;			//!< Extract the Monomial at given position
     std::vector<Monomial> getMonomials() const;                             //!< Get std::vector of all non-zero Monomials
 
     /********************************************************************************
