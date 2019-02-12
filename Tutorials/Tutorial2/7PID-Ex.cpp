@@ -1,5 +1,6 @@
 #include <dace/dace.h>
 #include <cmath>
+#include <algorithm>
 #include <fstream>
 using namespace DACE; using namespace std;
 
