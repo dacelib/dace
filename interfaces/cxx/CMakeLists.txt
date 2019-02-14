@@ -35,6 +35,9 @@ set_property(TARGET dace_s PROPERTY VERSION "${DACE_MAJOR_VERSION}.${DACE_MINOR_
 set_property(TARGET dace_s PROPERTY INTERFACE_dace_s_MAJOR_VERSION ${DACE_MAJOR_VERSION})
 set_property(TARGET dace_s APPEND PROPERTY COMPATIBLE_INTERFACE_STRING dace_s_MAJOR_VERSION)
 
+# explicitly set required minimum C++ standard so it carries through to exported targets and consumers
+set_property(TARGET dace PROPERTY INTERFACE_COMPILE_FEATURES cxx_std_11)
+set_property(TARGET dace_s PROPERTY INTERFACE_COMPILE_FEATURES cxx_std_11)
 
 install(TARGETS dace EXPORT dace
         LIBRARY DESTINATION lib COMPONENT libraries
