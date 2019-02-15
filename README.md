@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/abgandar/dace.svg?branch=master)](https://travis-ci.org/abgandar/dace)
+[![Build Status](https://travis-ci.org/dacelib/dace.svg?branch=master)](https://travis-ci.org/dacelib/dace)
 
 # DACE
 The Differential Algebra Computational Toolbox.
