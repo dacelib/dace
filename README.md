@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/abgandar/dace.svg?branch=master)](https://travis-ci.org/abgandar/dace)
+[![Build Status](https://travis-ci.org/dacelib/dace.svg?branch=master)](https://travis-ci.org/dacelib/dace)
 
 # DACE
 The Differential Algebra Computational Toolbox.
@@ -44,3 +44,5 @@ cmake ..
 make
 ```
 This should automatically compile all tutorials, ready to be run by you using e.g. the command ```./Example1```.
+
+Also have a look at the [DACE Wiki pages](https://github.com/dacelib/dace/wiki) if you have further questions
