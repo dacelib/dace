@@ -121,6 +121,7 @@ include_directories("${CMAKE_BINARY_DIR}/core/include")
 include_directories("interfaces/cxx/include")
 
 # now process the subdirectories
+add_subdirectory(core/contrib)
 add_subdirectory(core)
 add_subdirectory(interfaces/cxx)
 
