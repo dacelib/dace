@@ -1506,15 +1506,15 @@ void daceComplementaryErrorFunction(const DACEDA *ina, DACEDA *inc)
  */
 int BesselWrapper(const double x, const int n0, const int n1, const int type, double *bz)
 {
-    long int nb = (abs(n0) > abs(n1) ? abs(n0) : abs(n1)), ncalc;
+    long int nb = (abs(n0) > abs(n1) ? abs(n0) : abs(n1))+1, ncalc;
 	double xx = x, alpha = 0.0;
 
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     #define DACE_STATIC_MAX_BESSEL_ORDER 100
     if( DACE_STATIC_MAX_BESSEL_ORDER < nb ) return -1;
-    double b[DACE_STATIC_MAX_BESSEL_ORDER+1];
+    double b[DACE_STATIC_MAX_BESSEL_ORDER];
 #else
-    double* b = (double*) dacecalloc(nb+1, sizeof(double));
+    double* b = (double*) dacecalloc(nb, sizeof(double));
 #endif
 
 	if(type < 0)
@@ -1561,15 +1561,15 @@ int BesselWrapper(const double x, const int n0, const int n1, const int type, do
  */
 int ModifiedBesselWrapper(const double x, const int n0, const int n1, const int type, double *bz)
 {
-    long int nb = (abs(n0) > abs(n1) ? abs(n0) : abs(n1)), ize = abs(type), ncalc;
+    long int nb = (abs(n0) > abs(n1) ? abs(n0) : abs(n1))+1, ize = abs(type), ncalc;
 	double xx = x, alpha = 0.0;
 
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     #define DACE_STATIC_MAX_BESSEL_ORDER 100
     if( DACE_STATIC_MAX_BESSEL_ORDER < nb ) return -1;
-    double b[DACE_STATIC_MAX_BESSEL_ORDER+1];
+    double b[DACE_STATIC_MAX_BESSEL_ORDER];
 #else
-    double* b = (double*) dacecalloc(nb+1, sizeof(double));
+    double* b = (double*) dacecalloc(nb, sizeof(double));
 #endif
 
 	if(type < 0)
