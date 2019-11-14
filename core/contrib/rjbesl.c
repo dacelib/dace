@@ -28,10 +28,10 @@
     static doublereal twofiv = 25.;
     static doublereal one30 = 130.;
     static doublereal three5 = 35.;
-    static doublereal enten = 1e38;
-    static doublereal ensig = 1e17;
+    static doublereal enten = 1e308;
+    static doublereal ensig = 1e16;
     static doublereal rtnsig = 1e-4;
-    static doublereal enmten = 1.2e-37;
+    static doublereal enmten = 8.9e-308;
     static doublereal xlarge = 1e4;
     static doublereal fact[25] = { 1.,1.,2.,6.,24.,120.,720.,5040.,40320.,
 	    362880.,3628800.,39916800.,479001600.,6227020800.,87178291200.,
