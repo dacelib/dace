@@ -1755,12 +1755,12 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const doub
         for(unsigned int j = 0; j <= i; j++)
         {
             // use Kahan summation, since signs oscillate and magnitudes can also vary greatly
-            const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+2*j] - c;
-            const double t = xf[i] + y;
-            c = (t - xf[i]) - y;
-            xf[i] = t;
+            // const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+2*j] - c;
+            // const double t = xf[i] + y;
+            // c = (t - xf[i]) - y;
+            // xf[i] = t;
             // in infinite precision the above is equivalent to:
-            // xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
+            xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
             sign *= type;
         }
         xf[i] *= factor;
