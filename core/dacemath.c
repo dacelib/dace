@@ -1750,11 +1750,17 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const doub
             binomial[j] += binomial[j-1];
         // Calculate n-th derivative of Bessel function C, see http://dlmf.nist.gov/10.6
         // bz contains values of C_{n-o} to C_{n+o} of constant part of ina
-        double sign = 1.0;
+        double sign = 1.0, c = 0.0;
         xf[i] = 0.0;
         for(unsigned int j = 0; j <= i; j++)
         {
-            xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
+            // use Kahan summation, since signs oscillate and magnitudes can also vary greatly
+            const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+2*j] - c;
+            const double t = xf[i] + y;
+            c = (t - xf[i]) - y;
+            xf[i] = t;
+            // in infinite precision the above is equivalent to:
+            // xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
             sign *= type;
         }
         xf[i] *= factor;
@@ -1799,11 +1805,17 @@ void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz
             binomial[j] += binomial[j-1];
         // Calculate n-th derivative of Bessel function C
         // bz contains values of C_{n-o} to C_{n+o} of constant part of ina
-        double sign = 1.0;
+        double sign = 1.0, c = 0.0;
         xf[i] = 0.0;
         for(unsigned int j = 0; j <= 2*i; j++)
         {
-            xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+j];
+            // use Kahan summation, since signs oscillate and magnitudes can also vary greatly
+            const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+j] - c;
+            const double t = xf[i] + y;
+            c = (t - xf[i]) - y;
+            xf[i] = t;
+            // in infinite precision the above is equivalent to:
+            // xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+j];
             sign *= -1.0;
         }
         xf[i] *= factor;
