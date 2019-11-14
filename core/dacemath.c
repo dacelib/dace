@@ -1534,9 +1534,9 @@ int BesselWrapper(const double x, const int n0, const int n1, const int type, do
             else
             {
                 *(bz++) = s*b[-i];    // for integer orders considered here, (-1)^n J_n = J_{-n}, and (-1)^n Y_n = Y_{-n}
-            s *= -1.0;
+                s *= -1.0;
+            }
         }
-    }
     }
 
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
@@ -1616,11 +1616,19 @@ void daceBesselIFunction(const DACEDA *ina, const int n, const bool scaled, DACE
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
-    ModifiedBesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, scaled ? -2 : -1, bz);
-    if(scaled)
-        daceEvaluateScaledModifiedBesselFunction(ina, bz, inc);
+    const int res = ModifiedBesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, scaled ? -2 : -1, bz);
+    if(res >= 0)
+    {
+        if(scaled)
+            daceEvaluateScaledModifiedBesselFunction(ina, bz, inc);
+        else
+            daceEvaluateBesselFunction(ina, bz, 1.0, inc);
+    }
     else
-        daceEvaluateBesselFunction(ina, bz, 1.0, inc);
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
 
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
@@ -1650,11 +1658,19 @@ void daceBesselKFunction(const DACEDA *ina, const int n, const bool scaled, DACE
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
-    ModifiedBesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, scaled ? 2 : 1, bz);
-    if(scaled)
-        daceEvaluateScaledModifiedBesselFunction(ina, bz, inc);
+    const int res = ModifiedBesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, scaled ? 2 : 1, bz);
+    if(res >= 0)
+    {
+        if(scaled)
+            daceEvaluateScaledModifiedBesselFunction(ina, bz, inc);
+        else
+            daceEvaluateBesselFunction(ina, bz, 1.0, inc);
+    }
     else
-        daceEvaluateBesselFunction(ina, bz, 1.0, inc);
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
 
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
@@ -1683,8 +1699,14 @@ void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
-    BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, -1, bz);
-    daceEvaluateBesselFunction(ina, bz, -1.0, inc);
+    const int res = BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, -1, bz);
+    if(res >= 0)
+       daceEvaluateBesselFunction(ina, bz, -1.0, inc);
+    else
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
 
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
@@ -1713,8 +1735,14 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
-    BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, 1, bz);
-    daceEvaluateBesselFunction(ina, bz, -1.0, inc);
+    const int res = BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, 1, bz);
+    if(res >= 0)
+        daceEvaluateBesselFunction(ina, bz, -1.0, inc);
+    else
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
 
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
