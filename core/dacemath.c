@@ -1529,9 +1529,14 @@ int BesselWrapper(const double x, const int n0, const int n1, const int type, do
         double s = (n0%2 == 0 ? 1.0 : -1.0);
         for(int i = n0; i <= n1; i++)
         {
-            *(bz++) = s*b[abs(i)];    // for integer orders considered here, (-1)^n J_n = J_{-n}, and (-1)^n Y_n = Y_{-n}
+            if(i >= 0)
+                *(bz++) = b[i];
+            else
+            {
+                *(bz++) = s*b[-i];    // for integer orders considered here, (-1)^n J_n = J_{-n}, and (-1)^n Y_n = Y_{-n}
             s *= -1.0;
         }
+    }
     }
 
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
