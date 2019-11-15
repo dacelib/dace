@@ -1620,9 +1620,9 @@ void daceBesselIFunction(const DACEDA *ina, const int n, const bool scaled, DACE
     if(res >= 0)
     {
         if(scaled)
-            daceEvaluateScaledModifiedBesselFunction(ina, bz, inc);
+            daceEvaluateScaledModifiedBesselFunction(ina, bz, 1.0, inc);
         else
-            daceEvaluateBesselFunction(ina, bz, 1.0, inc);
+            daceEvaluateBesselFunction(ina, bz, 1.0, 1.0, inc);
     }
     else
     {
@@ -1662,9 +1662,9 @@ void daceBesselKFunction(const DACEDA *ina, const int n, const bool scaled, DACE
     if(res >= 0)
     {
         if(scaled)
-            daceEvaluateScaledModifiedBesselFunction(ina, bz, inc);
+            daceEvaluateScaledModifiedBesselFunction(ina, bz, -1.0, inc);
         else
-            daceEvaluateBesselFunction(ina, bz, 1.0, inc);
+            daceEvaluateBesselFunction(ina, bz, 1.0, -1.0, inc);
     }
     else
     {
@@ -1701,7 +1701,7 @@ void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
 
     const int res = BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, -1, bz);
     if(res >= 0)
-       daceEvaluateBesselFunction(ina, bz, -1.0, inc);
+       daceEvaluateBesselFunction(ina, bz, -1.0, 1.0, inc);
     else
     {
         daceSetError(__func__, DACE_ERROR, 50);
@@ -1737,7 +1737,7 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
 
     const int res = BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, 1, bz);
     if(res >= 0)
-        daceEvaluateBesselFunction(ina, bz, -1.0, inc);
+        daceEvaluateBesselFunction(ina, bz, -1.0, 1.0, inc);
     else
     {
         daceSetError(__func__, DACE_ERROR, 50);
@@ -1753,10 +1753,11 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
    \param[in] ina Pointer to the DA object to operate on
    \param[in] bz C array of 2*nocut+1 elements containing Bessel functions of orders n-nocut, ..., n+nocut
    \param[in] type Either -1.0 for normal Bessel functions, or +1.0 for modified Bessel functions.
+   \param[in] ktype Either -1.0 for modified Bessel K function, or +1.0 for all other Bessel functions.
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
-void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const double type, DACEDA *inc)
+void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const double type, const double ktype, DACEDA *inc)
 {
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
@@ -1771,7 +1772,7 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const doub
     double factor = 1.0;
     for(unsigned int i = 1; i < DACECom_t.nocut+1; i++)
     {
-        factor *= 0.5/i;
+        factor *= ktype*0.5/i;
         // calculate binomial coefficients i choose j based on previously calculated i-1 choose j.
         binomial[i] = 1.0;
         for(unsigned int j = i-1; j > 0; j--)
@@ -1783,12 +1784,12 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const doub
         for(unsigned int j = 0; j <= i; j++)
         {
             // use Kahan summation, since signs oscillate and magnitudes can also vary greatly
-            // const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+2*j] - c;
-            // const double t = xf[i] + y;
-            // c = (t - xf[i]) - y;
-            // xf[i] = t;
+            const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+2*j] - c;
+            const double t = xf[i] + y;
+            c = (t - xf[i]) - y;
+            xf[i] = t;
             // in infinite precision the above is equivalent to:
-            xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
+            // xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
             sign *= type;
         }
         xf[i] *= factor;
@@ -1804,10 +1805,11 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const doub
 /*! Evaluate a scaled modified Bessel function with coefficients bz with the non-constant part of ina.
    \param[in] ina Pointer to the DA object to operate on
    \param[in] bz C array of 2*nocut+1 elements containing modified Bessel functions of orders n-nocut, ..., n+nocut
+   \param[in] ktype Either -1.0 for scaled Bessel K function, or +1.0 for scaled Bessel I function
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
-void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz[], DACEDA *inc)
+void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz[], const double ktype, DACEDA *inc)
 {
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
@@ -1822,7 +1824,7 @@ void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz
     double factor = 1.0;
     for(unsigned int i = 1; i < DACECom_t.nocut+1; i++)
     {
-        factor *= 0.5/i;
+        factor *= ktype*0.5/i;
         // calculate binomial coefficients 2*i-1 choose j based on previously calculated 2*i-2 choose j.
         binomial[2*i-1] = 1.0;
         for(unsigned int j = 2*i-2; j > 0; j--)

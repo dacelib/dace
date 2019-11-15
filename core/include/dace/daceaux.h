@@ -147,8 +147,8 @@ void dacePack(double cc[], DACEDA *inc);
 void daceMultiplicativeInverse0(const DACEDA *ina, DACEDA *inc, const double a0);
 int BesselWrapper(const double x, const int n0, const int n1, const int type, double *bz);
 int ModifiedBesselWrapper(const double x, const int n0, const int n1, const int type, double *bz);
-void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const double type, DACEDA *inc);
-void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz[], DACEDA *inc);
+void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const double type, const double ktype, DACEDA *inc);
+void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz[], const double type, DACEDA *inc);
 void daceEvaluateSeries(const DACEDA *ina, const double xf[], DACEDA *inc);
 /// @endcond
 /** @}*/
