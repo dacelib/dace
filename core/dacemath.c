@@ -1550,10 +1550,10 @@ int BesselWrapper(const double x, const int n0, const int n1, const int type, do
    \param[in] n0 Lowest order of the Bessel functions to calculate (n0 <= n1)
    \param[in] n1 Highest order of the Bessel functions to calculate (n0 <= n1)
    \param[in] type Type of function to evaluate:
-              -2: Bessel I function, scaled (i.e. exp(-x)*B_n(x))
+              -2: Bessel I function, scaled (i.e. exp(-x)*I_n(x))
               -1: Bessel I function
                1: Bessel K function
-               2: Bessel K function, scaled (i.e. exp(-x)*B_n(x))
+               2: Bessel K function, scaled (i.e. exp(x)*K_n(x))
    \param[out] bz Array of size n1-n0+1 containing the values of B_{n0}, B_{n0+1}, ..., B_{n1}
    \return Returns 0 if all values are calculated accurately, -1 if x is too large
            to calculate the result or another error occured, or +1 if some of the
@@ -1638,7 +1638,7 @@ void daceBesselIFunction(const DACEDA *ina, const int n, const bool scaled, DACE
 /*! Compute the modified Bessel function K_n of a DA object.
    \param[in] ina Pointer to the DA object to operate on (constant part >= 0)
    \param[in] n Order of the Bessel function
-   \param[in] scaled If true, the scaled Bessel function is computed (i.e. exp(-x)*K_n(x))
+   \param[in] scaled If true, the scaled Bessel function is computed (i.e. exp(x)*K_n(x))
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */

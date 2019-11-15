@@ -1390,6 +1390,7 @@ DA DA::BesselJFunction(const int n) const{
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
  */
     DA temp;
     daceBesselJFunction(m_index, n, temp.m_index);
@@ -1405,6 +1406,7 @@ DA DA::BesselYFunction(const int n) const{
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
  */
     DA temp;
     daceBesselYFunction(m_index, n, temp.m_index);
@@ -1422,6 +1424,7 @@ DA DA::BesselIFunction(const int n, const bool scaled) const{
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
  */
     DA temp;
     daceBesselIFunction(m_index, n, scaled, temp.m_index);
@@ -1435,10 +1438,11 @@ DA DA::BesselKFunction(const int n, const bool scaled) const{
     The result is copied in a new DA object.
    \param[in] n order of the Bessel function
    \param[in] scaled if true, the modified Bessel function is scaled
-    by a factor exp(-x), i.e. exp(-x)K_n(x) is returned.
+    by a factor exp(x), i.e. exp(x)K_n(x) is returned.
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
  */
     DA temp;
     daceBesselKFunction(m_index, n, scaled, temp.m_index);
