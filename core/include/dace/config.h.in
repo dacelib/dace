@@ -29,7 +29,7 @@
 /*
     This file contains the build time configuration options used for building the DACE library.
 */
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -51,7 +51,6 @@
 #cmakedefine WITH_PTHREAD
 
 // automatically detected function availability at library build time
-#cmakedefine HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS
 #cmakedefine HAVE_SAFE_STRINGS
 
 // The following limits are only used when *building* the DACE library with DACE_MEMORY_STATIC memory model.

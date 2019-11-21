@@ -15,8 +15,8 @@ if(WIN32)
 endif(WIN32)
 
 # statically and dynamically linked C++ interface library with the corresponding c core object files compiled in
-add_library(dace SHARED $<TARGET_OBJECTS:c_core> $<TARGET_OBJECTS:dacecxx>)
-add_library(dace_s STATIC $<TARGET_OBJECTS:c_core_s> $<TARGET_OBJECTS:dacecxx_s>)
+add_library(dace SHARED $<TARGET_OBJECTS:c_core> $<TARGET_OBJECTS:c_core_contrib> $<TARGET_OBJECTS:dacecxx>)
+add_library(dace_s STATIC $<TARGET_OBJECTS:c_core_s> $<TARGET_OBJECTS:c_core_contrib_s> $<TARGET_OBJECTS:dacecxx_s>)
 
 target_include_directories(dace INTERFACE $<INSTALL_INTERFACE:include>)
 target_include_directories(dace_s INTERFACE $<INSTALL_INTERFACE:include>)
