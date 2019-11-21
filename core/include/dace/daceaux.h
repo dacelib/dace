@@ -149,6 +149,7 @@ int BesselWrapper(const double x, const int n0, const int n1, const int type, do
 int ModifiedBesselWrapper(const double x, const int n0, const int n1, const int type, double *bz);
 void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const double type, const double ktype, DACEDA *inc);
 void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz[], const double type, DACEDA *inc);
+void daceLogGammaFunction0(const DACEDA *ina, const double a0, DACEDA *inc);
 void daceEvaluateSeries(const DACEDA *ina, const double xf[], DACEDA *inc);
 /// @endcond
 /** @}*/
