@@ -39,7 +39,9 @@
 #ifndef DINAMICA_DACECONTRIB_H_
 #define DINAMICA_DACECONTRIB_H_
 
-double dgamma_(double *x);
+double zeta_(const double x, const double q, unsigned int *err);
+double dgamma_(const double *x);
+double psi_(const double *x);
 int ribesl_(double *x, double *alpha, long int *nb, long int *ize, double *b, long int *ncalc);
 int rjbesl_(double *x, double *alpha, long int *nb, double *b, long int *ncalc);
 int rkbesl_(double *x, double *alpha, long int *nb, long int *ize, double *b, long int *ncalc);

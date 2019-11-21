@@ -19,7 +19,7 @@
 #include "f2c.h"
 
 /* S    REAL FUNCTION GAMMA(X) */
-doublereal dgamma_(doublereal *x)
+doublereal dgamma_(const doublereal *x)
 {
     /* Initialized data */
 
