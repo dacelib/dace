@@ -1961,8 +1961,8 @@ void dacePsiFunction(const DACEDA *ina, const unsigned int n, DACEDA *inc)
     }
     else
     {
-        double fac = (n%2 ? -1.0 : 1.0);
-        for(unsigned int i = 2; i <= n; i++) fac *=n;
+        double fac = (n%2 ? 1.0 : -1.0);
+        for(unsigned int i = 2; i <= n; i++) fac *= i;
         for(unsigned int i = 0; i < DACECom_t.nocut+1; i++)
         {
             xf[i] = fac*zeta_(n+i+1, a0, NULL);
