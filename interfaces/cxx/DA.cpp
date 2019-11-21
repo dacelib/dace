@@ -1451,6 +1451,44 @@ DA DA::BesselKFunction(const int n, const bool scaled) const{
     return temp;
 }
 
+DA DA::GammaFunction() const{
+/*! Compute the Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+ */
+    DA temp;
+    daceGammaFunction(m_index, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
+DA DA::LogGammaFunction() const{
+/*! Compute the Logarithmic Gamma function (i.e. the natural logarithm of Gamma) of a DA object.
+    The result is copied in a new DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+ */
+    DA temp;
+    daceLogGammaFunction(m_index, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
+DA DA::PsiFunction(const unsigned int n) const{
+/*! Compute the n-th order Psi function, i.e. the (n+1)st derivative of the Logarithmic Gamma function, of a DA object.
+    The result is copied in a new DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+ */
+    DA temp;
+    dacePsiFunction(m_index, n, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
 
 /********************************************************************************
 *    Norm and estimation routines
@@ -2405,6 +2443,58 @@ DA BesselKFunction(const int n, const DA &da, const bool scaled){
  */
     return da.BesselKFunction(n, scaled);}
 
+DA tgamma(const DA &da){
+/*! Compute the Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::GammaFunction
+   \note Alias of GammaFunction() for C99 compatible naming.
+ */
+    return da.GammaFunction();}
+
+DA lgamma(const DA &da){
+/*! Compute the Log Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::LogGammaFunction
+   \note Alias of LogGammaFunction() for C99 compatible naming.
+ */
+    return da.LogGammaFunction();}
+
+DA GammaFunction(const DA &da){
+/*! Compute the Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::GammaFunction
+ */
+    return da.GammaFunction();}
+
+DA LogGammaFunction(const DA &da){
+/*! Compute the Log Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::LogGammaFunction
+ */
+    return da.LogGammaFunction();}
+
+DA PsiFunction(const unsigned int n, const DA &da){
+/*! Compute the n-th Psi function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::PsiFunction
+ */
+    return da.PsiFunction(n);}
+
 unsigned int size(const DA &da){
 /*! Return the number of non-zero coefficients of a DA object.
    \param[in] da a given DA object.
@@ -2590,10 +2680,6 @@ void write(const DA &da, std::ostream &os){
    \sa DA::write
  */
     return da.write(os);}
-
-
-
-
 
 
 // static class variables
