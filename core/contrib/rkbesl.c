@@ -18,8 +18,8 @@
 
 #include "f2c.h"
 
-/* Subroutine */ int rkbesl_(doublereal *x, doublereal *alpha, integer *nb,
-	integer *ize, doublereal *bk, integer *ncalc)
+/* Subroutine */ int rkbesl_(const doublereal *x, const doublereal *alpha, const integer *nb,
+	const integer *ize, doublereal *bk, integer *ncalc)
 {
     /* Initialized data */
 
@@ -62,7 +62,7 @@
 
     /* Builtin functions */
     double log(doublereal), exp(doublereal), sinh(doublereal), sqrt(
-	    doublereal), d_int(doublereal *);
+	    doublereal), d_int(const doublereal *);
 
     /* Local variables */
     doublereal c__;

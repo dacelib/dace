@@ -18,8 +18,8 @@
 
 #include "f2c.h"
 
-/* Subroutine */ int ribesl_(doublereal *x, doublereal *alpha, integer *nb,
-	integer *ize, doublereal *b, integer *ncalc)
+/* Subroutine */ int ribesl_(const doublereal *x, const doublereal *alpha, const integer *nb,
+	const integer *ize, doublereal *b, integer *ncalc)
 {
     /* Initialized data */
 
@@ -41,8 +41,8 @@
     doublereal d__1, d__2, d__3;
 
     /* Builtin functions */
-    double sqrt(doublereal), pow_di(doublereal *, integer *), pow_dd(
-	    doublereal *, doublereal *), exp(doublereal);
+    double sqrt(doublereal), pow_di(const doublereal *, const integer *), pow_dd(
+	    const doublereal *, const doublereal *), exp(doublereal);
 
     /* Local variables */
     integer k, l, n;

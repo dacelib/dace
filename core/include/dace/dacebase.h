@@ -204,6 +204,9 @@ DACE_API void daceBesselIFunction(const DACEDA REF(ina), const int n, const bool
 DACE_API void daceBesselJFunction(const DACEDA REF(ina), const int n, DACEDA REF(inc));
 DACE_API void daceBesselKFunction(const DACEDA REF(ina), const int n, const bool scaled, DACEDA REF(inc));
 DACE_API void daceBesselYFunction(const DACEDA REF(ina), const int n, DACEDA REF(inc));
+DACE_API void daceLogGammaFunction(const DACEDA REF(ina), DACEDA REF(inc));
+DACE_API void daceGammaFunction(const DACEDA REF(ina), DACEDA REF(inc));
+DACE_API void dacePsiFunction(const DACEDA REF(ina), const unsigned int n, DACEDA REF(inc));
 
 /********************************************************************************
 *     DACE norm and norm estimation routines

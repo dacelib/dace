@@ -18,7 +18,7 @@
 
 #include "f2c.h"
 
-/* Subroutine */ int rybesl_(doublereal *x, doublereal *alpha, integer *nb,
+/* Subroutine */ int rybesl_(const doublereal *x, const doublereal *alpha, const integer *nb,
 	doublereal *by, integer *ncalc)
 {
     /* Initialized data */
@@ -60,8 +60,8 @@
     doublereal d__1, d__2;
 
     /* Builtin functions */
-    double d_int(doublereal *), sqrt(doublereal), sin(doublereal), cos(
-	    doublereal), log(doublereal), pow_dd(doublereal *, doublereal *);
+    double d_int(const doublereal *), sqrt(doublereal), sin(doublereal), cos(
+	    doublereal), log(doublereal), pow_dd(const doublereal *, const doublereal *);
 
     /* Local variables */
     doublereal b, c__, d__, e, f, g, h__;

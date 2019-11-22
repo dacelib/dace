@@ -1858,6 +1858,125 @@ void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz
 #endif
 }
 
+/*! Compute the partial Logarithmic Gamma function of a DA object (without constant part).
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+   \note No argument checking is performed to ensure values are within allowable range.
+ */
+void daceLogGammaFunction0(const DACEDA *ina, const double a0, DACEDA *inc)
+{
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    double xf[DACE_STATIC_NOMAX+1];
+#else
+    double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
+#endif
+
+    xf[0] = 0.0;
+    xf[1] = psi_(&a0);
+    double s = 1.0;
+    for(unsigned int i = 2; i < DACECom_t.nocut+1; i++)
+    {
+        xf[i] = (s/i)*zeta_(i, a0, NULL);
+        s *= -1.0;
+    }
+
+    daceEvaluateSeries(ina, xf, inc);
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(xf);
+#endif
+}
+
+/*! Compute the Logarithmic Gamma function of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void daceLogGammaFunction(const DACEDA *ina, DACEDA *inc)
+{
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0 && trunc(a0) == a0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+    daceLogGammaFunction0(ina, a0, inc);
+    daceSetCoefficient0(inc, 0, log(dgamma_(&a0)));
+}
+
+/*! Compute the Gamma function of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void daceGammaFunction(const DACEDA *ina, DACEDA *inc)
+{
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0 && trunc(a0) == a0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+    daceLogGammaFunction0(ina, a0, inc);
+    daceExponential(inc, inc);
+    daceMultiplyDouble(inc, dgamma_(&a0), inc);
+}
+
+/*! Compute the n-th Psi function (i.e. the n+1 derivative of the logarithmic gamma function) of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[in] n Order of the Psi function (n >= 0)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void dacePsiFunction(const DACEDA *ina, const unsigned int n, DACEDA *inc)
+{
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0 && trunc(a0) == a0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    double xf[DACE_STATIC_NOMAX+1];
+#else
+    double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
+#endif
+
+    if(n == 0)
+    {
+        xf[0] = psi_(&a0);
+        double s = 1.0;
+        for(unsigned int i = 1; i < DACECom_t.nocut+1; i++)
+        {
+            xf[i] = s*zeta_(i+1, a0, NULL);
+            s *= -1.0;
+        }
+    }
+    else
+    {
+        double fac = (n%2 ? 1.0 : -1.0);
+        for(unsigned int i = 2; i <= n; i++) fac *= i;
+        for(unsigned int i = 0; i < DACECom_t.nocut+1; i++)
+        {
+            xf[i] = fac*zeta_(n+i+1, a0, NULL);
+            fac = -(fac/(i+1))*(n+i+1);
+        }
+    }
+
+    daceEvaluateSeries(ina, xf, inc);
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(xf);
+#endif
+}
+
 /*! Evaluate a polynomial with coefficients xf with the non-constant part of ina.
    \param[in] ina Pointer to the DA object to operate on
    \param[in] xf C array of nocut+1 elements containing the coefficients of the polynomial

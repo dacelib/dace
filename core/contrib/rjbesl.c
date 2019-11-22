@@ -18,7 +18,7 @@
 
 #include "f2c.h"
 
-/* Subroutine */ int rjbesl_(doublereal *x, doublereal *alpha, integer *nb,
+/* Subroutine */ int rjbesl_(const doublereal *x, const doublereal *alpha, const integer *nb,
 	doublereal *b, integer *ncalc)
 {
     /* Initialized data */
@@ -53,8 +53,8 @@
     doublereal d__1, d__2;
 
     /* Builtin functions */
-    double pow_dd(doublereal *, doublereal *), sqrt(doublereal), d_int(
-	    doublereal *), sin(doublereal), cos(doublereal);
+    double pow_dd(const doublereal *, const doublereal *), sqrt(doublereal), d_int(
+	    const doublereal *), sin(doublereal), cos(doublereal);
 
     /* Local variables */
     integer i__, j, k, l, m, n;
@@ -66,7 +66,7 @@
     integer nbmx;
     doublereal vcos, test, vsin, alpem, halfx, tempa, tempb, tempc, psave,
 	    plast, tover, alp2em;
-    extern doublereal dgamma_(doublereal *);
+    extern doublereal dgamma_(const doublereal *);
     doublereal psavel;
     integer nstart;
 

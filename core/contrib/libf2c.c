@@ -19,17 +19,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-double d_int(doublereal *x)
+double d_int(const doublereal *x)
 {
 return( (*x>0) ? floor(*x) : -floor(- *x) );
 }
 
-double pow_dd(doublereal *ap, doublereal *bp)
+double pow_dd(const doublereal *ap, const doublereal *bp)
 {
 return(pow(*ap, *bp) );
 }
 
-double pow_di(doublereal *ap, integer *bp)
+double pow_di(const doublereal *ap, const integer *bp)
 {
 double pow, x;
 integer n;
