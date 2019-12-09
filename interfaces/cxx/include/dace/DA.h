@@ -194,8 +194,13 @@ public:
     DA atanh() const;                                                       //!< hyperbolic arctangent
     DA erf() const;                                                         //!< error function
     DA erfc() const;                                                        //!< complementary error function
-    DA jn(const int n) const;                                               //!< Bessel function J_n
-    DA yn(const int n) const;                                               //!< Bessel function Y_n
+    DA BesselJFunction(const int n) const;                                  //!< Bessel function J_n
+    DA BesselYFunction(const int n) const;                                  //!< Bessel function Y_n
+    DA BesselIFunction(const int n, const bool scaled = false) const;       //!< Bessel function I_n
+    DA BesselKFunction(const int n, const bool scaled = false) const;       //!< Bessel function K_n
+    DA GammaFunction() const;                                               //!< Gamma function
+    DA LogGammaFunction() const;                                            //!< Logartihmic Gamma function
+    DA PsiFunction(const unsigned int n) const;                             //!< Psi function
 
     /********************************************************************************
     *    Norm and estimation routines
@@ -299,6 +304,15 @@ DACE_API DA erf(const DA &da);
 DACE_API DA erfc(const DA &da);
 DACE_API DA jn(const int n, const DA &da);
 DACE_API DA yn(const int n, const DA &da);
+DACE_API DA BesselJFunction(const int n, const DA &da);
+DACE_API DA BesselYFunction(const int n, const DA &da);
+DACE_API DA BesselIFunction(const int n, const DA &da, const bool scaled = false);
+DACE_API DA BesselKFunction(const int n, const DA &da, const bool scaled = false);
+DACE_API DA tgamma(const DA &da);
+DACE_API DA lgamma(const DA &da);
+DACE_API DA GammaFunction(const DA &da);
+DACE_API DA LogGammaFunction(const DA &da);
+DACE_API DA PsiFunction(const unsigned int n, const DA &da);
 
 DACE_API unsigned int size(const DA &da);
 DACE_API double abs(const DA &da);

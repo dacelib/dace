@@ -104,8 +104,6 @@ endif(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
 
 
 # Run checks for platform-specific functions
-include(CheckIfUnderscorePrefixedBesselFunctionsExist)
-check_if_underscore_prefixed_bessel_functions_exist(HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS)
 include(CheckSafeStrings)
 check_safe_strings(HAVE_SAFE_STRINGS)
 
@@ -121,6 +119,7 @@ include_directories("${CMAKE_BINARY_DIR}/core/include")
 include_directories("interfaces/cxx/include")
 
 # now process the subdirectories
+add_subdirectory(core/contrib)
 add_subdirectory(core)
 add_subdirectory(interfaces/cxx)
 

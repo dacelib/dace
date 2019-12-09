@@ -26,20 +26,19 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
 // MS C library needs this to trigger it to define math constants
 #define _USE_MATH_DEFINES
-// Glibc needs this to expose the jn() and yn() Bessel functions under that name
-#define _XOPEN_SOURCE
 #include <math.h>
 #include <stdlib.h>
 
 #include "dace/config.h"
 #include "dace/dacebase.h"
 #include "dace/daceaux.h"
+#include "dacecontrib.h"
 
 // define various math constants in case they have not been defined by math.h
 // these are non-standard C, but most C libraries have them
@@ -410,7 +409,7 @@ void daceDivideByVariable(const DACEDA *ina, const unsigned int var, const unsig
 
     if(var < 1 || var > DACECom.nvmax)
     {
-        daceSetError(__func__, DACE_ERROR, 24);      
+        daceSetError(__func__, DACE_ERROR, 24);
         daceCreateConstant(inc, 0.0);
         return;
     }
@@ -431,7 +430,7 @@ void daceDivideByVariable(const DACEDA *ina, const unsigned int var, const unsig
     else if(p > DACECom.nomax)
     {
         // dividing non-zero DA by too high a power
-        daceSetError(__func__, DACE_ERROR, 42);      
+        daceSetError(__func__, DACE_ERROR, 42);
         daceCreateConstant(inc, 0.0);
         return;
     }
@@ -454,7 +453,7 @@ void daceDivideByVariable(const DACEDA *ina, const unsigned int var, const unsig
             const unsigned int ipow = (ic2/idiv)%ibase;
             if(ipow < p)
             {
-                daceSetError(__func__, DACE_ERROR, 42);      
+                daceSetError(__func__, DACE_ERROR, 42);
                 daceCreateConstant(inc, 0.0);
                 return;
             }
@@ -709,7 +708,7 @@ void dacePowerDouble(const DACEDA *ina, const double p, DACEDA *inc)
     const double a0 = daceGetConstant(ina);
     if(a0 <= 0.0)
     {
-        daceSetError(__func__, DACE_ERROR, 43); 
+        daceSetError(__func__, DACE_ERROR, 43);
         daceCreateConstant(inc, 0.0);
         return;
     }
@@ -858,14 +857,14 @@ void daceRoot(const DACEDA *ina, const int np, DACEDA *inc)
 void daceMultiplicativeInverse(const DACEDA *ina, DACEDA *inc)
 {
     const double a0 = daceGetConstant(ina);
-    
+
     if(a0 == 0.0)
     {
         daceSetError(__func__, DACE_ERROR, 41);
         daceCreateConstant(inc, 0.0);
         return;
     }
-    
+
     if(DACECom_t.nocut < 5)
     {
         // lower orders: compute series directly
@@ -1142,7 +1141,7 @@ void daceTangent(const DACEDA *ina, DACEDA *inc)
         daceCreateConstant(inc, 0.0);
         return;
     }
-    
+
     daceAllocateDA(&itemp, 0);
     daceSine(ina, &itemp);
     daceCosine(ina, inc);
@@ -1165,7 +1164,7 @@ void daceArcSine(const DACEDA *ina, DACEDA *inc)
         daceCreateConstant(inc, 0.0);
         return;
     }
-    
+
     daceAllocateDA(&itemp, 0);
     daceSquare(ina, &itemp);
     daceDoubleSubtract(&itemp, 1.0, &itemp);
@@ -1212,7 +1211,7 @@ void daceArcTangent(const DACEDA *ina, DACEDA *inc)
     daceAddDouble(&iarg, 1.0, &iarg);
     daceSubtractDouble(ina, a0, inc);
     daceDivide(inc, &iarg, &iarg);
-    
+
     double s = 1.0;
     xf[0] = atan(a0);
     for(unsigned int i = 1; i < DACECom_t.nocut+1; i+=2)
@@ -1294,7 +1293,7 @@ void daceHyperbolicSine(const DACEDA *ina, DACEDA *inc)
     const double a0 = daceGetConstant(ina);
     xf[0] = sinh(a0);
     xf[1] = cosh(a0);
-    
+
     for(unsigned int i = 2; i < DACECom_t.nocut+1; i++)
     {
         xf[i] = xf[i-2]/(i*(i-1));
@@ -1322,7 +1321,7 @@ void daceHyperbolicCosine(const DACEDA *ina, DACEDA *inc)
     const double a0 = daceGetConstant(ina);
     xf[0] = cosh(a0);
     xf[1] = sinh(a0);
-    
+
     for(unsigned int i = 2; i < DACECom_t.nocut+1; i++)
     {
         xf[i] = xf[i-2]/(i*(i-1));
@@ -1342,7 +1341,7 @@ void daceHyperbolicCosine(const DACEDA *ina, DACEDA *inc)
 void daceHyperbolicTangent(const DACEDA *ina, DACEDA *inc)
 {
     DACEDA itemp;
-    
+
     daceAllocateDA(&itemp, 0);
     daceHyperbolicSine(ina, &itemp);
     daceHyperbolicCosine(ina, inc);
@@ -1358,7 +1357,7 @@ void daceHyperbolicTangent(const DACEDA *ina, DACEDA *inc)
 void daceHyperbolicArcSine(const DACEDA *ina, DACEDA *inc)
 {
     DACEDA itemp;
-    
+
     daceAllocateDA(&itemp, 0);
     daceSquare(ina, inc);
     daceAddDouble(inc, 1.0, &itemp);
@@ -1376,14 +1375,14 @@ void daceHyperbolicArcSine(const DACEDA *ina, DACEDA *inc)
 void daceHyperbolicArcCosine(const DACEDA *ina, DACEDA *inc)
 {
     DACEDA itemp;
-    
+
     if(daceGetConstant(ina) <= 1.0)
     {
         daceSetError(__func__, DACE_ERROR, 50);
         daceCreateConstant(inc, 0.0);
         return;
     }
-    
+
     daceAllocateDA(&itemp, 0);
     daceSquare(ina, inc);
     daceSubtractDouble(inc, 1.0, &itemp);
@@ -1401,14 +1400,14 @@ void daceHyperbolicArcCosine(const DACEDA *ina, DACEDA *inc)
 void daceHyperbolicArcTangent(const DACEDA *ina, DACEDA *inc)
 {
     DACEDA itemp;
-    
+
     if(fabs(daceGetConstant(ina)) >= 1.0)
     {
         daceSetError(__func__, DACE_ERROR, 50);
         daceCreateConstant(inc, 0.0);
         return;
     }
-    
+
     daceAllocateDA(&itemp, 0);
     daceAddDouble(ina, 1.0, &itemp);
     daceDoubleSubtract(ina, 1.0, inc);
@@ -1488,35 +1487,235 @@ void daceComplementaryErrorFunction(const DACEDA *ina, DACEDA *inc)
 #endif
 }
 
-/*! Compute the Bessel function J_n of a DA object.
-   \param[in] ina Pointer to the DA object to operate on
+
+/// @cond
+
+// Wrappers for contributed netlib Bessel functions (not for public use)
+
+/*! Compute value of Bessel functions J_n, Y_n for n in [n0, n1].
+   \param[in] x function argument (non-negative)
+   \param[in] n0 Lowest order of the Bessel functions to calculate (n0 <= n1)
+   \param[in] n1 Highest order of the Bessel functions to calculate (n0 <= n1)
+   \param[in] type Type of function to evaluate:
+              -1: Bessel J function
+               1: Bessel Y function
+   \param[out] bz Array of size n1-n0+1 containing the values of B_{n0}, B_{n0+1}, ..., B_{n1}
+   \return Returns 0 if all values are calculated accurately, -1 if x is too large
+           to calculate the result or another error occured, or +1 if some of the
+           results are of reduced accuracy.
+ */
+int BesselWrapper(const double x, const int n0, const int n1, const int type, double *bz)
+{
+    long int nb = (abs(n0) > abs(n1) ? abs(n0) : abs(n1))+1, ncalc;
+	double xx = x, alpha = 0.0;
+
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    #define DACE_STATIC_MAX_BESSEL_ORDER 100
+    if( DACE_STATIC_MAX_BESSEL_ORDER < nb ) return -1;
+    double b[DACE_STATIC_MAX_BESSEL_ORDER];
+#else
+    double* b = (double*) dacecalloc(nb, sizeof(double));
+#endif
+
+	if(type < 0)
+        rjbesl_(&xx, &alpha, &nb, b, &ncalc);
+    else
+        rybesl_(&xx, &alpha, &nb, b, &ncalc);
+
+	// discombobulate results
+    if(ncalc >= 0)
+    {
+        ncalc = (ncalc == nb ? 0 : 1);
+        double s = (n0%2 == 0 ? 1.0 : -1.0);
+        for(int i = n0; i <= n1; i++)
+        {
+            if(i >= 0)
+                *(bz++) = b[i];
+            else
+            {
+                *(bz++) = s*b[-i];    // for integer orders considered here, (-1)^n J_n = J_{-n}, and (-1)^n Y_n = Y_{-n}
+                s *= -1.0;
+            }
+        }
+    }
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(b);
+#endif
+    return ncalc < 0 ? -1 : ncalc;
+}
+
+/*! Compute value of modified Bessel functions I_n, K_n for n in [n0, n1].
+   \param[in] x function argument (non-negative)
+   \param[in] n0 Lowest order of the Bessel functions to calculate (n0 <= n1)
+   \param[in] n1 Highest order of the Bessel functions to calculate (n0 <= n1)
+   \param[in] type Type of function to evaluate:
+              -2: Bessel I function, scaled (i.e. exp(-x)*I_n(x))
+              -1: Bessel I function
+               1: Bessel K function
+               2: Bessel K function, scaled (i.e. exp(x)*K_n(x))
+   \param[out] bz Array of size n1-n0+1 containing the values of B_{n0}, B_{n0+1}, ..., B_{n1}
+   \return Returns 0 if all values are calculated accurately, -1 if x is too large
+           to calculate the result or another error occured, or +1 if some of the
+           results are of reduced accuracy.
+ */
+int ModifiedBesselWrapper(const double x, const int n0, const int n1, const int type, double *bz)
+{
+    long int nb = (abs(n0) > abs(n1) ? abs(n0) : abs(n1))+1, ize = abs(type), ncalc;
+	double xx = x, alpha = 0.0;
+
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    #define DACE_STATIC_MAX_BESSEL_ORDER 100
+    if( DACE_STATIC_MAX_BESSEL_ORDER < nb ) return -1;
+    double b[DACE_STATIC_MAX_BESSEL_ORDER];
+#else
+    double* b = (double*) dacecalloc(nb, sizeof(double));
+#endif
+
+	if(type < 0)
+        ribesl_(&xx, &alpha, &nb, &ize, b, &ncalc);
+    else
+        rkbesl_(&xx, &alpha, &nb, &ize, b, &ncalc);
+
+	// discombobulate results
+    if(ncalc >= 0)
+    {
+        ncalc = (ncalc == nb ? 0 : 1);
+        for(int i = n0; i <= n1; i++)
+            *(bz++) = b[abs(i)];    // for integer orders considered here, I_n = I_{-n}, and for all orders K_n = K_{-n}
+    }
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(b);
+#endif
+    return ncalc < 0 ? -1 : ncalc;
+}
+
+/// @endcond
+
+/*! Compute the modified Bessel function I_n of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part >= 0)
+   \param[in] n Order of the Bessel function
+   \param[in] scaled If true, the scaled Bessel function is computed (i.e. exp(-x)*I_n(x))
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
-void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
+void daceBesselIFunction(const DACEDA *ina, const int n, const bool scaled, DACEDA *inc)
 {
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double bz[2*DACE_STATIC_NOMAX+1];
 #else
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
+    const int res = ModifiedBesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, scaled ? -2 : -1, bz);
+    if(res >= 0)
+    {
+        if(scaled)
+            daceEvaluateScaledModifiedBesselFunction(ina, bz, 1.0, inc);
+        else
+            daceEvaluateBesselFunction(ina, bz, 1.0, 1.0, inc);
+    }
+    else
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(bz);
+#endif
+}
+
+/*! Compute the modified Bessel function K_n of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part >= 0)
+   \param[in] n Order of the Bessel function
+   \param[in] scaled If true, the scaled Bessel function is computed (i.e. exp(x)*K_n(x))
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void daceBesselKFunction(const DACEDA *ina, const int n, const bool scaled, DACEDA *inc)
+{
     const double a0 = daceGetConstant(ina);
-    for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-#ifdef HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS
-        bz[i] = _jn(n-DACECom_t.nocut+i, a0);        // MSVC wants _jn
+    if(a0 <= 0.0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    double bz[2*DACE_STATIC_NOMAX+1];
 #else
-        bz[i] = jn(n-DACECom_t.nocut+i, a0);
+    double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
-    daceEvaluateBesselFunction(ina, bz, inc);
+    const int res = ModifiedBesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, scaled ? 2 : 1, bz);
+    if(res >= 0)
+    {
+        if(scaled)
+            daceEvaluateScaledModifiedBesselFunction(ina, bz, -1.0, inc);
+        else
+            daceEvaluateBesselFunction(ina, bz, 1.0, -1.0, inc);
+    }
+    else
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(bz);
+#endif
+}
+
+/*! Compute the Bessel function J_n of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part >= 0)
+   \param[in] n Order of the Bessel function
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void daceBesselJFunction(const DACEDA *ina, const int n, DACEDA *inc)
+{
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    double bz[2*DACE_STATIC_NOMAX+1];
+#else
+    double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
+#endif
+
+    const int res = BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, -1, bz);
+    if(res >= 0)
+       daceEvaluateBesselFunction(ina, bz, -1.0, 1.0, inc);
+    else
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
+
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
 #endif
 }
 
 /*! Compute the Bessel function Y_n of a DA object.
-   \param[in] ina Pointer to the DA object to operate on
+   \param[in] ina Pointer to the DA object to operate on (constant part >= 0)
+   \param[in] n Order of the Bessel function
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
@@ -1536,14 +1735,15 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
     double* bz = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
 #endif
 
-    for(unsigned int i = 0; i < 2*DACECom_t.nocut+1; i++)
-#ifdef HAVE_UNDERSCORE_PREFIXED_BESSEL_FUNCTIONS 
-        bz[i] = _yn(n-DACECom_t.nocut+i, a0);		// MSVC wants _yn
-#else
-        bz[i] = yn(n-DACECom_t.nocut+i, a0);
-#endif
+    const int res = BesselWrapper(a0, n-DACECom_t.nocut, n+DACECom_t.nocut, 1, bz);
+    if(res >= 0)
+        daceEvaluateBesselFunction(ina, bz, -1.0, 1.0, inc);
+    else
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+    }
 
-    daceEvaluateBesselFunction(ina, bz, inc);
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(bz);
 #endif
@@ -1551,11 +1751,13 @@ void daceBesselYFunction(const DACEDA *ina, const int n, DACEDA *inc)
 
 /*! Evaluate a Bessel function with coefficients bz with the non-constant part of ina.
    \param[in] ina Pointer to the DA object to operate on
-   \param[in] bz C array of nocut+1 elements containing the Bessel coefficients of the polynomial
+   \param[in] bz C array of 2*nocut+1 elements containing Bessel functions of orders n-nocut, ..., n+nocut
+   \param[in] type Either -1.0 for normal Bessel functions, or +1.0 for modified Bessel functions.
+   \param[in] ktype Either -1.0 for modified Bessel K function, or +1.0 for all other Bessel functions.
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
-void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], DACEDA *inc)
+void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const double type, const double ktype, DACEDA *inc)
 {
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     double xf[DACE_STATIC_NOMAX+1];
@@ -1570,18 +1772,80 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], DACEDA *in
     double factor = 1.0;
     for(unsigned int i = 1; i < DACECom_t.nocut+1; i++)
     {
-        factor *= 0.5/i;
-        // calculate binomial coefficients i choose j
+        factor *= ktype*0.5/i;
+        // calculate binomial coefficients i choose j based on previously calculated i-1 choose j.
         binomial[i] = 1.0;
         for(unsigned int j = i-1; j > 0; j--)
             binomial[j] += binomial[j-1];
         // Calculate n-th derivative of Bessel function C, see http://dlmf.nist.gov/10.6
         // bz contains values of C_{n-o} to C_{n+o} of constant part of ina
-        double sign = 1.0;
+        double sign = 1.0, c = 0.0;
         xf[i] = 0.0;
         for(unsigned int j = 0; j <= i; j++)
         {
-            xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
+            // use Kahan summation, since signs oscillate and magnitudes can also vary greatly
+            const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+2*j] - c;
+            const double t = xf[i] + y;
+            c = (t - xf[i]) - y;
+            xf[i] = t;
+            // in infinite precision the above is equivalent to:
+            // xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+2*j];
+            sign *= type;
+        }
+        xf[i] *= factor;
+    }
+
+    daceEvaluateSeries(ina, xf, inc);
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(binomial);
+    dacefree(xf);
+#endif
+}
+
+/*! Evaluate a scaled modified Bessel function with coefficients bz with the non-constant part of ina.
+   \param[in] ina Pointer to the DA object to operate on
+   \param[in] bz C array of 2*nocut+1 elements containing modified Bessel functions of orders n-nocut, ..., n+nocut
+   \param[in] ktype Either -1.0 for scaled Bessel K function, or +1.0 for scaled Bessel I function
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz[], const double ktype, DACEDA *inc)
+{
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    double xf[DACE_STATIC_NOMAX+1];
+    double binomial[2*DACE_STATIC_NOMAX+1];
+#else
+    double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
+    double* binomial = (double*) dacecalloc(2*DACECom_t.nocut+1, sizeof(double));
+#endif
+
+    xf[0] = bz[DACECom_t.nocut];
+    binomial[0] = 1.0;
+    double factor = 1.0;
+    for(unsigned int i = 1; i < DACECom_t.nocut+1; i++)
+    {
+        factor *= ktype*0.5/i;
+        // calculate binomial coefficients 2*i-1 choose j based on previously calculated 2*i-2 choose j.
+        binomial[2*i-1] = 1.0;
+        for(unsigned int j = 2*i-2; j > 0; j--)
+            binomial[j] += binomial[j-1];
+        // calculate binomial coefficients 2*i choose j based on previously calculated 2*i-1 choose j.
+        binomial[2*i] = 1.0;
+        for(unsigned int j = 2*i-1; j > 0; j--)
+            binomial[j] += binomial[j-1];
+        // Calculate n-th derivative of Bessel function C
+        // bz contains values of C_{n-o} to C_{n+o} of constant part of ina
+        double sign = 1.0, c = 0.0;
+        xf[i] = 0.0;
+        for(unsigned int j = 0; j <= 2*i; j++)
+        {
+            // use Kahan summation, since signs oscillate and magnitudes can also vary greatly
+            const double y = binomial[j]*sign*bz[DACECom_t.nocut-i+j] - c;
+            const double t = xf[i] + y;
+            c = (t - xf[i]) - y;
+            xf[i] = t;
+            // in infinite precision the above is equivalent to:
+            // xf[i] += binomial[j]*sign*bz[DACECom_t.nocut-i+j];
             sign *= -1.0;
         }
         xf[i] *= factor;
@@ -1590,6 +1854,125 @@ void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], DACEDA *in
     daceEvaluateSeries(ina, xf, inc);
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(binomial);
+    dacefree(xf);
+#endif
+}
+
+/*! Compute the partial Logarithmic Gamma function of a DA object (without constant part).
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+   \note No argument checking is performed to ensure values are within allowable range.
+ */
+void daceLogGammaFunction0(const DACEDA *ina, const double a0, DACEDA *inc)
+{
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    double xf[DACE_STATIC_NOMAX+1];
+#else
+    double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
+#endif
+
+    xf[0] = 0.0;
+    xf[1] = psi_(&a0);
+    double s = 1.0;
+    for(unsigned int i = 2; i < DACECom_t.nocut+1; i++)
+    {
+        xf[i] = (s/i)*zeta_(i, a0, NULL);
+        s *= -1.0;
+    }
+
+    daceEvaluateSeries(ina, xf, inc);
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+    dacefree(xf);
+#endif
+}
+
+/*! Compute the Logarithmic Gamma function of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void daceLogGammaFunction(const DACEDA *ina, DACEDA *inc)
+{
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0 && trunc(a0) == a0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+    daceLogGammaFunction0(ina, a0, inc);
+    daceSetCoefficient0(inc, 0, log(dgamma_(&a0)));
+}
+
+/*! Compute the Gamma function of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void daceGammaFunction(const DACEDA *ina, DACEDA *inc)
+{
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0 && trunc(a0) == a0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+    daceLogGammaFunction0(ina, a0, inc);
+    daceExponential(inc, inc);
+    daceMultiplyDouble(inc, dgamma_(&a0), inc);
+}
+
+/*! Compute the n-th Psi function (i.e. the n+1 derivative of the logarithmic gamma function) of a DA object.
+   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[in] n Order of the Psi function (n >= 0)
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+ */
+void dacePsiFunction(const DACEDA *ina, const unsigned int n, DACEDA *inc)
+{
+    const double a0 = daceGetConstant(ina);
+    if(a0 <= 0.0 && trunc(a0) == a0)
+    {
+        daceSetError(__func__, DACE_ERROR, 50);
+        daceCreateConstant(inc, 0.0);
+        return;
+    }
+
+#if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
+    double xf[DACE_STATIC_NOMAX+1];
+#else
+    double* xf = (double*) dacecalloc(DACECom_t.nocut+1, sizeof(double));
+#endif
+
+    if(n == 0)
+    {
+        xf[0] = psi_(&a0);
+        double s = 1.0;
+        for(unsigned int i = 1; i < DACECom_t.nocut+1; i++)
+        {
+            xf[i] = s*zeta_(i+1, a0, NULL);
+            s *= -1.0;
+        }
+    }
+    else
+    {
+        double fac = (n%2 ? 1.0 : -1.0);
+        for(unsigned int i = 2; i <= n; i++) fac *= i;
+        for(unsigned int i = 0; i < DACECom_t.nocut+1; i++)
+        {
+            xf[i] = fac*zeta_(n+i+1, a0, NULL);
+            fac = -(fac/(i+1))*(n+i+1);
+        }
+    }
+
+    daceEvaluateSeries(ina, xf, inc);
+
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(xf);
 #endif
 }

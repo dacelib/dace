@@ -30,7 +30,7 @@
     This file contains all internal DACE auxiliary functions used by the DACE core.
     It is not meant to be included publicly by DACE users or high level interfaces.
 */
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -145,7 +145,11 @@ void daceInitializeThread0();
 void daceSetError(const char *c, const unsigned int ix, const unsigned int iyy);
 void dacePack(double cc[], DACEDA *inc);
 void daceMultiplicativeInverse0(const DACEDA *ina, DACEDA *inc, const double a0);
-void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], DACEDA *inc);
+int BesselWrapper(const double x, const int n0, const int n1, const int type, double *bz);
+int ModifiedBesselWrapper(const double x, const int n0, const int n1, const int type, double *bz);
+void daceEvaluateBesselFunction(const DACEDA *ina, const double bz[], const double type, const double ktype, DACEDA *inc);
+void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz[], const double type, DACEDA *inc);
+void daceLogGammaFunction0(const DACEDA *ina, const double a0, DACEDA *inc);
 void daceEvaluateSeries(const DACEDA *ina, const double xf[], DACEDA *inc);
 /// @endcond
 /** @}*/

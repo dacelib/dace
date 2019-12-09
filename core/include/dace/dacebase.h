@@ -33,12 +33,14 @@
     Legacy users of DACE 1 can additionally include dacecompat.h to obtain a
     source compatible mapping to the old DACE 1 function names and semantics.
 */
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
 #ifndef DINAMICA_DACEBASE_H_
 #define DINAMICA_DACEBASE_H_
+
+#include <stdbool.h>        // for bool type
 
 #include "dace/config.h"
 
@@ -137,7 +139,7 @@ DACE_API unsigned int daceGetLength(const DACEDA REF(ina));
 
 /********************************************************************************
 *     DACE DA copying and filtering
-*********************************************************************************/  
+*********************************************************************************/
 DACE_API void daceCopy(const DACEDA REF(ina), DACEDA REF(inb));
 DACE_API void daceCopyFiltering(const DACEDA REF(ina), DACEDA REF(inb));
 DACE_API void daceFilter(const DACEDA REF(ina), DACEDA REF(inb), const DACEDA REF(inc));
@@ -198,8 +200,13 @@ DACE_API void daceHyperbolicArcCosine(const DACEDA REF(ina), DACEDA REF(inc));
 DACE_API void daceHyperbolicArcTangent(const DACEDA REF(ina), DACEDA REF(inc));
 DACE_API void daceErrorFunction(const DACEDA REF(ina), DACEDA REF(inc));
 DACE_API void daceComplementaryErrorFunction(const DACEDA REF(ina), DACEDA REF(inc));
+DACE_API void daceBesselIFunction(const DACEDA REF(ina), const int n, const bool scaled, DACEDA REF(inc));
 DACE_API void daceBesselJFunction(const DACEDA REF(ina), const int n, DACEDA REF(inc));
+DACE_API void daceBesselKFunction(const DACEDA REF(ina), const int n, const bool scaled, DACEDA REF(inc));
 DACE_API void daceBesselYFunction(const DACEDA REF(ina), const int n, DACEDA REF(inc));
+DACE_API void daceLogGammaFunction(const DACEDA REF(ina), DACEDA REF(inc));
+DACE_API void daceGammaFunction(const DACEDA REF(ina), DACEDA REF(inc));
+DACE_API void dacePsiFunction(const DACEDA REF(ina), const unsigned int n, DACEDA REF(inc));
 
 /********************************************************************************
 *     DACE norm and norm estimation routines

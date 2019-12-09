@@ -310,7 +310,7 @@ DA::~DA() throw(){
 /*! Destroy a DA object and free the associated object in the DACE core.
  */
     daceFreeDA(m_index);
-    
+
     // Never throw an exception from a destructor. Instead, we clear the error and ignore it. There is not much the user could do in this case anyway.
     if(daceGetError()) daceClearError();
 }
@@ -336,7 +336,7 @@ AlgebraicVector<double> DA::linear() const{
    \throw DACE::DACEException
  */
      AlgebraicVector<double> v(daceGetMaxVariables());
-    
+
     daceGetLinear(m_index, v.data()); // Note: v.data() is C++11
     if(daceGetError()) DACEException();
 
@@ -390,7 +390,7 @@ void DA::setCoefficient(const std::vector<unsigned int> &jj, const double coeff)
  */
     // check arguments
     const unsigned int nvar = daceGetMaxVariables();
-    
+
 	if(jj.size() >= nvar)
 	{
 		daceSetCoefficient(m_index, jj.data(), coeff);
@@ -518,7 +518,7 @@ DA& DA::operator=(const double c){
    \throw DACE::DACEException
  */
     daceCreateConstant(m_index, c);
-    
+
     if(daceGetError()) DACEException();
 
     return *this;
@@ -545,7 +545,7 @@ DA& DA::operator+=(const double c){
    \throw DACE::DACEException
  */
     daceAddDouble(m_index, c, m_index);
-    
+
     if(daceGetError()) DACEException();
 
     return *this;
@@ -1383,11 +1383,14 @@ DA DA::erfc() const{
     return temp;
 }
 
-DA DA::jn(const int n) const{
+DA DA::BesselJFunction(const int n) const{
 /*! Compute the n-th Bessel function of first type J_n of a DA object.
     The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
  */
     DA temp;
     daceBesselJFunction(m_index, n, temp.m_index);
@@ -1396,11 +1399,14 @@ DA DA::jn(const int n) const{
     return temp;
 }
 
-DA DA::yn(const int n) const{
+DA DA::BesselYFunction(const int n) const{
 /*! Compute the n-th Bessel function of second type Y_n of a DA object.
     The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
  */
     DA temp;
     daceBesselYFunction(m_index, n, temp.m_index);
@@ -1409,6 +1415,80 @@ DA DA::yn(const int n) const{
     return temp;
 }
 
+DA DA::BesselIFunction(const int n, const bool scaled) const{
+/*! Compute the n-th modified Bessel function of first type I_n of a DA object.
+    The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
+   \param[in] scaled if true, the modified Bessel function is scaled
+    by a factor exp(-x), i.e. exp(-x)I_n(x) is returned.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
+ */
+    DA temp;
+    daceBesselIFunction(m_index, n, scaled, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
+DA DA::BesselKFunction(const int n, const bool scaled) const{
+/*! Compute the n-th modified Bessel function of second type K_n of a DA object.
+    The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
+   \param[in] scaled if true, the modified Bessel function is scaled
+    by a factor exp(x), i.e. exp(x)K_n(x) is returned.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note This function fails if the result is too large to be represented in double precision.
+ */
+    DA temp;
+    daceBesselKFunction(m_index, n, scaled, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
+DA DA::GammaFunction() const{
+/*! Compute the Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+ */
+    DA temp;
+    daceGammaFunction(m_index, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
+DA DA::LogGammaFunction() const{
+/*! Compute the Logarithmic Gamma function (i.e. the natural logarithm of Gamma) of a DA object.
+    The result is copied in a new DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+ */
+    DA temp;
+    daceLogGammaFunction(m_index, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
+DA DA::PsiFunction(const unsigned int n) const{
+/*! Compute the n-th order Psi function, i.e. the (n+1)st derivative of the Logarithmic Gamma function, of a DA object.
+    The result is copied in a new DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+ */
+    DA temp;
+    dacePsiFunction(m_index, n, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
 
 /********************************************************************************
 *    Norm and estimation routines
@@ -1540,7 +1620,7 @@ double DA::convRadius(const double eps, const unsigned int type) const{
    \throw DACE::DACEException
  */
     const unsigned int ord = daceGetTruncationOrder();
-    
+
     std::vector<double> res = estimNorm(0, type, ord+1);
     return std::pow(eps/res[ord+1],1.0/(ord+1));
 }
@@ -1688,7 +1768,7 @@ std::istream& operator>>(std::istream &in, DA &da){
    \return Standard input stream.
    \throw DACE::DACEException
    \note When using binary IO operations, make sure the stream is opened in ios_base::binary mode!
-    Some C++ libraries are known to mangle the input otherwise which will break the ability to read binary DA objects. 
+    Some C++ libraries are known to mangle the input otherwise which will break the ability to read binary DA objects.
 	Setting the binary flag for all IO (also text based) does not affect the output and is recommended.
    \sa DA::fromString
  */
@@ -2292,9 +2372,11 @@ DA jn(const int n, const DA &da){
    \param[in] da a given DA object.
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
-   \sa DA::jn
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note Alias of BesselJFunction for C compatible naming.
+   \sa DA::BesselJFunction
  */
-    return da.jn(n);}
+    return da.BesselJFunction(n);}
 
 DA yn(const int n, const DA &da){
 /*! Compute the n-th Bessel function of second type Y_n of a DA object.
@@ -2303,9 +2385,115 @@ DA yn(const int n, const DA &da){
    \param[in] da a given DA object.
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
-   \sa DA::yn
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \note Alias of BesselYFunction for C compatible naming.
+   \sa DA::BesselYFunction
  */
-    return da.yn(n);}
+    return da.BesselYFunction(n);}
+
+DA BesselJFunction(const int n, const DA &da){
+/*! Compute the n-th Bessel function of first type J_n of a DA object.
+    The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+    \sa DA::BesselJFunction
+*/
+    return da.BesselJFunction(n);}
+
+DA BesselYFunction(const int n, const DA &da){
+/*! Compute the n-th Bessel function of second type Y_n of a DA object.
+    The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \sa DA::BesselYFunction
+ */
+    return da.BesselYFunction(n);}
+
+DA BesselIFunction(const int n, const DA &da, const bool scaled){
+/*! Compute the n-th modified Bessel function of first type I_n of a DA object.
+    The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
+   \param[in] da a given DA object.
+   \param[in] scaled if true, the modified Bessel function is scaled
+    by a factor exp(-x), i.e. exp(-x)I_n(x) is returned.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \sa DA::BesselIFunction
+ */
+    return da.BesselIFunction(n, scaled);}
+
+DA BesselKFunction(const int n, const DA &da, const bool scaled){
+/*! Compute the n-th modified Bessel function of second type K_n of a DA object.
+    The result is copied in a new DA object.
+   \param[in] n order of the Bessel function
+   \param[in] da a given DA object.
+   \param[in] scaled if true, the modified Bessel function is scaled
+    by a factor exp(-x), i.e. exp(-x)K_n(x) is returned.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \note The DA must have non-negative constant part while the order is allowed to be negative.
+   \sa DA::BesselKFunction
+ */
+    return da.BesselKFunction(n, scaled);}
+
+DA tgamma(const DA &da){
+/*! Compute the Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::GammaFunction
+   \note Alias of GammaFunction() for C99 compatible naming.
+ */
+    return da.GammaFunction();}
+
+DA lgamma(const DA &da){
+/*! Compute the Log Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::LogGammaFunction
+   \note Alias of LogGammaFunction() for C99 compatible naming.
+ */
+    return da.LogGammaFunction();}
+
+DA GammaFunction(const DA &da){
+/*! Compute the Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::GammaFunction
+ */
+    return da.GammaFunction();}
+
+DA LogGammaFunction(const DA &da){
+/*! Compute the Log Gamma function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::LogGammaFunction
+ */
+    return da.LogGammaFunction();}
+
+DA PsiFunction(const unsigned int n, const DA &da){
+/*! Compute the n-th Psi function of a DA object.
+    The result is copied in a new DA object.
+   \param[in] da a given DA object.
+   \return A new DA object containing the result of the operation.
+   \throw DACE::DACEException
+   \sa DA::PsiFunction
+ */
+    return da.PsiFunction(n);}
 
 unsigned int size(const DA &da){
 /*! Return the number of non-zero coefficients of a DA object.
@@ -2492,10 +2680,6 @@ void write(const DA &da, std::ostream &os){
    \sa DA::write
  */
     return da.write(os);}
-
-
-
-
 
 
 // static class variables
