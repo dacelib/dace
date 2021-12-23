@@ -263,7 +263,7 @@ template<typename T> template<typename U> AlgebraicVector<T>& AlgebraicVector<T>
    \param[in] obj Vector of elements to append.
    \return A reference to ourselves.
  */
-    const size_t size = this->size();
+    const size_t size = obj.size();
     for(size_t i=0; i<size; i++){
         (*this).push_back((T)obj[i]);}
     return *this;
