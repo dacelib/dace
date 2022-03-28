@@ -908,7 +908,7 @@ template<typename U> std::ostream& operator<<(std::ostream &out, const Algebraic
 
     out << "[[[ " << size << " vector" << std::endl;
     for(size_t i=0; i<size;i++){
-        out << obj[i] << std::endl;}
+        out << obj[i]; }
     out << "]]]" << std::endl;
 
     return out;
