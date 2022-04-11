@@ -259,7 +259,7 @@ void daceDivide(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 
 /*! Square a DA object.
    \param[in] ina Pointer to the DA object to square
-   \param[out] inc Pointer to the DA object to store the result in
+   \param[out] inb Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
 void daceSquare(const DACEDA *ina, DACEDA *inb)
@@ -568,7 +568,7 @@ void daceDifferentiate(const unsigned int idif, const DACEDA *ina, DACEDA *inc)
 }
 
 /*! Integral of DA object with respect to a given independent variable.
-   \param[in] idif Number of the independent variable with respect to which the
+   \param[in] iint Number of the independent variable with respect to which the
     integral is taken
    \param[in] ina Pointer to the DA object to operate on
    \param[out] inc Pointer to the DA object to store the result in
@@ -732,7 +732,7 @@ void dacePowerDouble(const DACEDA *ina, const double p, DACEDA *inc)
 
 /*! Raise a DA object to the p-th integer power.
    \param[in] ina Pointer to the DA object to operate on
-   \param[in] p Power to which to raise the DA object
+   \param[in] np Power to which to raise the DA object
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
@@ -1230,7 +1230,7 @@ void daceArcTangent(const DACEDA *ina, DACEDA *inc)
 /*! Arctangent of ina/inb with proper sign in [-pi, pi]. This function follows
     the C standard atan2(y,x) function syntax.
    \param[in] ina Pointer to the first DA object to operate on
-   \param[in] ina Pointer to the second DA object to operate on
+   \param[in] inb Pointer to the second DA object to operate on
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
  */
@@ -1859,7 +1859,8 @@ void daceEvaluateScaledModifiedBesselFunction(const DACEDA *ina, const double bz
 }
 
 /*! Compute the partial Logarithmic Gamma function of a DA object (without constant part).
-   \param[in] ina Pointer to the DA object to operate on (constant part != 0, -1, -2, ...)
+   \param[in] ina Pointer to the DA object to operate on
+   \param[in] a0 Constant part
    \param[out] inc Pointer to the DA object to store the result in
    \note This routine is aliasing safe, i.e. inc can be the same as ina.
    \note No argument checking is performed to ensure values are within allowable range.

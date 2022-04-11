@@ -71,7 +71,7 @@ public:
     *********************************************************************************/
     static void init(const unsigned int ord, const unsigned int nvar);      //!< DACE initialization
     static bool isInitialized();                                            //!< Get DACE initialization status
-    static void version(int &maj, int &min, int &cosy_flag);                //!< DACE core routines version
+    static void version(int &maj, int &min, int &patch);                    //!< DACE core routines version
     static void checkVersion();                                             //!< Check DACE C++ interface and core routines version for compatibility
     static double setEps(const double eps);                                 //!< Set truncation epsilon
     static double getEps();                                                 //!< Get truncation epsilon
@@ -225,7 +225,7 @@ public:
     template<class T> T evalScalar(const T &arg) const;                     //!< Evaluation with a single arithmetic type T argument (not efficient for repeated evaluation!)
     compiledDA compile() const;                                             //!< Compile current DA for efficient repeated evaluation
     DA plug(const unsigned int var, const double val = 0.0) const;          //!< Partial evaluation to replace given independent DA variable by value val
-	double evalMonomials(const DA &da) const;								//!< evaluate the DA providing the value of every monomial in da
+	double evalMonomials(const DA &values) const;   						//!< evaluate the DA providing the value of every monomial in da
 	DA replaceVariable(const unsigned int from = 0, const unsigned int to = 0, const double val = 1.0) const;
                                                                             //!< Replace variable number from by val times variable number to
     DA scaleVariable(const unsigned int var = 0, const double val = 1.0) const;

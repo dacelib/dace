@@ -6,7 +6,7 @@
 		http://www.netlib.org/f2c/libf2c.zip
 */
 
-/** \addtogroup DACE Contrib
+/** \addtogroup DACEContrib Contrib
  *  @{
  */
 

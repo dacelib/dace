@@ -10,6 +10,12 @@
 		http://www.netlib.org/f2c/libf2c.zip
 */
 
+/** \addtogroup DACEContrib Contrib
+ *  @{
+ */
+
+/// @cond
+
 #include "f2c.h"
 
 doublereal psi_(const doublereal *xx)
@@ -310,3 +316,6 @@ L500:
 /* ---------- Last card of PSI ---------- */
 } /* psi_ */
 
+
+/// @endcond
+/** @}*/
