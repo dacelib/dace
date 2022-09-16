@@ -323,10 +323,10 @@ void daceSetCoefficient(DACEDA *ina, const unsigned int jj[], const double cjj)
     daceSetCoefficient0(ina, daceEncode(jj), cjj);
 }
 
-/*! Extract coefficient of a monomial in a DA object.
-   \param[in] ina Pointer to DA object to extract monomial coefficient from
+/*! Set coefficient of a monomial in a DA object.
+   \param[in] ina Pointer to DA object to set monomial in
    \param[in] ic DA coding integer of the monomial to set
-   \return The coefficient of the given monomial in the DA object
+   \param[in] cjj Value of the corresponding coefficient
 */
 void daceSetCoefficient0(DACEDA *ina, const unsigned int ic, const double cjj)
 {
@@ -535,7 +535,7 @@ void daceCopyFiltering(const DACEDA *ina, DACEDA *inb)
     and less than or equal imax.
    \param[in] ina Pointer to DA object to trim
    \param[in] imin Minimum order to keep
-   \param[in] imin Maximum order to keep
+   \param[in] imax Maximum order to keep
    \param[in] inc Pointer to DA object to store the truncated result in
 */
 void daceTrim(const DACEDA *ina, const unsigned int imin, const unsigned int imax, DACEDA *inc)

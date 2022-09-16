@@ -870,7 +870,7 @@ template<> template<typename V> V AlgebraicVector<DA>::eval(const V &args) const
 template<> template<typename U> AlgebraicVector<U> AlgebraicVector<DA>::eval(const std::initializer_list<U> l) const{
 /*! Evaluate a vector of polynomials with an braced initializer list of type U
     and return an AlgebraicVector of type U with the results.
-   \param[in] args Braced initializer list containing the arguments.
+   \param[in] l Braced initializer list containing the arguments.
    \return A new AlgebraicVector of type U containing the results of the evaluation.
    \note C++ is not able to derive the type of elements of an initializer list automatically.
     That means eval() must be called explicitly as e.g. eval<double>({1.0, 2.0, 3.0}) when
@@ -1246,7 +1246,7 @@ template<typename T> AlgebraicVector<T> eval(const AlgebraicVector<DA> &obj, con
 /*! Evaluate an AlgebraicVector<DA> with an braced initializer list of type T
     and return an AlgebraicVector of type T with the results.
    \param[in] obj An AlgebraicVector<DA>.
-   \param[in] args Braced initializer list containing the arguments.
+   \param[in] l Braced initializer list containing the arguments.
    \return A new AlgebraicVector of type T containing the results of the evaluation.
    \note C++ is not able to derive the type of elements of an initializer list automatically.
     That means eval() must be called explicitly as e.g. eval<double>(x, {1.0, 2.0, 3.0}) when

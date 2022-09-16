@@ -85,8 +85,7 @@ bool DA::isInitialized() {
 
 void DA::version(int &maj, int &min, int &patch) {
 /*! Return the major and minor version number of the DACE
-      along with the "COSY flag" indicating if the core library
-    is COSY or DACE.
+    along with the patch level of the library.
    \param[out] maj major DACE version number;
    \param[out] min minor DACE version number;
    \param[out] patch patch level of DACE version.
@@ -1655,7 +1654,7 @@ double DA::evalMonomials(const DA &values) const {
 /*! Evaluates the DA vector using the coefficients in argument values as the values for each monomial.
     This is equivalent to a monomial-wise dot product of two DA vectors.
    \param[in] values DA vector containing the values of each monomial
-   \return The resutl of the evaluation.
+   \return The result of the evaluation.
    \throw DACE::DACEException
    \sa DA::multiplyMonomial
 */
@@ -1948,8 +1947,9 @@ DA divide(const DA &da, const unsigned int var, const unsigned int p){
 /*! Divide by independent variable var raised to power p.
     The result is copied in a new DA object.
    \param[in] da DA object.
-   \param[in] i variable with respect to which the derivative is calculated.
-   \return A new DA object containing the result of the derivation.
+   \param[in] var variable number to divide by.
+   \param[in] p power of variable var to divide by.
+   \return A new DA object containing the result of the division.
    \throw DACE::DACEException
    \sa DA::divide
  */
@@ -2148,9 +2148,10 @@ DA icrt(const DA &da){
     return da.icrt();}
 
 DA hypot(const DA &da1, const DA &da2){
-/*! Compute the hypotenuse (sqrt(a*a + b*b)) of two DA objects.
+/*! Compute the hypotenuse (sqrt(da1*da1 + da2*da2)) of two DA objects.
     The result is copied in a new DA object.
-   \param[in] da a given DA object.
+   \param[in] da1 first DA object.
+   \param[in] da2 second DA object.
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \sa DA::hypot
@@ -2194,7 +2195,6 @@ DA log10(const DA &da){
 /*! Compute the 10 based logarithm of a DA object.
     The result is copied in a new DA object.
    \param[in] da a given DA object.
-   \param[in] b base with respect to which the logarithm is computed (base 10 set as default base).
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \sa DA::log10
@@ -2205,7 +2205,6 @@ DA log2(const DA &da){
 /*! Compute the 2 based logarithm of a DA object.
     The result is copied in a new DA object.
    \param[in] da a given DA object.
-   \param[in] b base with respect to which the logarithm is computed (base 10 set as default base).
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \sa DA::log2
@@ -2488,6 +2487,7 @@ DA LogGammaFunction(const DA &da){
 DA PsiFunction(const unsigned int n, const DA &da){
 /*! Compute the n-th Psi function of a DA object.
     The result is copied in a new DA object.
+   \param[in] n order of the Psi function to compute.
    \param[in] da a given DA object.
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException

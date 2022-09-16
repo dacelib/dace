@@ -53,13 +53,19 @@
  * Series, and Products, p. 1073; Academic Press, 1980.
  *
  */
-
+
 /*
 Cephes Math Library Release 2.8:  June, 2000
 Copyright 1984, 1987, 2000 by Stephen L. Moshier
 
 Modified interface by Alexander Wittig, November 2019.
 */
+
+/** \addtogroup DACEContrib Contrib
+ *  @{
+ */
+
+/// @cond
 
 #include <math.h>
 
@@ -153,3 +159,6 @@ retinf:
 done:
 	return(s);
 }
+
+/// @endcond
+/** @}*/

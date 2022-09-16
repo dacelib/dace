@@ -30,7 +30,7 @@
     This file contains all contributed routines to the DACE core.
     It is never included publicly by DACE users or high level interfaces.
 */
-/** \addtogroup DACE Contrib
+/** \addtogroup DACEContrib Contrib
  *  @{
  */
 

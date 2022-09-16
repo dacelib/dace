@@ -197,6 +197,7 @@ void daceOrderedNorm(const DACEDA *ina, const unsigned int ivar, const unsigned 
      0 = max norm
      1 = sum norm
     >1 = corresponding vector norm
+   \param[in] nc Maximum order to estimate
    \param[out] c C array of length nc+1 containing the grouped estimates
    \param[out] err C array of length min(nc, nomax)+1 containing the residuals
     of the exponential fit at each order. If NULL is passed in, no residuals

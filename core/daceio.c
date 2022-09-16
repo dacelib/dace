@@ -461,7 +461,7 @@ unsigned int daceBlobSize(const void *blob)
 
 /*! Import a DA object in a binary format.
    \param[in] blob Pointer to memory where the data is stored
-   \param[in] ina The DA object to import into
+   \param[in] inc The DA object to import into
    \note This routine will silently truncate orders above the currently set
     maximum computation order as well as any extra variables present.
 */

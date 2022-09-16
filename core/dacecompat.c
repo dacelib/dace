@@ -41,7 +41,7 @@
 
 /*! Return the number of non-zero monomials in a DA object.
    \param[in] ina Pointer to DA object to get length of
-   \return Number of non-zero monomials
+   \param[out] size Number of non-zero monomials
    \deprecated Has been renamed to daceGetLength()
    \sa daceGetLength()
 */
