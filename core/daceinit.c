@@ -46,8 +46,12 @@
 /*! Set up the ordering and addressing arrays in the common data structure
     and initialize DA memory.
    \note MUST BE CALLED BEFORE ANY OTHER DA ROUTINE CAN BE USED.
+   \note Also initializes the truncation order to the maximum computation order
+   and disables the DA epsilon cutoff by setting it to 0.0.
    \param[in] no order of the Taylor polynomials;
    \param[in] nv number of variables considered.
+   \sa daceTruncationOrder
+   \sa daceSetEpsilon
  */
 void daceInitialize(unsigned int no, unsigned int nv)
 {
@@ -185,7 +189,13 @@ void daceInitialize(unsigned int no, unsigned int nv)
    \note The main thread must call daceInitialize once before spawning new threads.
    All spawned threads must then call daceInitializeThread to initialize the
    thread before performing any other operations.
+   \note daceInitialize MUST NOT be called again by any thread while other threads
+   are active.
+   \note Also initializes the truncation order to the maximum computation order
+   and disables the DA epsilon cutoff by setting it to 0.0.
    \sa daceInitialize
+   \sa daceTruncationOrder
+   \sa daceSetEpsilon
  */
 void daceInitializeThread()
 {
@@ -209,11 +219,13 @@ void daceCleanupThread()
 }
 
 /*! Set up thread local data structures without resetting error.
- */
+    Also initializes the truncation order to the maximum computation order
+    and disables the DA epsilon cutoff by setting it to 0.0.
+*/
 void daceInitializeThread0()
 {
-    // Set cutoff to (arbitrarily) be 2^10 smaller than machine epsilon
-    DACECom_t.eps = DACECom.epsmac/pown(2.0, 10);
+    // Set initial cutoff to zero, disabling the optimization
+    DACECom_t.eps = 0.0;
 
     // Set truncation order to full order
     DACECom_t.nocut = DACECom.nomax;
@@ -244,9 +256,15 @@ void daceGetVersion(int *imaj, int *imin, int *ipat)
 }
 
 /*! Set cutoff value to eps and return the previous value.
-   \param[in] eps New cutoff value below which coefficients may be flushed to
+   \param[in] eps New cutoff value at or below which coefficients can be flushed to
     zero for efficiency purposes.
    \return The previous value of the cutoff
+   \note This feature can have severe unintended consequences if used incorrectly!
+    Flushing occurs for any intermediate result also within the DACE, and can result
+    in wrong solutions whenever DA coefficients become very small relative to epsilon.
+    For example, division by a large DA divisor can cause the (internally calculated)
+    multiplicative inverse to be entirely flushed to zero, resulting in a zero DA
+    quotient independently of the size of the dividend.
    \sa daceGetEpsilon
  */
 double daceSetEpsilon(const double eps)
@@ -266,7 +284,7 @@ double daceGetEpsilon()
 }
 
 /*! Get machine epsilon value.
-   \return The experimentally computed machine epsilon
+   \return The experimentally determined machine epsilon
  */
 double daceGetMachineEpsilon()
 {

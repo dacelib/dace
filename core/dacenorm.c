@@ -229,7 +229,7 @@ void daceEstimate(const DACEDA *ina, const unsigned int ivar, const unsigned int
     double xtx[2][2] = {{0.0}, {0.0}};
     for(unsigned int i = 1; i <= DACECom.nomax; i++)
     {
-        if(onorm[i] > DACECom_t.eps)
+        if(!(onorm[i] <= DACECom_t.eps))
         {
             xtx[0][0] += i*i;
             xtx[0][1] -= i;

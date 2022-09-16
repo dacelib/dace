@@ -328,12 +328,12 @@ void daceMultiplyDouble(const DACEDA *ina, const double ckon, DACEDA *inb)
                 continue;
 
             const double c = ia->cc*ckon;
-            if(fabs(c) < DACECom_t.eps)
-                continue;
-
-            ib->cc = c;
-            ib->ii = ia->ii;
-            ib++;
+            if(!(fabs(c) <= DACECom_t.eps))
+            {
+                ib->cc = c;
+                ib->ii = ia->ii;
+                ib++;
+            }
         }
     }
     else
@@ -345,17 +345,17 @@ void daceMultiplyDouble(const DACEDA *ina, const double ckon, DACEDA *inb)
                 continue;
 
             const double c = ia->cc*ckon;
-            if(fabs(c) < DACECom_t.eps)
-                continue;
-
-            if(ib >= ibmax)
+            if(!(fabs(c) <= DACECom_t.eps))
             {
-                daceSetError(__func__, DACE_ERROR, 21);
-                break;
+                if(ib >= ibmax)
+                {
+                    daceSetError(__func__, DACE_ERROR, 21);
+                    break;
+                }
+                ib->cc = c;
+                ib->ii = ia->ii;
+                ib++;
             }
-            ib->cc = c;
-            ib->ii = ia->ii;
-            ib++;
         }
     }
 
@@ -608,16 +608,17 @@ void daceIntegrate(const unsigned int iint, const DACEDA *ina, DACEDA *inc)
             const unsigned int ic2 = DACECom.ie2[i->ii];
             const unsigned int ipow = (ic2/idiv)%ibase;
             const double ccc = i->cc/(ipow+1);
-            if(fabs(ccc) < DACECom_t.eps)
-                continue;
-            if(ic >= icmax)
+            if(!(fabs(ccc) <= DACECom_t.eps))
             {
-                daceSetError(__func__, DACE_ERROR, 21);
-                break;
+                if(ic >= icmax)
+                {
+                    daceSetError(__func__, DACE_ERROR, 21);
+                    break;
+                }
+                ic->ii = DACECom.ia1[ic1] + DACECom.ia2[ic2+idiv];
+                ic->cc = ccc;
+                ic = ic+1;
             }
-            ic->ii = DACECom.ia1[ic1] + DACECom.ia2[ic2+idiv];
-            ic->cc = ccc;
-            ic = ic+1;
         }
     }
     else
@@ -630,16 +631,17 @@ void daceIntegrate(const unsigned int iint, const DACEDA *ina, DACEDA *inc)
             const unsigned int ic2 = DACECom.ie2[i->ii];
             const unsigned int ipow = (ic1/idiv)%ibase;
             const double ccc = i->cc/(ipow+1);
-            if(fabs(ccc) < DACECom_t.eps)
-                continue;
-            if(ic >= icmax)
+            if(!(fabs(ccc) <= DACECom_t.eps))
             {
-                daceSetError(__func__, DACE_ERROR, 21);
-                break;
+                if(ic >= icmax)
+                {
+                    daceSetError(__func__, DACE_ERROR, 21);
+                    break;
+                }
+                ic->ii = DACECom.ia1[ic1+idiv] + DACECom.ia2[ic2];
+                ic->cc = ccc;
+                ic = ic+1;
             }
-            ic->ii = DACECom.ia1[ic1+idiv] + DACECom.ia2[ic2];
-            ic->cc = ccc;
-            ic = ic+1;
         }
     }
 
@@ -2044,7 +2046,7 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
                 if(DACECom.ieo[ja] <= DACECom_t.nocut)
                 {
                     const double ccc = ia->cc*afac + ib->cc*bfac;
-                    if(fabs(ccc) >= DACECom_t.eps)
+                    if(!(fabs(ccc) <= DACECom_t.eps))
                     {
                         if(ic >= icmax)
                         {
@@ -2068,7 +2070,7 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
                 if(DACECom.ieo[ja] <= DACECom_t.nocut)
                 {
                     const double ccc = ia->cc*afac;
-                    if(fabs(ccc) >= DACECom_t.eps)
+                    if(!(fabs(ccc) <= DACECom_t.eps))
                     {
                         if(ic >= icmax)
                         {
@@ -2091,7 +2093,7 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
                 if(DACECom.ieo[jb] <= DACECom_t.nocut)
                 {
                     const double ccc = ib->cc*bfac;
-                    if(fabs(ccc) >= DACECom_t.eps)
+                    if(!(fabs(ccc) <= DACECom_t.eps))
                     {
                         if(ic >= icmax)
                         {
@@ -2132,7 +2134,7 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
         if(DACECom.ieo[is->ii] <= DACECom_t.nocut)
         {
             const double ccc = is->cc*fac;
-            if(fabs(ccc) >= DACECom_t.eps)
+            if(!(fabs(ccc) <= DACECom_t.eps))
             {
                 if(ic >= icmax)
                 {

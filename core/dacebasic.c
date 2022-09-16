@@ -65,7 +65,7 @@ void daceCreateVariable(DACEDA *ina, const unsigned int i, const double ckon)
         return;
     }
 
-    if(fabs(ckon) < DACECom_t.eps)
+    if(fabs(ckon) <= DACECom_t.eps)
     {
         return;
     }
@@ -117,15 +117,15 @@ void daceCreateMonomial(DACEDA *ina, const unsigned int jj[], const double ckon)
         return;
     }
 
-    if(fabs(ckon) >= DACECom_t.eps)
+    if(fabs(ckon) <= DACECom_t.eps)
+    {
+        daceSetLength(ina, 0);
+    }
+    else
     {
         ipoa->ii = daceEncode(jj);
         ipoa->cc = ckon;
         daceSetLength(ina, 1);
-    }
-    else
-    {
-        daceSetLength(ina, 0);
     }
 }
 
@@ -390,7 +390,7 @@ void daceSetCoefficient0(DACEDA *ina, const unsigned int ic, const double cjj)
     if(insert)
     {
         // insert a new monomial before the i-th monomial
-        if(fabs(cjj) < DACECom_t.eps) return;
+        if(fabs(cjj) <= DACECom_t.eps) return;
 
         if(illa+1 > ilma)
         {
@@ -410,16 +410,16 @@ void daceSetCoefficient0(DACEDA *ina, const unsigned int ic, const double cjj)
     else
     {
         // replace the i-th monomial
-        if(fabs(cjj) < DACECom_t.eps)
+        if(!(fabs(cjj) <= DACECom_t.eps))
+        {
+            i->cc = cjj;
+        }
+        else
         {
             //memmove(i, i+1, (ipoa+illa - i-1)*sizeof(monomial));
             for(monomial *ii = i; ii < ipoa+(illa-1); ii++)
                 *ii = *(ii+1);
             daceSetLength(ina, illa-1);
-        }
-        else
-        {
-            i->cc = cjj;
         }
     }
 }
@@ -506,7 +506,7 @@ void daceCopyFiltering(const DACEDA *ina, DACEDA *inb)
     {
         for(monomial *ia = ipoa; ia < ipoa+illa; ia++)
         {
-            if(fabs(ia->cc) < DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
+            if(fabs(ia->cc) <= DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
                 continue;
             *ib = *ia;
             ib++;
@@ -516,7 +516,7 @@ void daceCopyFiltering(const DACEDA *ina, DACEDA *inb)
     {
         for(monomial *ia = ipoa; ia < ipoa+illa; ia++)
         {
-            if(fabs(ia->cc) < DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
+            if(fabs(ia->cc) <= DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
                 continue;
             if(ib >= ipob+ilmb)
             {
@@ -568,8 +568,8 @@ void daceTrim(const DACEDA *ina, const unsigned int imin, const unsigned int ima
 }
 
 /*! Copy monomials from a DA object ina to DA object inb if the same monomial
-    is non-zero in DA vector inc, while filtering out terms below the current
-    threshold
+    is non-zero in DA object inc, while filtering out terms below the current
+    cutoff
    \param[in] ina Pointer to DA object to filter
    \param[in] inb Pointer to DA object to store the filtered result in
    \param[in] inc Pointer to DA object providing the filter template
@@ -595,7 +595,7 @@ void daceFilter(const DACEDA *ina, DACEDA *inb, const DACEDA *inc)
                 ic++;
             if(ic >= ipoc+illc) break;
 
-            if(ia->ii < ic->ii || fabs(ia->cc) < DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
+            if(ia->ii < ic->ii || fabs(ia->cc) <= DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
                 continue;
 
             *ib = *ia;
@@ -611,7 +611,7 @@ void daceFilter(const DACEDA *ina, DACEDA *inb, const DACEDA *inc)
                 ic++;
             if(ic >= ipoc+illc) break;
 
-            if(ia->ii < ic->ii || fabs(ia->cc) < DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
+            if(ia->ii < ic->ii || fabs(ia->cc) <= DACECom_t.eps || DACECom.ieo[ia->ii] > DACECom_t.nocut)
                 continue;
 
             if(ib >= ipob+ilmb)

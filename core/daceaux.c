@@ -345,32 +345,25 @@ void dacePack(double cc[], DACEDA *inc)
     if(LIKELY(DACECom.lfi == 0))
 #endif
     {
+        // provide loop without error checking for big enough target DA
         if(LIKELY(ilmc >= DACECom.nmmax))
         {
             for(unsigned int i = 0; i < DACECom.nmmax; i++)
             {
-//#define OPTIMIZE  // not clear if this actually helps in any way
-#ifndef OPTIMIZE
-                if(fabs(cc[i]) >= DACECom_t.eps)  //  && (DACECom.ieo[i] <= DACECom_t.nocut) is avoided for performance
+                if(!(fabs(cc[i]) <= DACECom_t.eps))  //  && (DACECom.ieo[i] <= DACECom_t.nocut) is avoided for performance
                 {
                     ic->ii = i;
                     ic->cc = cc[i];
                     ic++;
                 }
                 cc[i] = 0.0;
-#else
-                ic->ii = i;
-                ic->cc = cc[i];
-                ic += (fabs(cc[i]) >= DACECom_t.eps);
-                cc[i] = 0.0;
-#endif
             }
         }
         else
         {
             for(unsigned int i = 0; i < DACECom.nmmax; i++)
             {
-                if(fabs(cc[i]) >= DACECom_t.eps && DACECom.ieo[i] <= DACECom_t.nocut)
+                if(!(fabs(cc[i]) <= DACECom_t.eps) && DACECom.ieo[i] <= DACECom_t.nocut)     // here we remove also cut orders to save as much space as possible
                 {
                     if(ic >= ipoc+ilmc)
                     {
@@ -391,7 +384,7 @@ void dacePack(double cc[], DACEDA *inc)
     {
         for(unsigned int i = 0; i < DACECom.nmmax; i++)
         {
-            if((DACECom.ifi[i] != 0) && (fabs(cc[i]) >= DACECom_t.eps) && (DACECom.ieo[i] <= DACECom_t.nocut))
+            if((DACECom.ifi[i] != 0) && !(fabs(cc[i]) <= DACECom_t.eps) && (DACECom.ieo[i] <= DACECom_t.nocut))
             {
                 if(ic >= ipoc+ilmc)
                 {
