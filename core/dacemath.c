@@ -1343,11 +1343,25 @@ void daceHyperbolicCosine(const DACEDA *ina, DACEDA *inc)
 void daceHyperbolicTangent(const DACEDA *ina, DACEDA *inc)
 {
     DACEDA itemp;
+    const double a0 = daceGetConstant(ina);
 
     daceAllocateDA(&itemp, 0);
-    daceHyperbolicSine(ina, &itemp);
-    daceHyperbolicCosine(ina, inc);
-    daceDivide(&itemp, inc, inc);
+    if(a0 > 0.0)
+    {
+        daceMultiplyDouble(ina, -2.0, &itemp);
+        daceExponential(&itemp, &itemp);
+        daceAddDouble(&itemp, 1.0, inc);
+        daceDoubleSubtract(&itemp, 1.0, &itemp);
+        daceDivide(&itemp, inc, inc);
+    }
+    else
+    {
+        daceMultiplyDouble(ina, 2.0, &itemp);
+        daceExponential(&itemp, &itemp);
+        daceAddDouble(&itemp, 1.0, inc);
+        daceAddDouble(&itemp, -1.0, &itemp);
+        daceDivide(&itemp, inc, inc);
+    }
     daceFreeDA(&itemp);
 }
 
