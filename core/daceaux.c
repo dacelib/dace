@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -214,7 +214,7 @@ unsigned int daceDecodeExponents(unsigned int ic, const unsigned int no, const u
     order monomial). Then call it repeatedly with the previous state of p[]
     and it will put the next monomial in p[] as well as return the
     order of that monomial.
-   \note When there are no more monomials left, the funcion will cycle back to 
+   \note When there are no more monomials left, the funcion will cycle back to
     the constant monomial of order zero.
    \note This function handles the cases nv=0 and no=0 correctly (i.e. returning 0)
 */
@@ -250,7 +250,7 @@ unsigned int daceNextMonomial(unsigned int p[], const unsigned int no, const uns
     order monomial). Then call it repeatedly with the previous state of p[]
     and it will put the next monomial in p[] as well as return the
     order of that monomial.
-   \note When there are no more monomials left, the funcion will cycle back to 
+   \note When there are no more monomials left, the funcion will cycle back to
     the constant monomial of order zero.
    \note This function handles the cases nv=0 and no=0 correctly (i.e. returning 0)
 */

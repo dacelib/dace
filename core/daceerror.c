@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -106,30 +106,30 @@ void daceClearError()
     *DACEDbg.msg = '\0';
 }
 
-/*!   This subroutine serves as an error handler for errors within the dace.      
+/*!   This subroutine serves as an error handler for errors within the dace.
       It is intended mostly for development and debugging. More descriptive error messages should be
       displayed by the user interface.
- 
+
       The error codes are defined as XYY with X indicating the severity and
       YY corresponding to the actual error code
- 
+
       Severity Levels X
 
       1  = Info:  Informative, no action required
-      
+
       3  = Warning:  Serious, possibly incorrect use of DACE routines
-      
+
       6  = Error:    Recoverable, result may not be correct or assumptions have
                      been made
-      
+
       9  = Error:    Unrecoverable, new call to DACEINI is required to
                      reinitialize DACE, DACE objects are no longer valid
-      
+
       10 = Critical: Crash in the DACE, just printing as much as possible
                      and dying
- 
+
       Currently used error codes XYY are defined in daceerror.h
-      
+
       \param[in] c an error string representing the error
       \param[in] ix is the error severity code
       \param[in] iyy is the error code

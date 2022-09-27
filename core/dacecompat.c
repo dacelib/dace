@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
