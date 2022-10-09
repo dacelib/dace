@@ -1,13 +1,13 @@
 /* dgamma.f -- translated by f2c (version 20100827).
    You must link the resulting object file with libf2c:
-	on Microsoft Windows system, link with libf2c.lib;
-	on Linux or Unix systems, link with .../path/to/libf2c.a -lm
-	or, if you install libf2c.a in a standard place, with -lf2c -lm
-	-- in that order, at the end of the command line, as in
-		cc *.o -lf2c -lm
-	Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
+    on Microsoft Windows system, link with libf2c.lib;
+    on Linux or Unix systems, link with .../path/to/libf2c.a -lm
+    or, if you install libf2c.a in a standard place, with -lf2c -lm
+    -- in that order, at the end of the command line, as in
+        cc *.o -lf2c -lm
+    Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
 
-		http://www.netlib.org/f2c/libf2c.zip
+        http://www.netlib.org/f2c/libf2c.zip
 */
 
 /** \addtogroup DACEContrib Contrib
@@ -27,19 +27,19 @@ doublereal dgamma_(const doublereal *x)
     static doublereal eps = 2.22e-16;
     static doublereal xinf = 1.79e308;
     static doublereal p[8] = { -1.71618513886549492533811,
-	    24.7656508055759199108314,-379.804256470945635097577,
-	    629.331155312818442661052,866.966202790413211295064,
-	    -31451.2729688483675254357,-36144.4134186911729807069,
-	    66456.1438202405440627855 };
+        24.7656508055759199108314,-379.804256470945635097577,
+        629.331155312818442661052,866.966202790413211295064,
+        -31451.2729688483675254357,-36144.4134186911729807069,
+        66456.1438202405440627855 };
     static doublereal q[8] = { -30.8402300119738975254353,
-	    315.350626979604161529144,-1015.15636749021914166146,
-	    -3107.77167157231109440444,22538.1184209801510330112,
-	    4755.84627752788110767815,-134659.959864969306392456,
-	    -115132.259675553483497211 };
+        315.350626979604161529144,-1015.15636749021914166146,
+        -3107.77167157231109440444,22538.1184209801510330112,
+        4755.84627752788110767815,-134659.959864969306392456,
+        -115132.259675553483497211 };
     static doublereal c__[7] = { -.001910444077728,8.4171387781295e-4,
-	    -5.952379913043012e-4,7.93650793500350248e-4,
-	    -.002777777777777681622553,.08333333333333333331554247,
-	    .0057083835261 };
+        -5.952379913043012e-4,7.93650793500350248e-4,
+        -.002777777777777681622553,.08333333333333333331554247,
+        .0057083835261 };
     static doublereal half = .5;
     static doublereal twelve = 12.;
     static doublereal two = 2.;
@@ -55,7 +55,7 @@ doublereal dgamma_(const doublereal *x)
 
     /* Builtin functions */
     double d_int(doublereal *), sin(doublereal), log(doublereal), exp(
-	    doublereal);
+        doublereal);
 
     /* Local variables */
     integer i__, n;
@@ -194,20 +194,20 @@ doublereal dgamma_(const doublereal *x)
 /* ---------------------------------------------------------------------- */
 /*  Argument is negative */
 /* ---------------------------------------------------------------------- */
-	y = -(*x);
-	y1 = d_int(&y);
-	res = y - y1;
-	if (res != zero) {
-	    d__1 = y1 * half;
-	    if (y1 != d_int(&d__1) * two) {
-		parity = TRUE_;
-	    }
-	    fact = -pi / sin(pi * res);
-	    y += one;
-	} else {
-	    res = xinf;
-	    goto L900;
-	}
+    y = -(*x);
+    y1 = d_int(&y);
+    res = y - y1;
+    if (res != zero) {
+        d__1 = y1 * half;
+        if (y1 != d_int(&d__1) * two) {
+        parity = TRUE_;
+        }
+        fact = -pi / sin(pi * res);
+        y += one;
+    } else {
+        res = xinf;
+        goto L900;
+    }
     }
 /* ---------------------------------------------------------------------- */
 /*  Argument is positive */
@@ -216,82 +216,82 @@ doublereal dgamma_(const doublereal *x)
 /* ---------------------------------------------------------------------- */
 /*  Argument .LT. EPS */
 /* ---------------------------------------------------------------------- */
-	if (y >= xminin) {
-	    res = one / y;
-	} else {
-	    res = xinf;
-	    goto L900;
-	}
+    if (y >= xminin) {
+        res = one / y;
+    } else {
+        res = xinf;
+        goto L900;
+    }
     } else if (y < twelve) {
-	y1 = y;
-	if (y < one) {
+    y1 = y;
+    if (y < one) {
 /* ---------------------------------------------------------------------- */
 /*  0.0 .LT. argument .LT. 1.0 */
 /* ---------------------------------------------------------------------- */
-	    z__ = y;
-	    y += one;
-	} else {
+        z__ = y;
+        y += one;
+    } else {
 /* ---------------------------------------------------------------------- */
 /*  1.0 .LT. argument .LT. 12.0, reduce argument if necessary */
 /* ---------------------------------------------------------------------- */
-	    n = (integer) y - 1;
-	    y -= (doublereal) n;
-	    z__ = y - one;
-	}
+        n = (integer) y - 1;
+        y -= (doublereal) n;
+        z__ = y - one;
+    }
 /* ---------------------------------------------------------------------- */
 /*  Evaluate approximation for 1.0 .LT. argument .LT. 2.0 */
 /* ---------------------------------------------------------------------- */
-	xnum = zero;
-	xden = one;
-	for (i__ = 1; i__ <= 8; ++i__) {
-	    xnum = (xnum + p[i__ - 1]) * z__;
-	    xden = xden * z__ + q[i__ - 1];
+    xnum = zero;
+    xden = one;
+    for (i__ = 1; i__ <= 8; ++i__) {
+        xnum = (xnum + p[i__ - 1]) * z__;
+        xden = xden * z__ + q[i__ - 1];
 /* L260: */
-	}
-	res = xnum / xden + one;
-	if (y1 < y) {
+    }
+    res = xnum / xden + one;
+    if (y1 < y) {
 /* ---------------------------------------------------------------------- */
 /*  Adjust result for case  0.0 .LT. argument .LT. 1.0 */
 /* ---------------------------------------------------------------------- */
-	    res /= y1;
-	} else if (y1 > y) {
+        res /= y1;
+    } else if (y1 > y) {
 /* ---------------------------------------------------------------------- */
 /*  Adjust result for case  2.0 .LT. argument .LT. 12.0 */
 /* ---------------------------------------------------------------------- */
-	    i__1 = n;
-	    for (i__ = 1; i__ <= i__1; ++i__) {
-		res *= y;
-		y += one;
+        i__1 = n;
+        for (i__ = 1; i__ <= i__1; ++i__) {
+        res *= y;
+        y += one;
 /* L290: */
-	    }
-	}
+        }
+    }
     } else {
 /* ---------------------------------------------------------------------- */
 /*  Evaluate for argument .GE. 12.0, */
 /* ---------------------------------------------------------------------- */
-	if (y <= xbig) {
-	    ysq = y * y;
-	    sum = c__[6];
-	    for (i__ = 1; i__ <= 6; ++i__) {
-		sum = sum / ysq + c__[i__ - 1];
+    if (y <= xbig) {
+        ysq = y * y;
+        sum = c__[6];
+        for (i__ = 1; i__ <= 6; ++i__) {
+        sum = sum / ysq + c__[i__ - 1];
 /* L350: */
-	    }
-	    sum = sum / y - y + sqrtpi;
-	    sum += (y - half) * log(y);
-	    res = exp(sum);
-	} else {
-	    res = xinf;
-	    goto L900;
-	}
+        }
+        sum = sum / y - y + sqrtpi;
+        sum += (y - half) * log(y);
+        res = exp(sum);
+    } else {
+        res = xinf;
+        goto L900;
+    }
     }
 /* ---------------------------------------------------------------------- */
 /*  Final adjustments and return */
 /* ---------------------------------------------------------------------- */
     if (parity) {
-	res = -res;
+    res = -res;
     }
     if (fact != one) {
-	res = fact / res;
+    res = fact / res;
     }
 /* S900 GAMMA = RES */
 L900:

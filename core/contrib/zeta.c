@@ -1,6 +1,6 @@
-/*							zeta.c
+/*                            zeta.c
  *
- *	Riemann zeta function of two arguments
+ *    Riemann zeta function of two arguments
  *
  *
  *
@@ -94,70 +94,70 @@ static const double MACHEP = 1.11022302462515654042E-16;
 
 double zeta_(const double x, const double q, unsigned int *err)
 {
-	double a, b, k, s, t, w;
+    double a, b, k, s, t, w;
 
-	if( err ) *err = 0;
+    if( err ) *err = 0;
 
-	if( x == 1.0 )
-		goto retinf;
+    if( x == 1.0 )
+        goto retinf;
 
-	if( x < 1.0 )
-	{
+    if( x < 1.0 )
+    {
 domerr:
-		if( err ) *err = 1;
-		return(NAN);
-	}
+        if( err ) *err = 1;
+        return(NAN);
+    }
 
-	if( q <= 0.0 )
-	{
-		if(q == floor(q))
-		{
+    if( q <= 0.0 )
+    {
+        if(q == floor(q))
+        {
 retinf:
-			if( err ) *err = 2;
-			return(INFINITY);
-		}
-		if( x != floor(x) )
-			goto domerr; /* because q^-x not defined */
-	}
+            if( err ) *err = 2;
+            return(INFINITY);
+        }
+        if( x != floor(x) )
+            goto domerr; /* because q^-x not defined */
+    }
 
-	/* Euler-Maclaurin summation formula */
-	/* Permit negative q but continue sum until n+q > +9 .
-	* This case should be handled by a reflection formula.
-	* If q<0 and x is an integer, there is a relation to
-	* the polygamma function.
-	*/
-	s = pow( q, -x );
-	a = q;
-	b = 0.0;
-	for( unsigned int i = 0; (i < 9) || (a <= 9.0); i++ )
-	{
-		a += 1.0;
-		b = pow( a, -x );
-		s += b;
-		if( fabs(b/s) < MACHEP )
-			goto done;
-	}
+    /* Euler-Maclaurin summation formula */
+    /* Permit negative q but continue sum until n+q > +9 .
+    * This case should be handled by a reflection formula.
+    * If q<0 and x is an integer, there is a relation to
+    * the polygamma function.
+    */
+    s = pow( q, -x );
+    a = q;
+    b = 0.0;
+    for( unsigned int i = 0; (i < 9) || (a <= 9.0); i++ )
+    {
+        a += 1.0;
+        b = pow( a, -x );
+        s += b;
+        if( fabs(b/s) < MACHEP )
+            goto done;
+    }
 
-	w = a;
-	s += b*w/(x-1.0);
-	s -= 0.5 * b;
-	a = 1.0;
-	k = 0.0;
-	for( unsigned int i=0; i<12; i++ )
-	{
-		a *= x + k;
-		b /= w;
-		t = a*b/A[i];
-		s = s + t;
-		if( fabs(t/s) < MACHEP )
-			goto done;
-		k += 1.0;
-		a *= x + k;
-		b /= w;
-		k += 1.0;
-	}
+    w = a;
+    s += b*w/(x-1.0);
+    s -= 0.5 * b;
+    a = 1.0;
+    k = 0.0;
+    for( unsigned int i=0; i<12; i++ )
+    {
+        a *= x + k;
+        b /= w;
+        t = a*b/A[i];
+        s = s + t;
+        if( fabs(t/s) < MACHEP )
+            goto done;
+        k += 1.0;
+        a *= x + k;
+        b /= w;
+        k += 1.0;
+    }
 done:
-	return(s);
+    return(s);
 }
 
 /// @endcond

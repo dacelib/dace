@@ -1,6 +1,6 @@
-/*							zeta.c
+/*                            zeta.c
  *
- *	Riemann zeta function of two arguments
+ *    Riemann zeta function of two arguments
  *
  *
  *
@@ -18,7 +18,7 @@
  *
  *                 inf.
  *                  -        -x
- *   zeta(x,q)  =   >   (k+q)  
+ *   zeta(x,q)  =   >   (k+q)
  *                  -
  *                 k=0
  *
@@ -26,11 +26,11 @@
  * The Euler-Maclaurin summation formula is used to obtain
  * the expansion
  *
- *                n         
+ *                n
  *                -       -x
- * zeta(x,q)  =   >  (k+q)  
- *                -         
- *               k=1        
+ * zeta(x,q)  =   >  (k+q)
+ *                -
+ *               k=1
  *
  *           1-x                 inf.  B   x(x+1)...(x+2j)
  *      (n+q)           1         -     2j
@@ -98,26 +98,26 @@ int i;
 double a, b, k, s, t, w;
 
 if( x == 1.0 )
-	goto retinf;
+    goto retinf;
 
 if( x < 1.0 )
-	{
+    {
 domerr:
-	mtherr( "zeta", DOMAIN );
-	return(0.0);
-	}
+    mtherr( "zeta", DOMAIN );
+    return(0.0);
+    }
 
 if( q <= 0.0 )
-	{
-	if(q == floor(q))
-		{
-		mtherr( "zeta", SING );
+    {
+    if(q == floor(q))
+        {
+        mtherr( "zeta", SING );
 retinf:
-		return( MAXNUM );
-		}
-	if( x != floor(x) )
-		goto domerr; /* because q^-x not defined */
-	}
+        return( MAXNUM );
+        }
+    if( x != floor(x) )
+        goto domerr; /* because q^-x not defined */
+    }
 
 /* Euler-Maclaurin summation formula */
 /*
@@ -134,14 +134,14 @@ a = q;
 i = 0;
 b = 0.0;
 while( (i < 9) || (a <= 9.0) )
-	{
-	i += 1;
-	a += 1.0;
-	b = pow( a, -x );
-	s += b;
-	if( fabs(b/s) < MACHEP )
-		goto done;
-	}
+    {
+    i += 1;
+    a += 1.0;
+    b = pow( a, -x );
+    s += b;
+    if( fabs(b/s) < MACHEP )
+        goto done;
+    }
 
 w = a;
 s += b*w/(x-1.0);
@@ -149,19 +149,19 @@ s -= 0.5 * b;
 a = 1.0;
 k = 0.0;
 for( i=0; i<12; i++ )
-	{
-	a *= x + k;
-	b /= w;
-	t = a*b/A[i];
-	s = s + t;
-	t = fabs(t/s);
-	if( t < MACHEP )
-		goto done;
-	k += 1.0;
-	a *= x + k;
-	b /= w;
-	k += 1.0;
-	}
+    {
+    a *= x + k;
+    b /= w;
+    t = a*b/A[i];
+    s = s + t;
+    t = fabs(t/s);
+    if( t < MACHEP )
+        goto done;
+    k += 1.0;
+    a *= x + k;
+    b /= w;
+    k += 1.0;
+    }
 done:
 return(s);
 }
@@ -175,11 +175,11 @@ pseres:
 s = pow( q, -x );
 a = q;
 do
-	{
-	a += 2.0;
-	b = pow( a, -x );
-	s += b;
-	}
+    {
+    a += 2.0;
+    b = pow( a, -x );
+    s += b;
+    }
 while( b/s > MACHEP );
 
 b = pow( 2.0, -x );

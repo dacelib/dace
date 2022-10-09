@@ -1,13 +1,13 @@
 /* rkbesl.f -- translated by f2c (version 20100827).
    You must link the resulting object file with libf2c:
-	on Microsoft Windows system, link with libf2c.lib;
-	on Linux or Unix systems, link with .../path/to/libf2c.a -lm
-	or, if you install libf2c.a in a standard place, with -lf2c -lm
-	-- in that order, at the end of the command line, as in
-		cc *.o -lf2c -lm
-	Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
+    on Microsoft Windows system, link with libf2c.lib;
+    on Linux or Unix systems, link with .../path/to/libf2c.a -lm
+    or, if you install libf2c.a in a standard place, with -lf2c -lm
+    -- in that order, at the end of the command line, as in
+        cc *.o -lf2c -lm
+    Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
 
-		http://www.netlib.org/f2c/libf2c.zip
+        http://www.netlib.org/f2c/libf2c.zip
 */
 
 /** \addtogroup DACEContrib Contrib
@@ -19,7 +19,7 @@
 #include "f2c.h"
 
 /* Subroutine */ int rkbesl_(const doublereal *x, const doublereal *alpha, const integer *nb,
-	const integer *ize, doublereal *bk, integer *ncalc)
+    const integer *ize, doublereal *bk, integer *ncalc)
 {
     /* Initialized data */
 
@@ -29,25 +29,25 @@
     static doublereal xmin = 2.23e-308;
     static doublereal xmax = 705.342;
     static doublereal p[8] = { .805629875690432845,20.4045500205365151,
-	    157.705605106676174,536.671116469207504,900.382759291288778,
-	    730.923886650660393,229.299301509425145,.822467033424113231 };
+        157.705605106676174,536.671116469207504,900.382759291288778,
+        730.923886650660393,229.299301509425145,.822467033424113231 };
     static doublereal q[7] = { 29.4601986247850434,277.577868510221208,
-	    1206.70325591027438,2762.91444159791519,3443.74050506564618,
-	    2210.63190113378647,572.267338359892221 };
+        1206.70325591027438,2762.91444159791519,3443.74050506564618,
+        2210.63190113378647,572.267338359892221 };
     static doublereal r__[5] = { -.48672575865218401848,13.079485869097804016,
-	    -101.96490580880537526,347.65409106507813131,
-	    3.495898124521934782e-4 };
+        -101.96490580880537526,347.65409106507813131,
+        3.495898124521934782e-4 };
     static doublereal s[4] = { -25.579105509976461286,212.57260432226544008,
-	    -610.69018684944109624,422.69668805777760407 };
+        -610.69018684944109624,422.69668805777760407 };
     static doublereal t[6] = { 1.6125990452916363814e-10,
-	    2.5051878502858255354e-8,2.7557319615147964774e-6,
-	    1.9841269840928373686e-4,.0083333333333334751799,
-	    .16666666666666666446 };
+        2.5051878502858255354e-8,2.7557319615147964774e-6,
+        1.9841269840928373686e-4,.0083333333333334751799,
+        .16666666666666666446 };
     static doublereal estm[6] = { 52.0583,5.7607,2.7782,14.4303,185.3004,
-	    9.3715 };
+        9.3715 };
     static doublereal one = 1.;
     static doublereal estf[7] = { 41.8341,7.1075,6.4306,42.511,1.35633,
-	    84.5096,20. };
+        84.5096,20. };
     static doublereal two = 2.;
     static doublereal zero = 0.;
     static doublereal four = 4.;
@@ -62,7 +62,7 @@
 
     /* Builtin functions */
     double log(doublereal), exp(doublereal), sinh(doublereal), sqrt(
-	    doublereal), d_int(const doublereal *);
+        doublereal), d_int(const doublereal *);
 
     /* Local variables */
     doublereal c__;
@@ -267,342 +267,342 @@
     enu = *alpha;
     *ncalc = min(*nb,0) - 2;
     if (*nb > 0 && (enu >= zero && enu < one) && (*ize >= 1 && *ize <= 2) && (
-	    *ize != 1 || ex <= xmax) && ex > zero) {
-	k = 0;
-	if (enu < sqxmin) {
-	    enu = zero;
-	}
-	if (enu > half) {
-	    k = 1;
-	    enu -= one;
-	}
-	twonu = enu + enu;
-	iend = *nb + k - 1;
-	c__ = enu * enu;
-	d3 = -c__;
-	if (ex <= one) {
+        *ize != 1 || ex <= xmax) && ex > zero) {
+    k = 0;
+    if (enu < sqxmin) {
+        enu = zero;
+    }
+    if (enu > half) {
+        k = 1;
+        enu -= one;
+    }
+    twonu = enu + enu;
+    iend = *nb + k - 1;
+    c__ = enu * enu;
+    d3 = -c__;
+    if (ex <= one) {
 /* --------------------------------------------------------------------- */
 /*  Calculation of P0 = GAMMA(1+ALPHA) * (2/X)**ALPHA */
 /*                 Q0 = GAMMA(1-ALPHA) * (X/2)**ALPHA */
 /* --------------------------------------------------------------------- */
-	    d1 = zero;
-	    d2 = p[0];
-	    t1 = one;
-	    t2 = q[0];
-	    for (i__ = 2; i__ <= 7; i__ += 2) {
-		d1 = c__ * d1 + p[i__ - 1];
-		d2 = c__ * d2 + p[i__];
-		t1 = c__ * t1 + q[i__ - 1];
-		t2 = c__ * t2 + q[i__];
+        d1 = zero;
+        d2 = p[0];
+        t1 = one;
+        t2 = q[0];
+        for (i__ = 2; i__ <= 7; i__ += 2) {
+        d1 = c__ * d1 + p[i__ - 1];
+        d2 = c__ * d2 + p[i__];
+        t1 = c__ * t1 + q[i__ - 1];
+        t2 = c__ * t2 + q[i__];
 /* L10: */
-	    }
-	    d1 = enu * d1;
-	    t1 = enu * t1;
-	    f1 = log(ex);
-	    f0 = a + enu * (p[7] - enu * (d1 + d2) / (t1 + t2)) - f1;
-	    q0 = exp(-enu * (a - enu * (p[7] + enu * (d1 - d2) / (t1 - t2)) -
-		    f1));
-	    f1 = enu * f0;
-	    p0 = exp(f1);
+        }
+        d1 = enu * d1;
+        t1 = enu * t1;
+        f1 = log(ex);
+        f0 = a + enu * (p[7] - enu * (d1 + d2) / (t1 + t2)) - f1;
+        q0 = exp(-enu * (a - enu * (p[7] + enu * (d1 - d2) / (t1 - t2)) -
+            f1));
+        f1 = enu * f0;
+        p0 = exp(f1);
 /* --------------------------------------------------------------------- */
 /*  Calculation of F0 = */
 /* --------------------------------------------------------------------- */
-	    d1 = r__[4];
-	    t1 = one;
-	    for (i__ = 1; i__ <= 4; ++i__) {
-		d1 = c__ * d1 + r__[i__ - 1];
-		t1 = c__ * t1 + s[i__ - 1];
+        d1 = r__[4];
+        t1 = one;
+        for (i__ = 1; i__ <= 4; ++i__) {
+        d1 = c__ * d1 + r__[i__ - 1];
+        t1 = c__ * t1 + s[i__ - 1];
 /* L20: */
-	    }
-	    if (abs(f1) <= half) {
-		f1 *= f1;
-		d2 = zero;
-		for (i__ = 1; i__ <= 6; ++i__) {
-		    d2 = f1 * d2 + t[i__ - 1];
+        }
+        if (abs(f1) <= half) {
+        f1 *= f1;
+        d2 = zero;
+        for (i__ = 1; i__ <= 6; ++i__) {
+            d2 = f1 * d2 + t[i__ - 1];
 /* L30: */
-		}
-		d2 = f0 + f0 * f1 * d2;
-	    } else {
-		d2 = sinh(f1) / enu;
-	    }
-	    f0 = d2 - enu * d1 / (t1 * p0);
-	    if (ex <= tinyx) {
+        }
+        d2 = f0 + f0 * f1 * d2;
+        } else {
+        d2 = sinh(f1) / enu;
+        }
+        f0 = d2 - enu * d1 / (t1 * p0);
+        if (ex <= tinyx) {
 /* -------------------------------------------------------------------- */
 /*  X.LE.1.0E-10 */
 /*  Calculation of K(ALPHA,X) and X*K(ALPHA+1,X)/K(ALPHA,X) */
 /* -------------------------------------------------------------------- */
-		bk[1] = f0 + ex * f0;
-		if (*ize == 1) {
-		    bk[1] -= ex * bk[1];
-		}
-		ratio = p0 / f0;
-		c__ = ex * xinf;
-		if (k != 0) {
+        bk[1] = f0 + ex * f0;
+        if (*ize == 1) {
+            bk[1] -= ex * bk[1];
+        }
+        ratio = p0 / f0;
+        c__ = ex * xinf;
+        if (k != 0) {
 /* -------------------------------------------------------------------- */
 /*  Calculation of K(ALPHA,X) and X*K(ALPHA+1,X)/K(ALPHA,X), */
 /*  ALPHA .GE. 1/2 */
 /* -------------------------------------------------------------------- */
-		    *ncalc = -1;
-		    if (bk[1] >= c__ / ratio) {
-			goto L500;
-		    }
-		    bk[1] = ratio * bk[1] / ex;
-		    twonu += two;
-		    ratio = twonu;
-		}
-		*ncalc = 1;
-		if (*nb == 1) {
-		    goto L500;
-		}
+            *ncalc = -1;
+            if (bk[1] >= c__ / ratio) {
+            goto L500;
+            }
+            bk[1] = ratio * bk[1] / ex;
+            twonu += two;
+            ratio = twonu;
+        }
+        *ncalc = 1;
+        if (*nb == 1) {
+            goto L500;
+        }
 /* -------------------------------------------------------------------- */
 /*  Calculate  K(ALPHA+L,X)/K(ALPHA+L-1,X),  L  =  1, 2, ... , NB-1 */
 /* -------------------------------------------------------------------- */
-		*ncalc = -1;
-		i__1 = *nb;
-		for (i__ = 2; i__ <= i__1; ++i__) {
-		    if (ratio >= c__) {
-			goto L500;
-		    }
-		    bk[i__] = ratio / ex;
-		    twonu += two;
-		    ratio = twonu;
+        *ncalc = -1;
+        i__1 = *nb;
+        for (i__ = 2; i__ <= i__1; ++i__) {
+            if (ratio >= c__) {
+            goto L500;
+            }
+            bk[i__] = ratio / ex;
+            twonu += two;
+            ratio = twonu;
 /* L80: */
-		}
-		*ncalc = 1;
-		goto L420;
-	    } else {
+        }
+        *ncalc = 1;
+        goto L420;
+        } else {
 /* -------------------------------------------------------------------- */
 /*  1.0E-10 .LT. X .LE. 1.0 */
 /* -------------------------------------------------------------------- */
-		c__ = one;
-		x2by4 = ex * ex / four;
-		p0 = half * p0;
-		q0 = half * q0;
-		d1 = -one;
-		d2 = zero;
-		bk1 = zero;
-		bk2 = zero;
-		f1 = f0;
-		f2 = p0;
+        c__ = one;
+        x2by4 = ex * ex / four;
+        p0 = half * p0;
+        q0 = half * q0;
+        d1 = -one;
+        d2 = zero;
+        bk1 = zero;
+        bk2 = zero;
+        f1 = f0;
+        f2 = p0;
 L100:
-		d1 += two;
-		d2 += one;
-		d3 = d1 + d3;
-		c__ = x2by4 * c__ / d2;
-		f0 = (d2 * f0 + p0 + q0) / d3;
-		p0 /= d2 - enu;
-		q0 /= d2 + enu;
-		t1 = c__ * f0;
-		t2 = c__ * (p0 - d2 * f0);
-		bk1 += t1;
-		bk2 += t2;
-		if ((d__1 = t1 / (f1 + bk1), abs(d__1)) > eps || (d__2 = t2 /
-			(f2 + bk2), abs(d__2)) > eps) {
-		    goto L100;
-		}
-		bk1 = f1 + bk1;
-		bk2 = two * (f2 + bk2) / ex;
-		if (*ize == 2) {
-		    d1 = exp(ex);
-		    bk1 *= d1;
-		    bk2 *= d1;
-		}
-		wminf = estf[0] * ex + estf[1];
-	    }
-	} else if (eps * ex > one) {
+        d1 += two;
+        d2 += one;
+        d3 = d1 + d3;
+        c__ = x2by4 * c__ / d2;
+        f0 = (d2 * f0 + p0 + q0) / d3;
+        p0 /= d2 - enu;
+        q0 /= d2 + enu;
+        t1 = c__ * f0;
+        t2 = c__ * (p0 - d2 * f0);
+        bk1 += t1;
+        bk2 += t2;
+        if ((d__1 = t1 / (f1 + bk1), abs(d__1)) > eps || (d__2 = t2 /
+            (f2 + bk2), abs(d__2)) > eps) {
+            goto L100;
+        }
+        bk1 = f1 + bk1;
+        bk2 = two * (f2 + bk2) / ex;
+        if (*ize == 2) {
+            d1 = exp(ex);
+            bk1 *= d1;
+            bk2 *= d1;
+        }
+        wminf = estf[0] * ex + estf[1];
+        }
+    } else if (eps * ex > one) {
 /* -------------------------------------------------------------------- */
 /*  X .GT. ONE/EPS */
 /* -------------------------------------------------------------------- */
-	    *ncalc = *nb;
-	    bk1 = one / (d__ * sqrt(ex));
-	    i__1 = *nb;
-	    for (i__ = 1; i__ <= i__1; ++i__) {
-		bk[i__] = bk1;
+        *ncalc = *nb;
+        bk1 = one / (d__ * sqrt(ex));
+        i__1 = *nb;
+        for (i__ = 1; i__ <= i__1; ++i__) {
+        bk[i__] = bk1;
 /* L110: */
-	    }
-	    goto L500;
-	} else {
+        }
+        goto L500;
+    } else {
 /* -------------------------------------------------------------------- */
 /*  X .GT. 1.0 */
 /* -------------------------------------------------------------------- */
-	    twox = ex + ex;
-	    blpha = zero;
-	    ratio = zero;
-	    if (ex <= four) {
+        twox = ex + ex;
+        blpha = zero;
+        ratio = zero;
+        if (ex <= four) {
 /* -------------------------------------------------------------------- */
 /*  Calculation of K(ALPHA+1,X)/K(ALPHA,X),  1.0 .LE. X .LE. 4.0 */
 /* -------------------------------------------------------------------- */
-		d__1 = estm[0] / ex + estm[1];
-		d2 = d_int(&d__1);
-		m = (integer) d2;
-		d1 = d2 + d2;
-		d2 -= half;
-		d2 *= d2;
-		i__1 = m;
-		for (i__ = 2; i__ <= i__1; ++i__) {
-		    d1 -= two;
-		    d2 -= d1;
-		    ratio = (d3 + d2) / (twox + d1 - ratio);
+        d__1 = estm[0] / ex + estm[1];
+        d2 = d_int(&d__1);
+        m = (integer) d2;
+        d1 = d2 + d2;
+        d2 -= half;
+        d2 *= d2;
+        i__1 = m;
+        for (i__ = 2; i__ <= i__1; ++i__) {
+            d1 -= two;
+            d2 -= d1;
+            ratio = (d3 + d2) / (twox + d1 - ratio);
 /* L120: */
-		}
+        }
 /* -------------------------------------------------------------------- */
 /*  Calculation of I(|ALPHA|,X) and I(|ALPHA|+1,X) by backward */
 /*    recurrence and K(ALPHA,X) from the wronskian */
 /* -------------------------------------------------------------------- */
-		d__1 = estm[2] * ex + estm[3];
-		d2 = d_int(&d__1);
-		m = (integer) d2;
-		c__ = abs(enu);
-		d3 = c__ + c__;
-		d1 = d3 - one;
-		f1 = xmin;
-		f0 = (two * (c__ + d2) / ex + half * ex / (c__ + d2 + one)) *
-			xmin;
-		i__1 = m;
-		for (i__ = 3; i__ <= i__1; ++i__) {
-		    d2 -= one;
-		    f2 = (d3 + d2 + d2) * f0;
-		    blpha = (one + d1 / d2) * (f2 + blpha);
-		    f2 = f2 / ex + f1;
-		    f1 = f0;
-		    f0 = f2;
+        d__1 = estm[2] * ex + estm[3];
+        d2 = d_int(&d__1);
+        m = (integer) d2;
+        c__ = abs(enu);
+        d3 = c__ + c__;
+        d1 = d3 - one;
+        f1 = xmin;
+        f0 = (two * (c__ + d2) / ex + half * ex / (c__ + d2 + one)) *
+            xmin;
+        i__1 = m;
+        for (i__ = 3; i__ <= i__1; ++i__) {
+            d2 -= one;
+            f2 = (d3 + d2 + d2) * f0;
+            blpha = (one + d1 / d2) * (f2 + blpha);
+            f2 = f2 / ex + f1;
+            f1 = f0;
+            f0 = f2;
 /* L130: */
-		}
-		f1 = (d3 + two) * f0 / ex + f1;
-		d1 = zero;
-		t1 = one;
-		for (i__ = 1; i__ <= 7; ++i__) {
-		    d1 = c__ * d1 + p[i__ - 1];
-		    t1 = c__ * t1 + q[i__ - 1];
+        }
+        f1 = (d3 + two) * f0 / ex + f1;
+        d1 = zero;
+        t1 = one;
+        for (i__ = 1; i__ <= 7; ++i__) {
+            d1 = c__ * d1 + p[i__ - 1];
+            t1 = c__ * t1 + q[i__ - 1];
 /* L140: */
-		}
-		p0 = exp(c__ * (a + c__ * (p[7] - c__ * d1 / t1) - log(ex))) /
-			 ex;
-		f2 = (c__ + half - ratio) * f1 / ex;
-		bk1 = p0 + (d3 * f0 - f2 + f0 + blpha) / (f2 + f1 + f0) * p0;
-		if (*ize == 1) {
-		    bk1 *= exp(-ex);
-		}
-		wminf = estf[2] * ex + estf[3];
-	    } else {
+        }
+        p0 = exp(c__ * (a + c__ * (p[7] - c__ * d1 / t1) - log(ex))) /
+             ex;
+        f2 = (c__ + half - ratio) * f1 / ex;
+        bk1 = p0 + (d3 * f0 - f2 + f0 + blpha) / (f2 + f1 + f0) * p0;
+        if (*ize == 1) {
+            bk1 *= exp(-ex);
+        }
+        wminf = estf[2] * ex + estf[3];
+        } else {
 /* -------------------------------------------------------------------- */
 /*  Calculation of K(ALPHA,X) and K(ALPHA+1,X)/K(ALPHA,X), by backward */
 /*  recurrence, for  X .GT. 4.0 */
 /* -------------------------------------------------------------------- */
-		d__1 = estm[4] / ex + estm[5];
-		dm = d_int(&d__1);
-		m = (integer) dm;
-		d2 = dm - half;
-		d2 *= d2;
-		d1 = dm + dm;
-		i__1 = m;
-		for (i__ = 2; i__ <= i__1; ++i__) {
-		    dm -= one;
-		    d1 -= two;
-		    d2 -= d1;
-		    ratio = (d3 + d2) / (twox + d1 - ratio);
-		    blpha = (ratio + ratio * blpha) / dm;
+        d__1 = estm[4] / ex + estm[5];
+        dm = d_int(&d__1);
+        m = (integer) dm;
+        d2 = dm - half;
+        d2 *= d2;
+        d1 = dm + dm;
+        i__1 = m;
+        for (i__ = 2; i__ <= i__1; ++i__) {
+            dm -= one;
+            d1 -= two;
+            d2 -= d1;
+            ratio = (d3 + d2) / (twox + d1 - ratio);
+            blpha = (ratio + ratio * blpha) / dm;
 /* L160: */
-		}
-		bk1 = one / ((d__ + d__ * blpha) * sqrt(ex));
-		if (*ize == 1) {
-		    bk1 *= exp(-ex);
-		}
-		wminf = estf[4] * (ex - (d__1 = ex - estf[6], abs(d__1))) +
-			estf[5];
-	    }
+        }
+        bk1 = one / ((d__ + d__ * blpha) * sqrt(ex));
+        if (*ize == 1) {
+            bk1 *= exp(-ex);
+        }
+        wminf = estf[4] * (ex - (d__1 = ex - estf[6], abs(d__1))) +
+            estf[5];
+        }
 /* -------------------------------------------------------------------- */
 /*  Calculation of K(ALPHA+1,X) from K(ALPHA,X) and */
 /*    K(ALPHA+1,X)/K(ALPHA,X) */
 /* -------------------------------------------------------------------- */
-	    bk2 = bk1 + bk1 * (enu + half - ratio) / ex;
-	}
+        bk2 = bk1 + bk1 * (enu + half - ratio) / ex;
+    }
 /* -------------------------------------------------------------------- */
 /*  Calculation of 'NCALC', K(ALPHA+I,X), I  =  0, 1, ... , NCALC-1, */
 /*  K(ALPHA+I,X)/K(ALPHA+I-1,X), I  =  NCALC, NCALC+1, ... , NB-1 */
 /* -------------------------------------------------------------------- */
-	*ncalc = *nb;
-	bk[1] = bk1;
-	if (iend == 0) {
-	    goto L500;
-	}
-	j = 2 - k;
-	if (j > 0) {
-	    bk[j] = bk2;
-	}
-	if (iend == 1) {
-	    goto L500;
-	}
+    *ncalc = *nb;
+    bk[1] = bk1;
+    if (iend == 0) {
+        goto L500;
+    }
+    j = 2 - k;
+    if (j > 0) {
+        bk[j] = bk2;
+    }
+    if (iend == 1) {
+        goto L500;
+    }
 /* Computing MIN */
-	i__1 = (integer) (wminf - enu);
-	m = min(i__1,iend);
-	i__1 = m;
-	for (i__ = 2; i__ <= i__1; ++i__) {
-	    t1 = bk1;
-	    bk1 = bk2;
-	    twonu += two;
-	    if (ex < one) {
-		if (bk1 >= xinf / twonu * ex) {
-		    goto L195;
-		}
-		goto L187;
-	    } else {
-		if (bk1 / ex >= xinf / twonu) {
-		    goto L195;
-		}
-	    }
+    i__1 = (integer) (wminf - enu);
+    m = min(i__1,iend);
+    i__1 = m;
+    for (i__ = 2; i__ <= i__1; ++i__) {
+        t1 = bk1;
+        bk1 = bk2;
+        twonu += two;
+        if (ex < one) {
+        if (bk1 >= xinf / twonu * ex) {
+            goto L195;
+        }
+        goto L187;
+        } else {
+        if (bk1 / ex >= xinf / twonu) {
+            goto L195;
+        }
+        }
 L187:
-	    bk2 = twonu / ex * bk1 + t1;
-	    itemp = i__;
-	    ++j;
-	    if (j > 0) {
-		bk[j] = bk2;
-	    }
+        bk2 = twonu / ex * bk1 + t1;
+        itemp = i__;
+        ++j;
+        if (j > 0) {
+        bk[j] = bk2;
+        }
 /* L190: */
-	}
+    }
 L195:
-	m = itemp;
-	if (m == iend) {
-	    goto L500;
-	}
-	ratio = bk2 / bk1;
-	mplus1 = m + 1;
-	*ncalc = -1;
-	i__1 = iend;
-	for (i__ = mplus1; i__ <= i__1; ++i__) {
-	    twonu += two;
-	    ratio = twonu / ex + one / ratio;
-	    ++j;
-	    if (j > 1) {
-		bk[j] = ratio;
-	    } else {
-		if (bk2 >= xinf / ratio) {
-		    goto L500;
-		}
-		bk2 = ratio * bk2;
-	    }
+    m = itemp;
+    if (m == iend) {
+        goto L500;
+    }
+    ratio = bk2 / bk1;
+    mplus1 = m + 1;
+    *ncalc = -1;
+    i__1 = iend;
+    for (i__ = mplus1; i__ <= i__1; ++i__) {
+        twonu += two;
+        ratio = twonu / ex + one / ratio;
+        ++j;
+        if (j > 1) {
+        bk[j] = ratio;
+        } else {
+        if (bk2 >= xinf / ratio) {
+            goto L500;
+        }
+        bk2 = ratio * bk2;
+        }
 /* L410: */
-	}
+    }
 /* Computing MAX */
-	i__1 = mplus1 - k;
-	*ncalc = max(i__1,1);
-	if (*ncalc == 1) {
-	    bk[1] = bk2;
-	}
-	if (*nb == 1) {
-	    goto L500;
-	}
+    i__1 = mplus1 - k;
+    *ncalc = max(i__1,1);
+    if (*ncalc == 1) {
+        bk[1] = bk2;
+    }
+    if (*nb == 1) {
+        goto L500;
+    }
 L420:
-	j = *ncalc + 1;
-	i__1 = *nb;
-	for (i__ = j; i__ <= i__1; ++i__) {
-	    if (bk[*ncalc] >= xinf / bk[i__]) {
-		goto L500;
-	    }
-	    bk[i__] = bk[*ncalc] * bk[i__];
-	    *ncalc = i__;
+    j = *ncalc + 1;
+    i__1 = *nb;
+    for (i__ = j; i__ <= i__1; ++i__) {
+        if (bk[*ncalc] >= xinf / bk[i__]) {
+        goto L500;
+        }
+        bk[i__] = bk[*ncalc] * bk[i__];
+        *ncalc = i__;
 /* L430: */
-	}
+    }
     }
 L500:
     return 0;

@@ -81,14 +81,14 @@ typedef struct ddbg {
 // Basic memory structure of a monomial
 typedef struct dmonomial {
     double cc;
-	unsigned int ii;
+    unsigned int ii;
 } monomial;
 
 // Basic memory structure of an extended monomial (these are written and read from binary files, so enforce no padding!)
 #pragma pack(push,1)
 typedef struct dextendedmonomial {
-	unsigned int i1, i2;
-	double cc;
+    unsigned int i1, i2;
+    double cc;
 } extended_monomial;
 #pragma pack(pop)
 

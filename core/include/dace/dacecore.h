@@ -30,7 +30,7 @@
     User interface header for DACE core library.
     Includes all relevant headers with public interfaces to the DACE core.
 */
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 

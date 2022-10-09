@@ -31,7 +31,7 @@
     Includes all relevant headers with public interfaces to the DACE core
     with the correct API decorations for Windows static linking.
 */
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 

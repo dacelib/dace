@@ -31,7 +31,7 @@
     Where necessary, small shims with the old interface are provided in dacecompat.c.
 */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 #ifndef DINAMICA_DACECOMPAT_H_
@@ -52,7 +52,7 @@
 #define dacegetnot() daceGetTruncationOrder()
 #define dacesetnot(fnot) daceSetTruncationOrder(fnot)
 
-//#define dacegeterr() daceGetError()		// do not redefine this routine, it causes problems with the inlining of a function of the same name we do in C++ interface!
+//#define dacegeterr() daceGetError()        // do not redefine this routine, it causes problems with the inlining of a function of the same name we do in C++ interface!
 #define dacegetxerr() daceGetErrorX()
 #define dacegetyyerr() daceGetErrorYY()
 #define daceclrerr() daceClearError()
