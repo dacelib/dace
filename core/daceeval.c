@@ -294,7 +294,7 @@ void daceTranslateVariable(const DACEDA *ina, const unsigned int nvar, const dou
     double *cc = dacecalloc(DACECom.nmmax, sizeof(double));
     double *powa = dacecalloc(DACECom.nomax+1, sizeof(double));
     double *powc = dacecalloc(DACECom.nomax+1, sizeof(double));
-    double *binomial = dacecalloc((DACECom.nomax+1)*(DACECom.nomax+1), sizeof(double));
+    double *binomial = dacecalloc(((size_t)DACECom.nomax+1)*((size_t)DACECom.nomax+1), sizeof(double));
 #endif
 
     // precompute powers of a and c
