@@ -165,7 +165,7 @@ if(WIN32)
     Delete \\\"$SYSDIR\\\\dace.dll\\\"
 
   ")
-  unset(CPACK_PACKAGING_INSTALL_PREFIX)	# replace by whatever it needs to be
+  unset(CPACK_PACKAGING_INSTALL_PREFIX)    # replace by whatever it needs to be
 elseif(APPLE)
   set(CPACK_GENERATOR "TGZ;productbuild")
   set(CPACK_PACKAGE_VENDOR "DACEDevelopmentGroup")    # no spaces allowed for packagebuild

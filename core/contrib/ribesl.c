@@ -1,13 +1,13 @@
 /* ribesl.f -- translated by f2c (version 20100827).
    You must link the resulting object file with libf2c:
-	on Microsoft Windows system, link with libf2c.lib;
-	on Linux or Unix systems, link with .../path/to/libf2c.a -lm
-	or, if you install libf2c.a in a standard place, with -lf2c -lm
-	-- in that order, at the end of the command line, as in
-		cc *.o -lf2c -lm
-	Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
+    on Microsoft Windows system, link with libf2c.lib;
+    on Linux or Unix systems, link with .../path/to/libf2c.a -lm
+    or, if you install libf2c.a in a standard place, with -lf2c -lm
+    -- in that order, at the end of the command line, as in
+        cc *.o -lf2c -lm
+    Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
 
-		http://www.netlib.org/f2c/libf2c.zip
+        http://www.netlib.org/f2c/libf2c.zip
 */
 
 /** \addtogroup DACEContrib Contrib
@@ -19,7 +19,7 @@
 #include "f2c.h"
 
 /* Subroutine */ int ribesl_(const doublereal *x, const doublereal *alpha, const integer *nb,
-	const integer *ize, doublereal *b, integer *ncalc)
+    const integer *ize, doublereal *b, integer *ncalc)
 {
     /* Initialized data */
 
@@ -42,7 +42,7 @@
 
     /* Builtin functions */
     double sqrt(doublereal), pow_di(const doublereal *, const integer *), pow_dd(
-	    const doublereal *, const doublereal *), exp(doublereal);
+        const doublereal *, const doublereal *), exp(doublereal);
 
     /* Local variables */
     integer k, l, n;
@@ -51,7 +51,7 @@
     doublereal pold;
     integer nbmx;
     doublereal test, empal, halfx, tempa, tempb, tempc, psave, plast, tover,
-	    emp2al;
+        emp2al;
     extern doublereal dgamma_(doublereal *);
     doublereal psavel;
     integer nstart;
@@ -250,303 +250,303 @@
 /* Check for X, NB, OR IZE out of range. */
 /* ------------------------------------------------------------------- */
     if (*nb > 0 && *x >= zero && *alpha >= zero && *alpha < one && ((*ize == 1
-	    && *x <= exparg) || (*ize == 2 && *x <= xlarge))) {
+        && *x <= exparg) || (*ize == 2 && *x <= xlarge))) {
 /* ------------------------------------------------------------------- */
 /* Use 2-term ascending series for small X */
 /* ------------------------------------------------------------------- */
-	*ncalc = *nb;
-	magx = (integer) (*x);
-	if (*x >= rtnsig) {
+    *ncalc = *nb;
+    magx = (integer) (*x);
+    if (*x >= rtnsig) {
 /* ------------------------------------------------------------------- */
 /* Initialize the forward sweep, the P-sequence of Olver */
 /* ------------------------------------------------------------------- */
-	    nbmx = *nb - magx;
-	    n = magx + 1;
-	    i__1 = n + n;
-	    en = (doublereal) i__1 + (*alpha + *alpha);
-	    plast = one;
-	    p = en / *x;
+        nbmx = *nb - magx;
+        n = magx + 1;
+        i__1 = n + n;
+        en = (doublereal) i__1 + (*alpha + *alpha);
+        plast = one;
+        p = en / *x;
 /* ------------------------------------------------------------------- */
 /* Calculate general significance test */
 /* ------------------------------------------------------------------- */
-	    test = ensig + ensig;
-	    if (magx << 1 > nsig * 5) {
-		test = sqrt(test * p);
-	    } else {
-		test /= pow_di(&const__, &magx);
-	    }
-	    if (nbmx >= 3) {
+        test = ensig + ensig;
+        if (magx << 1 > nsig * 5) {
+        test = sqrt(test * p);
+        } else {
+        test /= pow_di(&const__, &magx);
+        }
+        if (nbmx >= 3) {
 /* ------------------------------------------------------------------- */
 /* Calculate P-sequence until N = NB-1.  Check for possible overflow. */
 /* ------------------------------------------------------------------- */
-		tover = enten / ensig;
-		nstart = magx + 2;
-		nend = *nb - 1;
-		i__1 = nend;
-		for (k = nstart; k <= i__1; ++k) {
-		    n = k;
-		    en += two;
-		    pold = plast;
-		    plast = p;
-		    p = en * plast / *x + pold;
-		    if (p > tover) {
+        tover = enten / ensig;
+        nstart = magx + 2;
+        nend = *nb - 1;
+        i__1 = nend;
+        for (k = nstart; k <= i__1; ++k) {
+            n = k;
+            en += two;
+            pold = plast;
+            plast = p;
+            p = en * plast / *x + pold;
+            if (p > tover) {
 /* ------------------------------------------------------------------- */
 /* To avoid overflow, divide P-sequence by TOVER.  Calculate */
 /* P-sequence until ABS(P) .GT. 1. */
 /* ------------------------------------------------------------------- */
-			tover = enten;
-			p /= tover;
-			plast /= tover;
-			psave = p;
-			psavel = plast;
-			nstart = n + 1;
+            tover = enten;
+            p /= tover;
+            plast /= tover;
+            psave = p;
+            psavel = plast;
+            nstart = n + 1;
 L60:
-			++n;
-			en += two;
-			pold = plast;
-			plast = p;
-			p = en * plast / *x + pold;
-			if (p <= one) {
-			    goto L60;
-			}
-			tempb = en / *x;
+            ++n;
+            en += two;
+            pold = plast;
+            plast = p;
+            p = en * plast / *x + pold;
+            if (p <= one) {
+                goto L60;
+            }
+            tempb = en / *x;
 /* ------------------------------------------------------------------- */
 /* Calculate backward test, and find NCALC, the highest N */
 /* such that the test is passed. */
 /* ------------------------------------------------------------------- */
-			test = pold * plast / ensig;
-			test *= half - half / (tempb * tempb);
-			p = plast * tover;
-			--n;
-			en -= two;
-			nend = min(*nb,n);
-			i__2 = nend;
-			for (l = nstart; l <= i__2; ++l) {
-			    *ncalc = l;
-			    pold = psavel;
-			    psavel = psave;
-			    psave = en * psavel / *x + pold;
-			    if (psave * psavel > test) {
-				goto L90;
-			    }
+            test = pold * plast / ensig;
+            test *= half - half / (tempb * tempb);
+            p = plast * tover;
+            --n;
+            en -= two;
+            nend = min(*nb,n);
+            i__2 = nend;
+            for (l = nstart; l <= i__2; ++l) {
+                *ncalc = l;
+                pold = psavel;
+                psavel = psave;
+                psave = en * psavel / *x + pold;
+                if (psave * psavel > test) {
+                goto L90;
+                }
 /* L80: */
-			}
-			*ncalc = nend + 1;
+            }
+            *ncalc = nend + 1;
 L90:
-			--(*ncalc);
-			goto L120;
-		    }
+            --(*ncalc);
+            goto L120;
+            }
 /* L100: */
-		}
-		n = nend;
-		i__1 = n + n;
-		en = (doublereal) i__1 + (*alpha + *alpha);
+        }
+        n = nend;
+        i__1 = n + n;
+        en = (doublereal) i__1 + (*alpha + *alpha);
 /* ------------------------------------------------------------------- */
 /* Calculate special significance test for NBMX .GT. 2. */
 /* ------------------------------------------------------------------- */
 /* Computing MAX */
-		d__1 = test, d__2 = sqrt(plast * ensig) * sqrt(p + p);
-		test = max(d__1,d__2);
-	    }
+        d__1 = test, d__2 = sqrt(plast * ensig) * sqrt(p + p);
+        test = max(d__1,d__2);
+        }
 /* ------------------------------------------------------------------- */
 /* Calculate P-sequence until significance test passed. */
 /* ------------------------------------------------------------------- */
 L110:
-	    ++n;
-	    en += two;
-	    pold = plast;
-	    plast = p;
-	    p = en * plast / *x + pold;
-	    if (p < test) {
-		goto L110;
-	    }
+        ++n;
+        en += two;
+        pold = plast;
+        plast = p;
+        p = en * plast / *x + pold;
+        if (p < test) {
+        goto L110;
+        }
 /* ------------------------------------------------------------------- */
 /* Initialize the backward recursion and the normalization sum. */
 /* ------------------------------------------------------------------- */
 L120:
-	    ++n;
-	    en += two;
-	    tempb = zero;
-	    tempa = one / p;
-	    em = (doublereal) n - one;
-	    empal = em + *alpha;
-	    emp2al = em - one + (*alpha + *alpha);
-	    sum = tempa * empal * emp2al / em;
-	    nend = n - *nb;
-	    if (nend < 0) {
+        ++n;
+        en += two;
+        tempb = zero;
+        tempa = one / p;
+        em = (doublereal) n - one;
+        empal = em + *alpha;
+        emp2al = em - one + (*alpha + *alpha);
+        sum = tempa * empal * emp2al / em;
+        nend = n - *nb;
+        if (nend < 0) {
 /* ------------------------------------------------------------------- */
 /* N .LT. NB, so store B(N) and set higher orders to zero. */
 /* ------------------------------------------------------------------- */
-		b[n] = tempa;
-		nend = -nend;
-		i__1 = nend;
-		for (l = 1; l <= i__1; ++l) {
+        b[n] = tempa;
+        nend = -nend;
+        i__1 = nend;
+        for (l = 1; l <= i__1; ++l) {
 /* L130: */
-		    b[n + l] = zero;
-		}
-	    } else {
-		if (nend > 0) {
+            b[n + l] = zero;
+        }
+        } else {
+        if (nend > 0) {
 /* ------------------------------------------------------------------- */
 /* Recur backward via difference equation, calculating (but */
 /* not storing) B(N), until N = NB. */
 /* ------------------------------------------------------------------- */
-		    i__1 = nend;
-		    for (l = 1; l <= i__1; ++l) {
-			--n;
-			en -= two;
-			tempc = tempb;
-			tempb = tempa;
-			tempa = en * tempb / *x + tempc;
-			em -= one;
-			emp2al -= one;
-			if (n == 1) {
-			    goto L150;
-			}
-			if (n == 2) {
-			    emp2al = one;
-			}
-			empal -= one;
-			sum = (sum + tempa * empal) * emp2al / em;
+            i__1 = nend;
+            for (l = 1; l <= i__1; ++l) {
+            --n;
+            en -= two;
+            tempc = tempb;
+            tempb = tempa;
+            tempa = en * tempb / *x + tempc;
+            em -= one;
+            emp2al -= one;
+            if (n == 1) {
+                goto L150;
+            }
+            if (n == 2) {
+                emp2al = one;
+            }
+            empal -= one;
+            sum = (sum + tempa * empal) * emp2al / em;
 /* L140: */
-		    }
-		}
+            }
+        }
 /* ------------------------------------------------------------------- */
 /* Store B(NB) */
 /* ------------------------------------------------------------------- */
 L150:
-		b[n] = tempa;
-		if (*nb <= 1) {
-		    sum = sum + sum + tempa;
-		    goto L230;
-		}
+        b[n] = tempa;
+        if (*nb <= 1) {
+            sum = sum + sum + tempa;
+            goto L230;
+        }
 /* ------------------------------------------------------------------- */
 /* Calculate and Store B(NB-1) */
 /* ------------------------------------------------------------------- */
-		--n;
-		en -= two;
-		b[n] = en * tempa / *x + tempb;
-		if (n == 1) {
-		    goto L220;
-		}
-		em -= one;
-		emp2al -= one;
-		if (n == 2) {
-		    emp2al = one;
-		}
-		empal -= one;
-		sum = (sum + b[n] * empal) * emp2al / em;
-	    }
-	    nend = n - 2;
-	    if (nend > 0) {
+        --n;
+        en -= two;
+        b[n] = en * tempa / *x + tempb;
+        if (n == 1) {
+            goto L220;
+        }
+        em -= one;
+        emp2al -= one;
+        if (n == 2) {
+            emp2al = one;
+        }
+        empal -= one;
+        sum = (sum + b[n] * empal) * emp2al / em;
+        }
+        nend = n - 2;
+        if (nend > 0) {
 /* ------------------------------------------------------------------- */
 /* Calculate via difference equation and store B(N), until N = 2. */
 /* ------------------------------------------------------------------- */
-		i__1 = nend;
-		for (l = 1; l <= i__1; ++l) {
-		    --n;
-		    en -= two;
-		    b[n] = en * b[n + 1] / *x + b[n + 2];
-		    em -= one;
-		    emp2al -= one;
-		    if (n == 2) {
-			emp2al = one;
-		    }
-		    empal -= one;
-		    sum = (sum + b[n] * empal) * emp2al / em;
+        i__1 = nend;
+        for (l = 1; l <= i__1; ++l) {
+            --n;
+            en -= two;
+            b[n] = en * b[n + 1] / *x + b[n + 2];
+            em -= one;
+            emp2al -= one;
+            if (n == 2) {
+            emp2al = one;
+            }
+            empal -= one;
+            sum = (sum + b[n] * empal) * emp2al / em;
 /* L200: */
-		}
-	    }
+        }
+        }
 /* ------------------------------------------------------------------- */
 /* Calculate B(1) */
 /* ------------------------------------------------------------------- */
-	    b[1] = two * empal * b[2] / *x + b[3];
+        b[1] = two * empal * b[2] / *x + b[3];
 L220:
-	    sum = sum + sum + b[1];
+        sum = sum + sum + b[1];
 /* ------------------------------------------------------------------- */
 /* Normalize.  Divide all B(N) by sum. */
 /* ------------------------------------------------------------------- */
 L230:
-	    if (*alpha != zero) {
-		d__1 = one + *alpha;
-		d__2 = *x * half;
-		d__3 = -(*alpha);
-		sum = sum * dgamma_(&d__1) * pow_dd(&d__2, &d__3);
-	    }
-	    if (*ize == 1) {
-		sum *= exp(-(*x));
-	    }
-	    tempa = enmten;
-	    if (sum > one) {
-		tempa *= sum;
-	    }
-	    i__1 = *nb;
-	    for (n = 1; n <= i__1; ++n) {
-		if (b[n] < tempa) {
-		    b[n] = zero;
-		}
-		b[n] /= sum;
+        if (*alpha != zero) {
+        d__1 = one + *alpha;
+        d__2 = *x * half;
+        d__3 = -(*alpha);
+        sum = sum * dgamma_(&d__1) * pow_dd(&d__2, &d__3);
+        }
+        if (*ize == 1) {
+        sum *= exp(-(*x));
+        }
+        tempa = enmten;
+        if (sum > one) {
+        tempa *= sum;
+        }
+        i__1 = *nb;
+        for (n = 1; n <= i__1; ++n) {
+        if (b[n] < tempa) {
+            b[n] = zero;
+        }
+        b[n] /= sum;
 /* L260: */
-	    }
-	    return 0;
+        }
+        return 0;
 /* ------------------------------------------------------------------- */
 /* Two-term ascending series for small X. */
 /* ------------------------------------------------------------------- */
-	} else {
-	    tempa = one;
-	    empal = one + *alpha;
-	    halfx = zero;
-	    if (*x > enmten) {
-		halfx = half * *x;
-	    }
-	    if (*alpha != zero) {
-		tempa = pow_dd(&halfx, alpha) / dgamma_(&empal);
-	    }
-	    if (*ize == 2) {
-		tempa *= exp(-(*x));
-	    }
-	    tempb = zero;
-	    if (*x + one > one) {
-		tempb = halfx * halfx;
-	    }
-	    b[1] = tempa + tempa * tempb / empal;
-	    if (*x != zero && b[1] == zero) {
-		*ncalc = 0;
-	    }
-	    if (*nb > 1) {
-		if (*x == zero) {
-		    i__1 = *nb;
-		    for (n = 2; n <= i__1; ++n) {
-			b[n] = zero;
+    } else {
+        tempa = one;
+        empal = one + *alpha;
+        halfx = zero;
+        if (*x > enmten) {
+        halfx = half * *x;
+        }
+        if (*alpha != zero) {
+        tempa = pow_dd(&halfx, alpha) / dgamma_(&empal);
+        }
+        if (*ize == 2) {
+        tempa *= exp(-(*x));
+        }
+        tempb = zero;
+        if (*x + one > one) {
+        tempb = halfx * halfx;
+        }
+        b[1] = tempa + tempa * tempb / empal;
+        if (*x != zero && b[1] == zero) {
+        *ncalc = 0;
+        }
+        if (*nb > 1) {
+        if (*x == zero) {
+            i__1 = *nb;
+            for (n = 2; n <= i__1; ++n) {
+            b[n] = zero;
 /* L310: */
-		    }
-		} else {
+            }
+        } else {
 /* ------------------------------------------------------------------- */
 /* Calculate higher-order functions. */
 /* ------------------------------------------------------------------- */
-		    tempc = halfx;
-		    tover = (enmten + enmten) / *x;
-		    if (tempb != zero) {
-			tover = enmten / tempb;
-		    }
-		    i__1 = *nb;
-		    for (n = 2; n <= i__1; ++n) {
-			tempa /= empal;
-			empal += one;
-			tempa *= tempc;
-			if (tempa <= tover * empal) {
-			    tempa = zero;
-			}
-			b[n] = tempa + tempa * tempb / empal;
-			if (b[n] == zero && *ncalc > n) {
-			    *ncalc = n - 1;
-			}
+            tempc = halfx;
+            tover = (enmten + enmten) / *x;
+            if (tempb != zero) {
+            tover = enmten / tempb;
+            }
+            i__1 = *nb;
+            for (n = 2; n <= i__1; ++n) {
+            tempa /= empal;
+            empal += one;
+            tempa *= tempc;
+            if (tempa <= tover * empal) {
+                tempa = zero;
+            }
+            b[n] = tempa + tempa * tempb / empal;
+            if (b[n] == zero && *ncalc > n) {
+                *ncalc = n - 1;
+            }
 /* L340: */
-		    }
-		}
-	    }
-	}
+            }
+        }
+        }
+    }
     } else {
-	*ncalc = min(*nb,0) - 1;
+    *ncalc = min(*nb,0) - 1;
     }
     return 0;
 /* ---------- Last line of RIBESL ---------- */

@@ -161,14 +161,14 @@ namespace DACE{
         const int id = m_x*100+m_yy;
         int i = 0;
         std::stringstream s;
-        
+
         if(m_x > 10)
         {
             for(i=length-1; (i>0)&&(DACEerr[i].ID != id); i--);
 
-            
+
             s << DACEerr[i].msg << " (ID: " << DACEerr[i].ID << ")" ;
-            
+
         }
         else
         {
@@ -230,7 +230,7 @@ namespace DACE{
     /********************************************************************************
     *     Friend functions
     *********************************************************************************/
-	std::ostream& operator<< (std::ostream &out, const DACEException &ex){
+    std::ostream& operator<< (std::ostream &out, const DACEException &ex){
     /*! Overload of std::operator<< in iostream.
        \param[in] out standard output stream.
        \param[in] ex Exception to be printed in the stream

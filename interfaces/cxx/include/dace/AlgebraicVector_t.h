@@ -937,7 +937,7 @@ template<typename U> std::istream& operator>>(std::istream &in, AlgebraicVector<
         // fill the AlgebraicVector
         for (size_t i = 0; in.good() && (i < vec_size); i++) {
             in >> obj[i];
-            
+
             // check the next character
             if (in.peek() == '\n')       // the previous operator>> does not consume the \n character when an AlgebraicVector<T> (with T != DA) is considered
                 in.ignore();            // ignore the next character

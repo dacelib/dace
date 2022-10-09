@@ -1,13 +1,13 @@
 /* rjbesl.f -- translated by f2c (version 20100827).
    You must link the resulting object file with libf2c:
-	on Microsoft Windows system, link with libf2c.lib;
-	on Linux or Unix systems, link with .../path/to/libf2c.a -lm
-	or, if you install libf2c.a in a standard place, with -lf2c -lm
-	-- in that order, at the end of the command line, as in
-		cc *.o -lf2c -lm
-	Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
+    on Microsoft Windows system, link with libf2c.lib;
+    on Linux or Unix systems, link with .../path/to/libf2c.a -lm
+    or, if you install libf2c.a in a standard place, with -lf2c -lm
+    -- in that order, at the end of the command line, as in
+        cc *.o -lf2c -lm
+    Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
 
-		http://www.netlib.org/f2c/libf2c.zip
+        http://www.netlib.org/f2c/libf2c.zip
 */
 
 /** \addtogroup DACEContrib Contrib
@@ -19,7 +19,7 @@
 #include "f2c.h"
 
 /* Subroutine */ int rjbesl_(const doublereal *x, const doublereal *alpha, const integer *nb,
-	doublereal *b, integer *ncalc)
+    doublereal *b, integer *ncalc)
 {
     /* Initialized data */
 
@@ -34,11 +34,11 @@
     static doublereal enmten = 8.9e-308;
     static doublereal xlarge = 1e4;
     static doublereal fact[25] = { 1.,1.,2.,6.,24.,120.,720.,5040.,40320.,
-	    362880.,3628800.,39916800.,479001600.,6227020800.,87178291200.,
-	    1.307674368e12,2.0922789888e13,3.55687428096e14,6.402373705728e15,
-	    1.21645100408832e17,2.43290200817664e18,5.109094217170944e19,
-	    1.12400072777760768e21,2.585201673888497664e22,
-	    6.2044840173323943936e23 };
+        362880.,3628800.,39916800.,479001600.,6227020800.,87178291200.,
+        1.307674368e12,2.0922789888e13,3.55687428096e14,6.402373705728e15,
+        1.21645100408832e17,2.43290200817664e18,5.109094217170944e19,
+        1.12400072777760768e21,2.585201673888497664e22,
+        6.2044840173323943936e23 };
     static doublereal twopi1 = 6.28125;
     static doublereal twopi2 = .001935307179586476925286767;
     static doublereal zero = 0.;
@@ -54,7 +54,7 @@
 
     /* Builtin functions */
     double pow_dd(const doublereal *, const doublereal *), sqrt(doublereal), d_int(
-	    const doublereal *), sin(doublereal), cos(doublereal);
+        const doublereal *), sin(doublereal), cos(doublereal);
 
     /* Local variables */
     integer i__, j, k, l, m, n;
@@ -65,7 +65,7 @@
     doublereal pold;
     integer nbmx;
     doublereal vcos, test, vsin, alpem, halfx, tempa, tempb, tempc, psave,
-	    plast, tover, alp2em;
+        plast, tover, alp2em;
     extern doublereal dgamma_(const doublereal *);
     doublereal psavel;
     integer nstart;
@@ -250,385 +250,385 @@
 /* --------------------------------------------------------------------- */
     magx = (integer) (*x);
     if (*nb > 0 && *x >= zero && *x <= xlarge && *alpha >= zero && *alpha <
-	    one) {
+        one) {
 /* --------------------------------------------------------------------- */
 /* Initialize result array to zero. */
 /* --------------------------------------------------------------------- */
-	*ncalc = *nb;
-	i__1 = *nb;
-	for (i__ = 1; i__ <= i__1; ++i__) {
-	    b[i__] = zero;
+    *ncalc = *nb;
+    i__1 = *nb;
+    for (i__ = 1; i__ <= i__1; ++i__) {
+        b[i__] = zero;
 /* L20: */
-	}
+    }
 /* --------------------------------------------------------------------- */
 /* Branch to use 2-term ascending series for small X and asymptotic */
 /* form for large X when NB is not too large. */
 /* --------------------------------------------------------------------- */
-	if (*x < rtnsig) {
+    if (*x < rtnsig) {
 /* --------------------------------------------------------------------- */
 /* Two-term ascending series for small X. */
 /* --------------------------------------------------------------------- */
-	    tempa = one;
-	    alpem = one + *alpha;
-	    halfx = zero;
-	    if (*x > enmten) {
-		halfx = half * *x;
-	    }
-	    if (*alpha != zero) {
-		tempa = pow_dd(&halfx, alpha) / (*alpha * dgamma_(alpha));
-	    }
-	    tempb = zero;
-	    if (*x + one > one) {
-		tempb = -halfx * halfx;
-	    }
-	    b[1] = tempa + tempa * tempb / alpem;
-	    if (*x != zero && b[1] == zero) {
-		*ncalc = 0;
-	    }
-	    if (*nb != 1) {
-		if (*x <= zero) {
-		    i__1 = *nb;
-		    for (n = 2; n <= i__1; ++n) {
-			b[n] = zero;
+        tempa = one;
+        alpem = one + *alpha;
+        halfx = zero;
+        if (*x > enmten) {
+        halfx = half * *x;
+        }
+        if (*alpha != zero) {
+        tempa = pow_dd(&halfx, alpha) / (*alpha * dgamma_(alpha));
+        }
+        tempb = zero;
+        if (*x + one > one) {
+        tempb = -halfx * halfx;
+        }
+        b[1] = tempa + tempa * tempb / alpem;
+        if (*x != zero && b[1] == zero) {
+        *ncalc = 0;
+        }
+        if (*nb != 1) {
+        if (*x <= zero) {
+            i__1 = *nb;
+            for (n = 2; n <= i__1; ++n) {
+            b[n] = zero;
 /* L30: */
-		    }
-		} else {
+            }
+        } else {
 /* --------------------------------------------------------------------- */
 /* Calculate higher order functions. */
 /* --------------------------------------------------------------------- */
-		    tempc = halfx;
-		    tover = (enmten + enmten) / *x;
-		    if (tempb != zero) {
-			tover = enmten / tempb;
-		    }
-		    i__1 = *nb;
-		    for (n = 2; n <= i__1; ++n) {
-			tempa /= alpem;
-			alpem += one;
-			tempa *= tempc;
-			if (tempa <= tover * alpem) {
-			    tempa = zero;
-			}
-			b[n] = tempa + tempa * tempb / alpem;
-			if (b[n] == zero && *ncalc > n) {
-			    *ncalc = n - 1;
-			}
+            tempc = halfx;
+            tover = (enmten + enmten) / *x;
+            if (tempb != zero) {
+            tover = enmten / tempb;
+            }
+            i__1 = *nb;
+            for (n = 2; n <= i__1; ++n) {
+            tempa /= alpem;
+            alpem += one;
+            tempa *= tempc;
+            if (tempa <= tover * alpem) {
+                tempa = zero;
+            }
+            b[n] = tempa + tempa * tempb / alpem;
+            if (b[n] == zero && *ncalc > n) {
+                *ncalc = n - 1;
+            }
 /* L50: */
-		    }
-		}
-	    }
-	} else if (*x > twofiv && *nb <= magx + 1) {
+            }
+        }
+        }
+    } else if (*x > twofiv && *nb <= magx + 1) {
 /* --------------------------------------------------------------------- */
 /* Asymptotic series for X .GT. 21.0. */
 /* --------------------------------------------------------------------- */
-	    xc = sqrt(pi2 / *x);
+        xc = sqrt(pi2 / *x);
 /* Computing 2nd power */
-	    d__1 = eighth / *x;
-	    xin = d__1 * d__1;
-	    m = 11;
-	    if (*x >= three5) {
-		m = 8;
-	    }
-	    if (*x >= one30) {
-		m = 4;
-	    }
-	    xm = four * (doublereal) m;
+        d__1 = eighth / *x;
+        xin = d__1 * d__1;
+        m = 11;
+        if (*x >= three5) {
+        m = 8;
+        }
+        if (*x >= one30) {
+        m = 4;
+        }
+        xm = four * (doublereal) m;
 /* --------------------------------------------------------------------- */
 /* Argument reduction for SIN and COS routines. */
 /* --------------------------------------------------------------------- */
-	    d__1 = *x / (twopi1 + twopi2) + half;
-	    t = d_int(&d__1);
-	    z__ = *x - t * twopi1 - t * twopi2 - (*alpha + half) / pi2;
-	    vsin = sin(z__);
-	    vcos = cos(z__);
-	    gnu = *alpha + *alpha;
-	    for (i__ = 1; i__ <= 2; ++i__) {
-		s = (xm - one - gnu) * (xm - one + gnu) * xin * half;
-		t = (gnu - (xm - three)) * (gnu + (xm - three));
-		capp = s * t / fact[m * 2];
-		t1 = (gnu - (xm + one)) * (gnu + (xm + one));
-		capq = s * t1 / fact[(m << 1) + 1];
-		xk = xm;
-		k = m + m;
-		t1 = t;
-		i__1 = m;
-		for (j = 2; j <= i__1; ++j) {
-		    xk -= four;
-		    s = (xk - one - gnu) * (xk - one + gnu);
-		    t = (gnu - (xk - three)) * (gnu + (xk - three));
-		    capp = (capp + one / fact[k - 2]) * s * t * xin;
-		    capq = (capq + one / fact[k - 1]) * s * t1 * xin;
-		    k += -2;
-		    t1 = t;
+        d__1 = *x / (twopi1 + twopi2) + half;
+        t = d_int(&d__1);
+        z__ = *x - t * twopi1 - t * twopi2 - (*alpha + half) / pi2;
+        vsin = sin(z__);
+        vcos = cos(z__);
+        gnu = *alpha + *alpha;
+        for (i__ = 1; i__ <= 2; ++i__) {
+        s = (xm - one - gnu) * (xm - one + gnu) * xin * half;
+        t = (gnu - (xm - three)) * (gnu + (xm - three));
+        capp = s * t / fact[m * 2];
+        t1 = (gnu - (xm + one)) * (gnu + (xm + one));
+        capq = s * t1 / fact[(m << 1) + 1];
+        xk = xm;
+        k = m + m;
+        t1 = t;
+        i__1 = m;
+        for (j = 2; j <= i__1; ++j) {
+            xk -= four;
+            s = (xk - one - gnu) * (xk - one + gnu);
+            t = (gnu - (xk - three)) * (gnu + (xk - three));
+            capp = (capp + one / fact[k - 2]) * s * t * xin;
+            capq = (capq + one / fact[k - 1]) * s * t1 * xin;
+            k += -2;
+            t1 = t;
 /* L70: */
-		}
-		capp += one;
-		capq = (capq + one) * (gnu * gnu - one) * (eighth / *x);
-		b[i__] = xc * (capp * vcos - capq * vsin);
-		if (*nb == 1) {
-		    goto L300;
-		}
-		t = vsin;
-		vsin = -vcos;
-		vcos = t;
-		gnu += two;
+        }
+        capp += one;
+        capq = (capq + one) * (gnu * gnu - one) * (eighth / *x);
+        b[i__] = xc * (capp * vcos - capq * vsin);
+        if (*nb == 1) {
+            goto L300;
+        }
+        t = vsin;
+        vsin = -vcos;
+        vcos = t;
+        gnu += two;
 /* L80: */
-	    }
+        }
 /* --------------------------------------------------------------------- */
 /* If  NB .GT. 2, compute J(X,ORDER+I)  I = 2, NB-1 */
 /* --------------------------------------------------------------------- */
-	    if (*nb > 2) {
-		gnu = *alpha + *alpha + two;
-		i__1 = *nb;
-		for (j = 3; j <= i__1; ++j) {
-		    b[j] = gnu * b[j - 1] / *x - b[j - 2];
-		    gnu += two;
+        if (*nb > 2) {
+        gnu = *alpha + *alpha + two;
+        i__1 = *nb;
+        for (j = 3; j <= i__1; ++j) {
+            b[j] = gnu * b[j - 1] / *x - b[j - 2];
+            gnu += two;
 /* L90: */
-		}
-	    }
+        }
+        }
 /* --------------------------------------------------------------------- */
 /* Use recurrence to generate results.  First initialize the */
 /* calculation of P*S. */
 /* --------------------------------------------------------------------- */
-	} else {
-	    nbmx = *nb - magx;
-	    n = magx + 1;
-	    i__1 = n + n;
-	    en = (doublereal) i__1 + (*alpha + *alpha);
-	    plast = one;
-	    p = en / *x;
+    } else {
+        nbmx = *nb - magx;
+        n = magx + 1;
+        i__1 = n + n;
+        en = (doublereal) i__1 + (*alpha + *alpha);
+        plast = one;
+        p = en / *x;
 /* --------------------------------------------------------------------- */
 /* Calculate general significance test. */
 /* --------------------------------------------------------------------- */
-	    test = ensig + ensig;
-	    if (nbmx >= 3) {
+        test = ensig + ensig;
+        if (nbmx >= 3) {
 /* --------------------------------------------------------------------- */
 /* Calculate P*S until N = NB-1.  Check for possible overflow. */
 /* --------------------------------------------------------------------- */
-		tover = enten / ensig;
-		nstart = magx + 2;
-		nend = *nb - 1;
-		i__1 = nstart + nstart;
-		en = (doublereal) i__1 - two + (*alpha + *alpha);
-		i__1 = nend;
-		for (k = nstart; k <= i__1; ++k) {
-		    n = k;
-		    en += two;
-		    pold = plast;
-		    plast = p;
-		    p = en * plast / *x - pold;
-		    if (p > tover) {
+        tover = enten / ensig;
+        nstart = magx + 2;
+        nend = *nb - 1;
+        i__1 = nstart + nstart;
+        en = (doublereal) i__1 - two + (*alpha + *alpha);
+        i__1 = nend;
+        for (k = nstart; k <= i__1; ++k) {
+            n = k;
+            en += two;
+            pold = plast;
+            plast = p;
+            p = en * plast / *x - pold;
+            if (p > tover) {
 /* --------------------------------------------------------------------- */
 /* To avoid overflow, divide P*S by TOVER.  Calculate P*S until */
 /* ABS(P) .GT. 1. */
 /* --------------------------------------------------------------------- */
-			tover = enten;
-			p /= tover;
-			plast /= tover;
-			psave = p;
-			psavel = plast;
-			nstart = n + 1;
+            tover = enten;
+            p /= tover;
+            plast /= tover;
+            psave = p;
+            psavel = plast;
+            nstart = n + 1;
 L100:
-			++n;
-			en += two;
-			pold = plast;
-			plast = p;
-			p = en * plast / *x - pold;
-			if (p <= one) {
-			    goto L100;
-			}
-			tempb = en / *x;
+            ++n;
+            en += two;
+            pold = plast;
+            plast = p;
+            p = en * plast / *x - pold;
+            if (p <= one) {
+                goto L100;
+            }
+            tempb = en / *x;
 /* --------------------------------------------------------------------- */
 /* Calculate backward test and find NCALC, the highest N such that */
 /* the test is passed. */
 /* --------------------------------------------------------------------- */
-			test = pold * plast * (half - half / (tempb * tempb));
-			test /= ensig;
-			p = plast * tover;
-			--n;
-			en -= two;
-			nend = min(*nb,n);
-			i__2 = nend;
-			for (l = nstart; l <= i__2; ++l) {
-			    pold = psavel;
-			    psavel = psave;
-			    psave = en * psavel / *x - pold;
-			    if (psave * psavel > test) {
-				*ncalc = l - 1;
-				goto L190;
-			    }
+            test = pold * plast * (half - half / (tempb * tempb));
+            test /= ensig;
+            p = plast * tover;
+            --n;
+            en -= two;
+            nend = min(*nb,n);
+            i__2 = nend;
+            for (l = nstart; l <= i__2; ++l) {
+                pold = psavel;
+                psavel = psave;
+                psave = en * psavel / *x - pold;
+                if (psave * psavel > test) {
+                *ncalc = l - 1;
+                goto L190;
+                }
 /* L110: */
-			}
-			*ncalc = nend;
-			goto L190;
-		    }
+            }
+            *ncalc = nend;
+            goto L190;
+            }
 /* L130: */
-		}
-		n = nend;
-		i__1 = n + n;
-		en = (doublereal) i__1 + (*alpha + *alpha);
+        }
+        n = nend;
+        i__1 = n + n;
+        en = (doublereal) i__1 + (*alpha + *alpha);
 /* --------------------------------------------------------------------- */
 /* Calculate special significance test for NBMX .GT. 2. */
 /* --------------------------------------------------------------------- */
 /* Computing MAX */
-		d__1 = test, d__2 = sqrt(plast * ensig) * sqrt(p + p);
-		test = max(d__1,d__2);
-	    }
+        d__1 = test, d__2 = sqrt(plast * ensig) * sqrt(p + p);
+        test = max(d__1,d__2);
+        }
 /* --------------------------------------------------------------------- */
 /* Calculate P*S until significance test passes. */
 /* --------------------------------------------------------------------- */
 L140:
-	    ++n;
-	    en += two;
-	    pold = plast;
-	    plast = p;
-	    p = en * plast / *x - pold;
-	    if (p < test) {
-		goto L140;
-	    }
+        ++n;
+        en += two;
+        pold = plast;
+        plast = p;
+        p = en * plast / *x - pold;
+        if (p < test) {
+        goto L140;
+        }
 /* --------------------------------------------------------------------- */
 /* Initialize the backward recursion and the normalization sum. */
 /* --------------------------------------------------------------------- */
 L190:
-	    ++n;
-	    en += two;
-	    tempb = zero;
-	    tempa = one / p;
-	    m = (n << 1) - (n / 2 << 2);
-	    sum = zero;
-	    i__1 = n / 2;
-	    em = (doublereal) i__1;
-	    alpem = em - one + *alpha;
-	    alp2em = em + em + *alpha;
-	    if (m != 0) {
-		sum = tempa * alpem * alp2em / em;
-	    }
-	    nend = n - *nb;
-	    if (nend > 0) {
+        ++n;
+        en += two;
+        tempb = zero;
+        tempa = one / p;
+        m = (n << 1) - (n / 2 << 2);
+        sum = zero;
+        i__1 = n / 2;
+        em = (doublereal) i__1;
+        alpem = em - one + *alpha;
+        alp2em = em + em + *alpha;
+        if (m != 0) {
+        sum = tempa * alpem * alp2em / em;
+        }
+        nend = n - *nb;
+        if (nend > 0) {
 /* --------------------------------------------------------------------- */
 /* Recur backward via difference equation, calculating (but not */
 /* storing) B(N), until N = NB. */
 /* --------------------------------------------------------------------- */
-		i__1 = nend;
-		for (l = 1; l <= i__1; ++l) {
-		    --n;
-		    en -= two;
-		    tempc = tempb;
-		    tempb = tempa;
-		    tempa = en * tempb / *x - tempc;
-		    m = 2 - m;
-		    if (m != 0) {
-			em -= one;
-			alp2em = em + em + *alpha;
-			if (n == 1) {
-			    goto L210;
-			}
-			alpem = em - one + *alpha;
-			if (alpem == zero) {
-			    alpem = one;
-			}
-			sum = (sum + tempa * alp2em) * alpem / em;
-		    }
+        i__1 = nend;
+        for (l = 1; l <= i__1; ++l) {
+            --n;
+            en -= two;
+            tempc = tempb;
+            tempb = tempa;
+            tempa = en * tempb / *x - tempc;
+            m = 2 - m;
+            if (m != 0) {
+            em -= one;
+            alp2em = em + em + *alpha;
+            if (n == 1) {
+                goto L210;
+            }
+            alpem = em - one + *alpha;
+            if (alpem == zero) {
+                alpem = one;
+            }
+            sum = (sum + tempa * alp2em) * alpem / em;
+            }
 /* L200: */
-		}
-	    }
+        }
+        }
 /* --------------------------------------------------------------------- */
 /* Store B(NB). */
 /* --------------------------------------------------------------------- */
 L210:
-	    b[n] = tempa;
-	    if (nend >= 0) {
-		if (*nb <= 1) {
-		    alp2em = *alpha;
-		    if (*alpha + one == one) {
-			alp2em = one;
-		    }
-		    sum += b[1] * alp2em;
-		    goto L250;
-		} else {
+        b[n] = tempa;
+        if (nend >= 0) {
+        if (*nb <= 1) {
+            alp2em = *alpha;
+            if (*alpha + one == one) {
+            alp2em = one;
+            }
+            sum += b[1] * alp2em;
+            goto L250;
+        } else {
 /* --------------------------------------------------------------------- */
 /* Calculate and store B(NB-1). */
 /* --------------------------------------------------------------------- */
-		    --n;
-		    en -= two;
-		    b[n] = en * tempa / *x - tempb;
-		    if (n == 1) {
-			goto L240;
-		    }
-		    m = 2 - m;
-		    if (m != 0) {
-			em -= one;
-			alp2em = em + em + *alpha;
-			alpem = em - one + *alpha;
-			if (alpem == zero) {
-			    alpem = one;
-			}
-			sum = (sum + b[n] * alp2em) * alpem / em;
-		    }
-		}
-	    }
-	    nend = n - 2;
-	    if (nend != 0) {
+            --n;
+            en -= two;
+            b[n] = en * tempa / *x - tempb;
+            if (n == 1) {
+            goto L240;
+            }
+            m = 2 - m;
+            if (m != 0) {
+            em -= one;
+            alp2em = em + em + *alpha;
+            alpem = em - one + *alpha;
+            if (alpem == zero) {
+                alpem = one;
+            }
+            sum = (sum + b[n] * alp2em) * alpem / em;
+            }
+        }
+        }
+        nend = n - 2;
+        if (nend != 0) {
 /* --------------------------------------------------------------------- */
 /* Calculate via difference equation and store B(N), until N = 2. */
 /* --------------------------------------------------------------------- */
-		i__1 = nend;
-		for (l = 1; l <= i__1; ++l) {
-		    --n;
-		    en -= two;
-		    b[n] = en * b[n + 1] / *x - b[n + 2];
-		    m = 2 - m;
-		    if (m != 0) {
-			em -= one;
-			alp2em = em + em + *alpha;
-			alpem = em - one + *alpha;
-			if (alpem == zero) {
-			    alpem = one;
-			}
-			sum = (sum + b[n] * alp2em) * alpem / em;
-		    }
+        i__1 = nend;
+        for (l = 1; l <= i__1; ++l) {
+            --n;
+            en -= two;
+            b[n] = en * b[n + 1] / *x - b[n + 2];
+            m = 2 - m;
+            if (m != 0) {
+            em -= one;
+            alp2em = em + em + *alpha;
+            alpem = em - one + *alpha;
+            if (alpem == zero) {
+                alpem = one;
+            }
+            sum = (sum + b[n] * alp2em) * alpem / em;
+            }
 /* L230: */
-		}
-	    }
+        }
+        }
 /* --------------------------------------------------------------------- */
 /* Calculate B(1). */
 /* --------------------------------------------------------------------- */
-	    b[1] = two * (*alpha + one) * b[2] / *x - b[3];
+        b[1] = two * (*alpha + one) * b[2] / *x - b[3];
 L240:
-	    em -= one;
-	    alp2em = em + em + *alpha;
-	    if (alp2em == zero) {
-		alp2em = one;
-	    }
-	    sum += b[1] * alp2em;
+        em -= one;
+        alp2em = em + em + *alpha;
+        if (alp2em == zero) {
+        alp2em = one;
+        }
+        sum += b[1] * alp2em;
 /* --------------------------------------------------------------------- */
 /* Normalize.  Divide all B(N) by sum. */
 /* --------------------------------------------------------------------- */
 L250:
-	    if (*alpha + one != one) {
-		d__1 = *x * half;
-		d__2 = -(*alpha);
-		sum = sum * dgamma_(alpha) * pow_dd(&d__1, &d__2);
-	    }
-	    tempa = enmten;
-	    if (sum > one) {
-		tempa *= sum;
-	    }
-	    i__1 = *nb;
-	    for (n = 1; n <= i__1; ++n) {
-		if ((d__1 = b[n], abs(d__1)) < tempa) {
-		    b[n] = zero;
-		}
-		b[n] /= sum;
+        if (*alpha + one != one) {
+        d__1 = *x * half;
+        d__2 = -(*alpha);
+        sum = sum * dgamma_(alpha) * pow_dd(&d__1, &d__2);
+        }
+        tempa = enmten;
+        if (sum > one) {
+        tempa *= sum;
+        }
+        i__1 = *nb;
+        for (n = 1; n <= i__1; ++n) {
+        if ((d__1 = b[n], abs(d__1)) < tempa) {
+            b[n] = zero;
+        }
+        b[n] /= sum;
 /* L260: */
-	    }
-	}
+        }
+    }
 /* --------------------------------------------------------------------- */
 /* Error return -- X, NB, or ALPHA is out of range. */
 /* --------------------------------------------------------------------- */
     } else {
-	b[1] = zero;
-	*ncalc = min(*nb,0) - 1;
+    b[1] = zero;
+    *ncalc = min(*nb,0) - 1;
     }
 /* --------------------------------------------------------------------- */
 /* Exit */

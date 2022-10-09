@@ -29,7 +29,7 @@
 #ifndef DINAMICA_DACEERROR_H
 #define DINAMICA_DACEERROR_H
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 typedef struct {
@@ -100,7 +100,7 @@ DACE_API const errstrings DACEerr[] = {
     {  57, ""},
     {  58, ""},
     {  59, ""},
-    {  60, ""},    
+    {  60, ""},
     { 161, "Free or invalid variable"},
     { 162, "Truncation order too high"},
     { 163, "Inacurate estimate"},

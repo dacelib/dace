@@ -1,13 +1,13 @@
 /* netlib/psi.f -- translated by f2c (version 20100827).
    You must link the resulting object file with libf2c:
-	on Microsoft Windows system, link with libf2c.lib;
-	on Linux or Unix systems, link with .../path/to/libf2c.a -lm
-	or, if you install libf2c.a in a standard place, with -lf2c -lm
-	-- in that order, at the end of the command line, as in
-		cc *.o -lf2c -lm
-	Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
+    on Microsoft Windows system, link with libf2c.lib;
+    on Linux or Unix systems, link with .../path/to/libf2c.a -lm
+    or, if you install libf2c.a in a standard place, with -lf2c -lm
+    -- in that order, at the end of the command line, as in
+        cc *.o -lf2c -lm
+    Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
 
-		http://www.netlib.org/f2c/libf2c.zip
+        http://www.netlib.org/f2c/libf2c.zip
 */
 
 /** \addtogroup DACEContrib Contrib
@@ -30,20 +30,20 @@ doublereal psi_(const doublereal *xx)
     static doublereal x01d = 128.;
     static doublereal x02 = 6.9464496836234126266e-4;
     static doublereal p1[9] = { .004510468124576293416,5.4932855833000385356,
-	    376.46693175929276856,7952.5490849151998065,71451.59581895193321,
-	    306559.76301987365674,636069.97788964458797,580413.12783537569993,
-	    165856.95029761022321 };
+        376.46693175929276856,7952.5490849151998065,71451.59581895193321,
+        306559.76301987365674,636069.97788964458797,580413.12783537569993,
+        165856.95029761022321 };
     static doublereal q1[8] = { 96.141654774222358525,2628.771579058119333,
-	    29862.49702225027792,162065.66091533671639,434878.80712768329037,
-	    542563.84537269993733,242421.85002017985252,
-	    6.4155223783576225996e-8 };
+        29862.49702225027792,162065.66091533671639,434878.80712768329037,
+        542563.84537269993733,242421.85002017985252,
+        6.4155223783576225996e-8 };
     static doublereal p2[7] = { -2.7103228277757834192,-15.166271776896121383,
-	    -19.784554148719218667,-8.8100958828312219821,
-	    -1.4479614616899842986,-.073689600332394549911,
-	    -6.5135387732718171306e-21 };
+        -19.784554148719218667,-8.8100958828312219821,
+        -1.4479614616899842986,-.073689600332394549911,
+        -6.5135387732718171306e-21 };
     static doublereal q2[6] = { 44.992760373789365846,202.40955312679931159,
-	    247.36979003315290057,107.42543875702278326,17.463965060678569906,
-	    .88427520398873480342 };
+        247.36979003315290057,107.42543875702278326,17.463965060678569906,
+        .88427520398873480342 };
     static doublereal fourth = .25;
     static doublereal half = .5;
     static doublereal one = 1.;
@@ -215,25 +215,25 @@ doublereal psi_(const doublereal *xx)
 /*  Check for valid arguments, then branch to appropriate algorithm */
 /* ---------------------------------------------------------------------- */
     if (-x >= xmax1 || w < xmin1) {
-	goto L410;
+    goto L410;
     } else if (x >= half) {
-	goto L200;
+    goto L200;
 /* ---------------------------------------------------------------------- */
 /*  X < 0.5, use reflection formula: psi(1-x) = psi(x) + pi * cot(pi*x) */
 /*     Use 1/X for PI*COTAN(PI*X)  when  XMIN1 < |X| <= XSMALL. */
 /* ---------------------------------------------------------------------- */
     } else if (w <= xsmall) {
-	aug = -one / x;
-	goto L150;
+    aug = -one / x;
+    goto L150;
     }
 /* ---------------------------------------------------------------------- */
 /*  Argument reduction for cot */
 /* ---------------------------------------------------------------------- */
 /* L100: */
     if (x < zero) {
-	sgn = piov4;
+    sgn = piov4;
     } else {
-	sgn = -piov4;
+    sgn = -piov4;
     }
     w -= d_int(&w);
     nq = (integer) (w * four);
@@ -245,11 +245,11 @@ doublereal psi_(const doublereal *xx)
 /* ---------------------------------------------------------------------- */
     n = nq / 2;
     if (n + n != nq) {
-	w = one - w;
+    w = one - w;
     }
     z__ = piov4 * w;
     if (n % 2 != 0) {
-	sgn = -sgn;
+    sgn = -sgn;
     }
 /* ---------------------------------------------------------------------- */
 /*  determine the final value for  -pi * cotan(pi*x) */
@@ -259,18 +259,18 @@ doublereal psi_(const doublereal *xx)
 /* ---------------------------------------------------------------------- */
 /*  Check for singularity */
 /* ---------------------------------------------------------------------- */
-	if (z__ == zero) {
-	    goto L410;
-	}
-	aug = sgn * (four / tan(z__));
+    if (z__ == zero) {
+        goto L410;
+    }
+    aug = sgn * (four / tan(z__));
     } else {
-	aug = sgn * (four * tan(z__));
+    aug = sgn * (four * tan(z__));
     }
 L150:
     x = one - x;
 L200:
     if (x > three) {
-	goto L300;
+    goto L300;
     }
 /* ---------------------------------------------------------------------- */
 /*  0.5 <= X <= 3.0 */
@@ -278,8 +278,8 @@ L200:
     den = x;
     upper = p1[0] * x;
     for (i__ = 1; i__ <= 7; ++i__) {
-	den = (den + q1[i__ - 1]) * x;
-	upper = (upper + p1[i__]) * x;
+    den = (den + q1[i__ - 1]) * x;
+    upper = (upper + p1[i__]) * x;
 /* L210: */
     }
     den = (upper + p1[8]) / (den + q1[7]);
@@ -291,15 +291,15 @@ L200:
 /* ---------------------------------------------------------------------- */
 L300:
     if (x < xlarge) {
-	w = one / (x * x);
-	den = w;
-	upper = p2[0] * w;
-	for (i__ = 1; i__ <= 5; ++i__) {
-	    den = (den + q2[i__ - 1]) * w;
-	    upper = (upper + p2[i__]) * w;
+    w = one / (x * x);
+    den = w;
+    upper = p2[0] * w;
+    for (i__ = 1; i__ <= 5; ++i__) {
+        den = (den + q2[i__ - 1]) * w;
+        upper = (upper + p2[i__]) * w;
 /* L310: */
-	}
-	aug = (upper + p2[6]) / (den + q2[5]) - half / x + aug;
+    }
+    aug = (upper + p2[6]) / (den + q2[5]) - half / x + aug;
     }
     ret_val = aug + log(x);
     goto L500;
@@ -309,7 +309,7 @@ L300:
 L410:
     ret_val = xinf;
     if (x > zero) {
-	ret_val = -xinf;
+    ret_val = -xinf;
     }
 L500:
     return ret_val;

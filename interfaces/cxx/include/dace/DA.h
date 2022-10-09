@@ -56,14 +56,14 @@ template<typename T> class AlgebraicVector;
 /*! Basic DA class representing a single polynomial. */
 class DACE_API DA
 {
-	friend class compiledDA;
-	friend class storedDA;
+    friend class compiledDA;
+    friend class storedDA;
 
 private:
     static bool initialized;                                                //!< Indicates if DA::init() was called
     static std::stack<unsigned int> TOstack;                                //!< Truncation order stack
-	// XXX: Mauro, MSVC is bitching around (also for other templated classes, e.g. std::string):		Warning	C4251	'DACE::DA::TOstack': class 'std::stack<unsigned int,std::deque<_Ty,std::allocator<_Ty>>>' needs to have dll - interface to be used by clients of class 'DACE::DA'
-	DACEDA m_index;                                                         //!< Index to the DA vector
+    // XXX: Mauro, MSVC is bitching around (also for other templated classes, e.g. std::string):        Warning    C4251    'DACE::DA::TOstack': class 'std::stack<unsigned int,std::deque<_Ty,std::allocator<_Ty>>>' needs to have dll - interface to be used by clients of class 'DACE::DA'
+    DACEDA m_index;                                                         //!< Index to the DA vector
 
 public:
     /********************************************************************************
@@ -103,10 +103,10 @@ public:
     double cons() const;                                                    //!< Get constant part of a DA
     AlgebraicVector<double> linear() const;                                 //!< Get linear part of a DA
     AlgebraicVector<DA> gradient() const;                                   //!< Gradient vector with respect to all independent DA variables
-	double getCoefficient(const std::vector<unsigned int> &jj) const;                //!< Get specific coefficient
+    double getCoefficient(const std::vector<unsigned int> &jj) const;                //!< Get specific coefficient
     void setCoefficient(const std::vector<unsigned int> &jj, const double coeff);    //!< Set specific coefficient
-	Monomial getMonomial(const unsigned int npos) const;                    //!< Get the Monomial at given position
-	void getMonomial(const unsigned int npos, Monomial &m) const;			//!< Extract the Monomial at given position
+    Monomial getMonomial(const unsigned int npos) const;                    //!< Get the Monomial at given position
+    void getMonomial(const unsigned int npos, Monomial &m) const;            //!< Extract the Monomial at given position
     std::vector<Monomial> getMonomials() const;                             //!< Get std::vector of all non-zero Monomials
 
     /********************************************************************************
@@ -134,27 +134,27 @@ public:
     *********************************************************************************/
     DA operator-() const;                                                   //!< Negate this DA
 
-	friend DA DACE_API operator+(const DA &da1, const DA &da2);             //!< Addition between two DAs
-	friend DA DACE_API operator+(const DA &da, const double c);             //!< Addition between a DA and a constant
-	friend DA DACE_API operator+(const double c, const DA &da);             //!< Addition between a constant and a DA
+    friend DA DACE_API operator+(const DA &da1, const DA &da2);             //!< Addition between two DAs
+    friend DA DACE_API operator+(const DA &da, const double c);             //!< Addition between a DA and a constant
+    friend DA DACE_API operator+(const double c, const DA &da);             //!< Addition between a constant and a DA
 
-	friend DA DACE_API operator-(const DA &da1, const DA &da2);             //!< Subtraction between two DAs
-	friend DA DACE_API operator-(const DA &da, const double c);             //!< Subtraction between a DA and a constant
-	friend DA DACE_API operator-(const double c, const DA &da);             //!< Subtraction between a constant and a DA
+    friend DA DACE_API operator-(const DA &da1, const DA &da2);             //!< Subtraction between two DAs
+    friend DA DACE_API operator-(const DA &da, const double c);             //!< Subtraction between a DA and a constant
+    friend DA DACE_API operator-(const double c, const DA &da);             //!< Subtraction between a constant and a DA
 
-	friend DA DACE_API operator*(const DA &da1, const DA &da2);             //!< Multiplication between two DAs
-	friend DA DACE_API operator*(const DA &da, const double c);             //!< Multiplication between a DA and a constant
-	friend DA DACE_API operator*(const double c, const DA &da);             //!< Multiplication between a constant and a DA
+    friend DA DACE_API operator*(const DA &da1, const DA &da2);             //!< Multiplication between two DAs
+    friend DA DACE_API operator*(const DA &da, const double c);             //!< Multiplication between a DA and a constant
+    friend DA DACE_API operator*(const double c, const DA &da);             //!< Multiplication between a constant and a DA
 
-	friend DA DACE_API operator/(const DA &da1, const DA &da2);             //!< Division between two DAs
-	friend DA DACE_API operator/(const DA &da, const double c);             //!< Division between a DA and a constant
-	friend DA DACE_API operator/(const double c, const DA &da);             //!< Division between a constant and a DA
+    friend DA DACE_API operator/(const DA &da1, const DA &da2);             //!< Division between two DAs
+    friend DA DACE_API operator/(const DA &da, const double c);             //!< Division between a DA and a constant
+    friend DA DACE_API operator/(const double c, const DA &da);             //!< Division between a constant and a DA
 
     /********************************************************************************
     *     Math routines
     *********************************************************************************/
-	DA multiplyMonomials(const DA &da) const;								//!< Multiply the DA with the argument da monomial by monomial (i.e. coefficient-wise)
-	DA divide(const unsigned int var, const unsigned int p = 1) const;      //!< Divide by an independent variable to some power
+    DA multiplyMonomials(const DA &da) const;                                //!< Multiply the DA with the argument da monomial by monomial (i.e. coefficient-wise)
+    DA divide(const unsigned int var, const unsigned int p = 1) const;      //!< Divide by an independent variable to some power
     DA deriv(const unsigned int i) const;                                   //!< Derivative with respect to given variable
     DA deriv(const std::vector<unsigned int> ind) const;                    //!< Derivative with respect to given variables
     DA integ(const unsigned int i) const;                                   //!< Integral with respect to given variable
@@ -225,8 +225,8 @@ public:
     template<class T> T evalScalar(const T &arg) const;                     //!< Evaluation with a single arithmetic type T argument (not efficient for repeated evaluation!)
     compiledDA compile() const;                                             //!< Compile current DA for efficient repeated evaluation
     DA plug(const unsigned int var, const double val = 0.0) const;          //!< Partial evaluation to replace given independent DA variable by value val
-	double evalMonomials(const DA &values) const;   						//!< evaluate the DA providing the value of every monomial in da
-	DA replaceVariable(const unsigned int from = 0, const unsigned int to = 0, const double val = 1.0) const;
+    double evalMonomials(const DA &values) const;                           //!< evaluate the DA providing the value of every monomial in da
+    DA replaceVariable(const unsigned int from = 0, const unsigned int to = 0, const double val = 1.0) const;
                                                                             //!< Replace variable number from by val times variable number to
     DA scaleVariable(const unsigned int var = 0, const double val = 1.0) const;
                                                                             //!< Scale variable number var by val
@@ -238,8 +238,8 @@ public:
     *********************************************************************************/
     std::string toString() const;                                           //!< Convert to string representation
     void write(std::ostream &os) const;                                     //!< Write binary representation of DA to stream
-	friend DACE_API std::ostream& operator<< (std::ostream &out, const DA &da);      //!< Output to C++ stream in text form
-	friend DACE_API std::istream& operator>> (std::istream &in, DA &da);             //!< Input from C++ stream in text form
+    friend DACE_API std::ostream& operator<< (std::ostream &out, const DA &da);      //!< Output to C++ stream in text form
+    friend DACE_API std::istream& operator>> (std::istream &in, DA &da);             //!< Input from C++ stream in text form
 
     /********************************************************************************
     *     Static factory routines
@@ -344,16 +344,16 @@ private:
     static const unsigned int headerSize;
 
 public:
-	storedDA(const DA &da);							//!< Constructor from a DA.
-	storedDA(const std::vector<char> &data);		//!< Constructor from binary data.
-	storedDA(std::istream &is);                     //!< Constructor from stream.
+    storedDA(const DA &da);                            //!< Constructor from a DA.
+    storedDA(const std::vector<char> &data);        //!< Constructor from binary data.
+    storedDA(std::istream &is);                     //!< Constructor from stream.
 
     bool isValid() const;                           //!< Is the data a valid DACE blob
 
     operator DA() const;                            //!< Cast to DA
     operator std::string() const;                   //!< Cast to std::string
 
-	friend DACE_API std::ostream& operator<<(std::ostream &out, const storedDA &sda);      //!< Output to C++ stream in binary form
+    friend DACE_API std::ostream& operator<<(std::ostream &out, const storedDA &sda);      //!< Output to C++ stream in binary form
 };
 
 }

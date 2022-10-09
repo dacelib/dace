@@ -42,7 +42,7 @@ class DACE_API DACEException : public std::exception
 private:
     int m_x;                    //!< Severity code
     int m_yy;                   //!< Error code
-	std::string msg;            //!< Error message
+    std::string msg;            //!< Error message
     static int severity;        //!< Default severity code
     static bool warning;        //!< Default warning status
     void execute() const;       //!< Execute the exception
@@ -57,7 +57,7 @@ public:
     static void setSeverity(const int n);               //!< Select the desired severity code
     static void setWarning(const bool w);               //!< Select the warning status
 
-	friend DACE_API std::ostream& operator<< (std::ostream &out, const DACEException &ex); //!< Overload output stream operator
+    friend DACE_API std::ostream& operator<< (std::ostream &out, const DACEException &ex); //!< Overload output stream operator
 };
 
 }

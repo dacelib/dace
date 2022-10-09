@@ -365,16 +365,16 @@ double DA::getCoefficient(const std::vector<unsigned int> &jj) const {
 
     double coeff;
     const unsigned int nvar = daceGetMaxVariables();
-	if(jj.size() >= nvar)
-	{
-		coeff = daceGetCoefficient(m_index, jj.data());
-	}
-	else
-	{
-		std::vector<unsigned int> temp(jj);
-		temp.resize(nvar, 0);
-		coeff = daceGetCoefficient(m_index, temp.data());
-	}
+    if(jj.size() >= nvar)
+    {
+        coeff = daceGetCoefficient(m_index, jj.data());
+    }
+    else
+    {
+        std::vector<unsigned int> temp(jj);
+        temp.resize(nvar, 0);
+        coeff = daceGetCoefficient(m_index, temp.data());
+    }
 
     if(daceGetError()) DACEException();
 
@@ -390,16 +390,16 @@ void DA::setCoefficient(const std::vector<unsigned int> &jj, const double coeff)
     // check arguments
     const unsigned int nvar = daceGetMaxVariables();
 
-	if(jj.size() >= nvar)
-	{
-		daceSetCoefficient(m_index, jj.data(), coeff);
-	}
-	else
-	{
-		std::vector<unsigned int> temp(jj);
-		temp.resize(nvar, 0);
-		daceSetCoefficient(m_index, temp.data(), coeff);
-	}
+    if(jj.size() >= nvar)
+    {
+        daceSetCoefficient(m_index, jj.data(), coeff);
+    }
+    else
+    {
+        std::vector<unsigned int> temp(jj);
+        temp.resize(nvar, 0);
+        daceSetCoefficient(m_index, temp.data(), coeff);
+    }
 
     if(daceGetError()) DACEException();
 }
@@ -420,17 +420,17 @@ Monomial DA::getMonomial(const unsigned int npos) const{
    \sa DA::getMonomials
 */
     Monomial m;
-	getMonomial(npos, m);
+    getMonomial(npos, m);
     return m;
 }
 
 
 void DA::getMonomial(const unsigned int npos, Monomial &m) const {
 /*! Return the Monomial corresponding to the non-zero coefficient at the given
-	position in the DA object (monomials use one based indexing!).
+    position in the DA object (monomials use one based indexing!).
    \param[in] npos position within the DA object. The ordering of the Monomials
-	within a DA object is implementation dependent and does not correspond
-	to the order in which Monomials are listed in the ASCII output routines.
+    within a DA object is implementation dependent and does not correspond
+    to the order in which Monomials are listed in the ASCII output routines.
    \param[out] m the monomial object in which to store the corresponding monomial.
    \throw DACE::DACEException
    \sa Monomial
@@ -830,17 +830,17 @@ DA operator/(const double c, const DA &da){
 
 DA DA::multiplyMonomials(const DA &da) const {
 /*! Multiply the DA vector with another DA vector da monomial by monomial.
-	This is the equivalent of coefficient-wise multiplication (like in DA addition).
+    This is the equivalent of coefficient-wise multiplication (like in DA addition).
    \param[in] da DA vector to multiply with coefficient-wise
    \return A new DA object containing the result of the operation.
    \throw DACE::DACEException
    \sa DA::evalMonomial
 */
-	DA temp;
-	daceMultiplyMonomials(m_index, da.m_index, temp.m_index);
-	if (daceGetError()) DACEException();
+    DA temp;
+    daceMultiplyMonomials(m_index, da.m_index, temp.m_index);
+    if (daceGetError()) DACEException();
 
-	return temp;
+    return temp;
 }
 
 DA DA::divide(const unsigned int var, const unsigned int p) const{
@@ -1658,10 +1658,10 @@ double DA::evalMonomials(const DA &values) const {
    \throw DACE::DACEException
    \sa DA::multiplyMonomial
 */
-	const double res = daceEvalMonomials(m_index, values.m_index);
-	if (daceGetError()) DACEException();
+    const double res = daceEvalMonomials(m_index, values.m_index);
+    if (daceGetError()) DACEException();
 
-	return res;
+    return res;
 }
 
 DA DA::replaceVariable(const unsigned int from, const unsigned int to, const double val) const{
@@ -1768,16 +1768,16 @@ std::istream& operator>>(std::istream &in, DA &da){
    \throw DACE::DACEException
    \note When using binary IO operations, make sure the stream is opened in ios_base::binary mode!
     Some C++ libraries are known to mangle the input otherwise which will break the ability to read binary DA objects.
-	Setting the binary flag for all IO (also text based) does not affect the output and is recommended.
+    Setting the binary flag for all IO (also text based) does not affect the output and is recommended.
    \sa DA::fromString
  */
     storedDA sda(in);
 
     if(sda.isValid())
-	{
+    {
         da = sda;                                       // automatically cast sDA to DA
         return in;
-	}
+    }
     else
     {
         const std::string endstr = "------------------------------------------------";  // from daceio.c
@@ -1897,9 +1897,9 @@ DA DA::fromString(const std::vector<std::string> &str){
 DA DA::read(std::istream &is){
 /*!  Read a binary representation of a DA from is.
     \throw DACE::DACEException
-	\note When using binary IO operations, make sure the stream is opened in ios_base::binary mode!
-	 Some C++ libraries are known to mangle the input otherwise which will break the ability to read binary DA objects.
-	 Setting the binary flag for all IO (also text based) does not affect the output and is recommended.
+    \note When using binary IO operations, make sure the stream is opened in ios_base::binary mode!
+     Some C++ libraries are known to mangle the input otherwise which will break the ability to read binary DA objects.
+     Setting the binary flag for all IO (also text based) does not affect the output and is recommended.
  */
     storedDA sda(is);
     return sda;         // automatically cast to DA
@@ -2687,11 +2687,11 @@ const unsigned int storedDA::headerSize = daceBlobSize(NULL);
 
 // create new storedDA from an existing DA
 storedDA::storedDA(const DA &da){
-	unsigned int len;
+    unsigned int len;
 
-	daceExportBlob(da.m_index, NULL, len);
-	resize(len);
-	daceExportBlob(da.m_index, data(), len);
+    daceExportBlob(da.m_index, NULL, len);
+    resize(len);
+    daceExportBlob(da.m_index, data(), len);
     if(daceGetError()) DACEException();
 }
 
@@ -2703,11 +2703,11 @@ storedDA::storedDA(const std::vector<char> &data) : std::vector<char>(data){
 storedDA::storedDA(std::istream &is) : std::vector<char>(storedDA::headerSize){
     // read blob header
     is.read(data(), headerSize);
-	if(is.gcount() != headerSize)
-	{
+    if(is.gcount() != headerSize)
+    {
         resize((size_t)is.gcount());
         return;
-	}
+    }
 
     // check validity of blob header and read the rest
     const unsigned int len = daceBlobSize(data());
@@ -2716,15 +2716,15 @@ storedDA::storedDA(std::istream &is) : std::vector<char>(storedDA::headerSize){
         return;
     }
     else if(len > headerSize)
-	{
+    {
         resize(len);
-		is.read(data()+headerSize, len-headerSize);
-		if(is.gcount() != (len-headerSize))
-		{
+        is.read(data()+headerSize, len-headerSize);
+        if(is.gcount() != (len-headerSize))
+        {
             resize((size_t)(headerSize+is.gcount()));
-			return;
-		}
-	}
+            return;
+        }
+    }
 }
 
 // return if this storedDA data appears to be valid

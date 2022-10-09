@@ -3,7 +3,7 @@
 
    Source for libf2c is in /netlib/f2c/libf2c.zip, e.g.,
 
-		http://www.netlib.org/f2c/libf2c.zip
+        http://www.netlib.org/f2c/libf2c.zip
 */
 
 /** \addtogroup DACEContrib Contrib
@@ -40,22 +40,22 @@ x = *ap;
 n = *bp;
 
 if(n != 0)
-	{
-	if(n < 0)
-		{
-		n = -n;
-		x = 1/x;
-		}
-	for(u = n; ; )
-		{
-		if(u & 01)
-			pow *= x;
-		if(u >>= 1)
-			x *= x;
-		else
-			break;
-		}
-	}
+    {
+    if(n < 0)
+        {
+        n = -n;
+        x = 1/x;
+        }
+    for(u = n; ; )
+        {
+        if(u & 01)
+            pow *= x;
+        if(u >>= 1)
+            x *= x;
+        else
+            break;
+        }
+    }
 return(pow);
 }
 #ifdef __cplusplus

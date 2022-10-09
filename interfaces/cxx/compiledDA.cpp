@@ -153,7 +153,7 @@ template<> void compiledDA::eval(const std::vector<DA> &args, std::vector<DA> &r
     daceAllocateDA(tmp,0);
     // prepare temporary powers
     daceCreateConstant(xm[0],1.0);
-    
+
     // constant part
     for(unsigned int i=0; i<dim; i++, p++)
         daceCreateConstant(res[i].m_index,*p);
