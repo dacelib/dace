@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -63,7 +63,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
         daceSetError(__func__, DACE_INFO, 67);
         no = 1;
     }
-    
+
     if(nv < 1) {
         daceSetError(__func__, DACE_INFO, 68);
         nv = 1;
@@ -76,7 +76,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
          DACECom.epsmac = DACECom.epsmac/2.0;
     }
     DACECom.epsmac = DACECom.epsmac*2.0;
-    
+
     // Reset memory, purging all previous DA objects, if any.
     daceFreeMemory();
 
@@ -150,7 +150,7 @@ void daceInitialize(unsigned int no, unsigned int nv)
             i++;                                            // increase total monomial count
         } while((no2 = daceNextOrderedMonomial(p2, no-no1, nv2)) > 0);
     } while((no1 = daceNextOrderedMonomial(p1, no, nv1)) > 0);
-    
+
     // free memory
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(p1);

@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -471,7 +471,7 @@ void daceImportBlob(const void *blob, DACEDA *inc)
 
     if(data->magic != DACE_BINARY_MAGIC)
     {
-        daceSetError(__func__, DACE_ERROR, 31); 
+        daceSetError(__func__, DACE_ERROR, 31);
         daceCreateConstant(inc, 0.0);
         return;
     }
@@ -485,7 +485,7 @@ void daceImportBlob(const void *blob, DACEDA *inc)
 #if DACE_MEMORY_MODEL == DACE_MEMORY_STATIC
     if(nv > DACE_STATIC_NVMAX)
     {
-        daceSetError(__func__, DACE_ERROR, 23); 
+        daceSetError(__func__, DACE_ERROR, 23);
         daceCreateConstant(inc, 0.0);
         return;
     }

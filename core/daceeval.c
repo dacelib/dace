@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -160,7 +160,7 @@ void daceReplaceVariable(const DACEDA *ina, const unsigned int from, const unsig
 
     if(from < 1 || from > DACECom.nvmax || to < 1 || to > DACECom.nvmax)
     {
-        daceSetError(__func__, DACE_ERROR, 24); 
+        daceSetError(__func__, DACE_ERROR, 24);
         daceCreateConstant(inc, 0.0);
         return;
     }
@@ -216,7 +216,7 @@ void daceScaleVariable(const DACEDA *ina, const unsigned int nvar, const double 
 
     if(nvar < 1 || nvar > DACECom.nvmax)
     {
-        daceSetError(__func__, DACE_ERROR, 24);    
+        daceSetError(__func__, DACE_ERROR, 24);
         daceCreateConstant(inc, 0.0);
         return;
     }
@@ -278,7 +278,7 @@ void daceTranslateVariable(const DACEDA *ina, const unsigned int nvar, const dou
 
     if(nvar < 1 || nvar > DACECom.nvmax)
     {
-        daceSetError(__func__, DACE_ERROR, 24);    
+        daceSetError(__func__, DACE_ERROR, 24);
         daceCreateConstant(inc, 0.0);
         return;
     }
@@ -475,7 +475,7 @@ void daceEvalTree(const DACEDA *das[], const unsigned int count, double ac[], un
             exit(1);
         }
 #endif
-    
+
 #if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
     dacefree(nc);
     dacefree(p);

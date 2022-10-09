@@ -159,7 +159,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
     daceVariableInformation(inb, &ipob, &ilmb, &illb);
 
     // sort so that ina is the short DA vector
-    if(illa>illb)
+    if(illa > illb)
     {
         unsigned int t1;
         t1 = illb; illb = illa; illa = t1;

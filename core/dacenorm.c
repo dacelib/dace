@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -108,7 +108,7 @@ void daceOrderedNorm(const DACEDA *ina, const unsigned int ivar, const unsigned 
 
     if(ivar > DACECom.nvmax)
     {
-        daceSetError(__func__, DACE_ERROR, 24);   
+        daceSetError(__func__, DACE_ERROR, 24);
         return;
     }
 

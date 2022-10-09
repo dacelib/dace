@@ -26,7 +26,7 @@
  *      Author: Politecnico di Milano
  */
 
-/** \addtogroup DACE Core 
+/** \addtogroup DACE Core
  *  @{
  */
 
@@ -71,8 +71,8 @@ typedef struct dvariable {
 
 // Global memory array
 typedef struct dmem {
-    monomial *mem; 
-    variable *var; 
+    monomial *mem;
+    variable *var;
     unsigned int nda, mda, nst, lda, lst;
 } dacemem;
 
@@ -111,7 +111,7 @@ void daceReallocateMemory(const unsigned int nvar, const unsigned int nmem)
         daceSetError(__func__, DACE_PANIC, 2);
         exit(1);
     }
-    
+
     // static memory blocks
     static monomial dace_static_mem[DACE_STATIC_MEM_SIZE];
     static variable dace_static_var[DACE_STATIC_VAR_SIZE];
@@ -290,7 +290,7 @@ void daceMemoryDump()
 /*! Extract internal information about a DA object.
    \param[in] inc Pointer to the DA object to extract information from
    \param[out] ipoc Pointer to an array of monomials allocated for this variable
-   \param[out] ilmc Pointer where to store the maximum number of monomials allocated in this DA object 
+   \param[out] ilmc Pointer where to store the maximum number of monomials allocated in this DA object
    \param[out] illc Pointer where to store the currently used length of this DA object
 */
 void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *ilmc, unsigned int *illc)
@@ -414,7 +414,7 @@ void daceMemoryDump()
 /*! Extract internal information about a DA object.
    \param[in] inc Pointer to the DA object to extract information from
    \param[out] ipoc Pointer to an array of monomials allocated for this variable
-   \param[out] ilmc Pointer where to store the maximum number of monomials allocated in this DA object 
+   \param[out] ilmc Pointer where to store the maximum number of monomials allocated in this DA object
    \param[out] illc Pointer where to store the currently used length of this DA object
 */
 void daceVariableInformation(const DACEDA *inc, monomial **ipoc, unsigned int *ilmc, unsigned int *illc)
@@ -438,7 +438,7 @@ void daceSetLength(DACEDA *inc, const size_t len)
 {
     if(UNLIKELY(inc->max < len))
     {
-        daceSetError(__func__, DACE_PANIC, 7);  
+        daceSetError(__func__, DACE_PANIC, 7);
         exit(1);
         // catastrophic error because we may have written past the end of the variable and contaminated memory there
     }
