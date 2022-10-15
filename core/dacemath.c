@@ -126,7 +126,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 			ipbeg[i] = emb + daceCountMonomials(i - 1, DACECom.nvmax);
     }
 #else
-    static DACE_THREAD_LOCAL double *cc = NULL;
+    static DACE_THREAD_LOCAL double *restrict cc = NULL;
     static DACE_THREAD_LOCAL extended_monomial *emb = NULL;
     static DACE_THREAD_LOCAL extended_monomial **ipbeg = NULL;
     static DACE_THREAD_LOCAL extended_monomial **ipend = NULL;
@@ -171,10 +171,10 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
     for(unsigned int i = 0; i <= DACECom_t.nocut; i++) ipend[i] = ipbeg[i];
 
     // sort vector b by order
-    for(monomial *ib = ipob; ib < ipob+illb; ib++)
+    for(const monomial *ib = ipob; ib < ipob+illb; ib++)
     {
         const unsigned int noib = DACECom.ieo[ib->ii];
-        if(noib > DACECom_t.nocut) continue;
+        if(UNLIKELY(noib > DACECom_t.nocut)) continue;
         ipend[noib]->i1 = DACECom.ie1[ib->ii];
         ipend[noib]->i2 = DACECom.ie2[ib->ii];
         ipend[noib]->cc = ib->cc;
@@ -182,7 +182,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
     }
 
     // perform actual multiplication
-    for(monomial *ia = ipoa; ia < ipoa+illa; ia++)
+    for(const monomial *ia = ipoa; ia < ipoa+illa; ia++)
     {
         const unsigned int i1ia = DACECom.ie1[ia->ii];
         const unsigned int i2ia = DACECom.ie2[ia->ii];
@@ -191,7 +191,7 @@ void daceMultiply(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
         //#pragma omp parallel for
         for(int noib = DACECom_t.nocut-DACECom.ieo[ia->ii]; noib >= 0; noib--)
         {
-            for(extended_monomial *ib = ipbeg[noib]; ib < ipend[noib]; ib++)
+            for(const extended_monomial *ib = ipbeg[noib]; ib < ipend[noib]; ib++)
             {
                 const unsigned int ic = DACECom.ia1[i1ia+ib->i1] + DACECom.ia2[i2ia+ib->i2];
                 cc[ic] += ccia*ib->cc;

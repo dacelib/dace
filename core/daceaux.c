@@ -334,7 +334,7 @@ void daceDecode(const unsigned int jc, unsigned int jj[])
    \param[in] cc C array of nmmax monomials
    \param[in] inc Pointer to DA object to pack the monomials into
 */
-void dacePack(double cc[], DACEDA *inc)
+void dacePack(double cc[restrict], DACEDA *restrict inc)
 {
     monomial *ipoc; unsigned int ilmc, illc;
 
@@ -350,7 +350,7 @@ void dacePack(double cc[], DACEDA *inc)
         {
             for(unsigned int i = 0; i < DACECom.nmmax; i++)
             {
-                if(!(fabs(cc[i]) <= DACECom_t.eps))  //  && (DACECom.ieo[i] <= DACECom_t.nocut) is avoided for performance
+                if(LIKELY(!(fabs(cc[i]) <= DACECom_t.eps)))  //  && (DACECom.ieo[i] <= DACECom_t.nocut) is avoided for performance
                 {
                     ic->ii = i;
                     ic->cc = cc[i];
@@ -363,9 +363,9 @@ void dacePack(double cc[], DACEDA *inc)
         {
             for(unsigned int i = 0; i < DACECom.nmmax; i++)
             {
-                if(!(fabs(cc[i]) <= DACECom_t.eps) && DACECom.ieo[i] <= DACECom_t.nocut)     // here we remove also cut orders to save as much space as possible
+                if(LIKELY(!(fabs(cc[i]) <= DACECom_t.eps) && DACECom.ieo[i] <= DACECom_t.nocut))     // here we remove also cut orders to save as much space as possible
                 {
-                    if(ic >= ipoc+ilmc)
+                    if(UNLIKELY(ic >= ipoc+ilmc))
                     {
                         daceSetError(__func__, DACE_ERROR, 21);
                         for(unsigned int j = i; j < DACECom.nmmax; j++) cc[j] = 0.0;
@@ -384,9 +384,9 @@ void dacePack(double cc[], DACEDA *inc)
     {
         for(unsigned int i = 0; i < DACECom.nmmax; i++)
         {
-            if((DACECom.ifi[i] != 0) && !(fabs(cc[i]) <= DACECom_t.eps) && (DACECom.ieo[i] <= DACECom_t.nocut))
+            if(LIKELY((DACECom.ifi[i] != 0) && !(fabs(cc[i]) <= DACECom_t.eps) && (DACECom.ieo[i] <= DACECom_t.nocut)))
             {
-                if(ic >= ipoc+ilmc)
+                if(UNLIKELY(ic >= ipoc+ilmc))
                 {
                     daceSetError(__func__, DACE_ERROR, 21);
                     for(unsigned int j = 0; j < DACECom.nmmax; j++) cc[j] = 0.0;
