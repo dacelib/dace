@@ -70,5 +70,5 @@ int main( void )
     cout << "Exercise 1.2.2: Breaking bad\n"
          << ex1_2_2( 0.0, 0.0 ) << endl
          << ex1_2_2( x, y ) << endl;
-    } catch( exception &ex ) { cout << ex.what( ) << endl; }
+    } catch( exception const& ex ) { cout << ex.what( ) << endl; }
 }

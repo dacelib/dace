@@ -66,7 +66,7 @@ void DA::init(const unsigned int ord, const unsigned int nvar) {
  */
     try {
         checkVersion();
-    } catch(DACEException ex) {
+    } catch(DACEException const& ex) {
         std::cerr << ex << std::endl;
         std::terminate(); }
     daceInitialize(ord,nvar);
