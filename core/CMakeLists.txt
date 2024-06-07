@@ -11,4 +11,4 @@ if(WIN32)
 endif(WIN32)
 
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/core/include/ DESTINATION include/ COMPONENT headers FILES_MATCHING PATTERN "*.h")
-install(FILES ${CMAKE_BINARY_DIR}/core/include/dace/config.h DESTINATION include/dace COMPONENT headers)
+install(FILES ${PROJECT_BINARY_DIR}/core/include/dace/config.h DESTINATION include/dace COMPONENT headers)
