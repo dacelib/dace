@@ -54,7 +54,7 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
     if (obj1.size()!=obj2.nrows())
         throw std::runtime_error("DACE::AlgebraicMatrix<T>::operator*: objects in vector/matrix multiplication must have compatible size.");
 
-    AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(obj1.size());
+    AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(obj2.ncols());
 
     for(unsigned int i=0; i<obj2.ncols(); i++){
         temp[i] = 0.;
@@ -76,7 +76,7 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
     if (obj1.ncols()!=obj2.size())
         throw std::runtime_error("DACE::AlgebraicMatrix<T>::operator*: objects in vector/matrix multiplication must have compatible size.");
 
-    AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(obj2.size());
+    AlgebraicVector<typename PromotionTrait< U, V >::returnType> temp(obj1.nrows());
 
     for(unsigned int i=0; i<obj1.nrows(); i++){
         temp[i] = 0.;
