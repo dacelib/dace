@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.0.0)
+cmake_minimum_required (VERSION 3.6.0)
 include(CMakeDependentOption)
 
 # since MacOS 10.14 (XCode 10.0), default includes are no longer installed to /usr/include or /usr/local/include
@@ -36,14 +36,14 @@ endif(WIN32)
 # Standard is a hard requirement and that option is hidden from CMake GUI
 if(NOT CMAKE_C_STANDARD)
   set(CMAKE_C_STANDARD 99 CACHE STRING "C standard (minimum 99)" FORCE)
-  set_property(CACHE CMAKE_C_STANDARD PROPERTY STRINGS 99 11)  # options shown in CMake GUI
+  set_property(CACHE CMAKE_C_STANDARD PROPERTY STRINGS 99 11 17)  # options shown in CMake GUI
 endif(NOT CMAKE_C_STANDARD)
 set(CMAKE_C_STANDARD_REQUIRED ON CACHE BOOL "")
 mark_as_advanced(CMAKE_C_STANDARD_REQUIRED)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 11 CACHE STRING "C++ standard (minimum 11)" FORCE)
-  set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS 11 14 17)  # options shown in CMake GUI
+  set(CMAKE_CXX_STANDARD 14 CACHE STRING "C++ standard (minimum 14)" FORCE)
+  set_property(CACHE CMAKE_CXX_STANDARD PROPERTY STRINGS 14 17 20)  # options shown in CMake GUI
 endif(NOT CMAKE_CXX_STANDARD)
 set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE BOOL "")
 mark_as_advanced(CMAKE_CXX_STANDARD_REQUIRED)
