@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 3.6.0)
+cmake_minimum_required (VERSION 3.10)
 include(CMakeDependentOption)
 
 # since MacOS 10.14 (XCode 10.0), default includes are no longer installed to /usr/include or /usr/local/include
