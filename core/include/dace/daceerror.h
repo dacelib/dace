@@ -48,7 +48,6 @@ DACE_API const errstrings DACEerr[] = {
     {1006, "Incorrect DA coding arrays"},
     {1007, "Requested length too long"},
     {1008, "Error in monomial evaluation tree construction"},
-    {   8, ""},
     {   9, ""},
     {  10, ""},
     { 911, "Order and/or variable too large"},
