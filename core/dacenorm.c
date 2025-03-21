@@ -242,6 +242,9 @@ void daceEstimate(const DACEDA *ina, const unsigned int ivar, const unsigned int
     if(xtx[1][1] < 2)
     {
         daceSetError(__func__, DACE_INFO, 63);
+#if DACE_MEMORY_MODEL != DACE_MEMORY_STATIC
+        dacefree(onorm);
+#endif
         return;
     }
 
