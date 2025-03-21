@@ -1806,12 +1806,29 @@ std::istream& operator>>(std::istream &in, DA &da){
             }
         }
 
-        // read the istream until end string is found and put each line in the string vector (end condition taken from daceio.c)
-        for(getline(in, line); in.good() && (line.compare(4, 31, endstr, 0, 31) != 0); getline(in, line))
-            strs.push_back(line);
+        if (!strs.empty())
+        {
+            if(!strs.back().empty())
+            {
+                // check that last line is not the terminator line and in case remove it
+                if(strs.back().compare(4, 31, endstr, 0, 31) == 0)
+                {
+                    strs.pop_back();
 
-        // convert string vector to DA
-        da = DA::fromString(strs);
+                }
+                else
+                {
+                    // read the istream until end string is found and put each line in the string vector (end condition taken from daceio.c)
+                    for(getline(in, line); in.good() && (line.compare(4, 31, endstr, 0, 31) != 0); getline(in, line))
+                    strs.push_back(line);
+                }
+            }
+            // convert string vector to DA
+            da = DA::fromString(strs);
+        }
+        
+
+        
     }
 
     return in;
