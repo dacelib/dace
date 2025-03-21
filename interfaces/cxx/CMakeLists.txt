@@ -18,8 +18,18 @@ endif(WIN32)
 add_library(dace SHARED $<TARGET_OBJECTS:c_core> $<TARGET_OBJECTS:c_core_contrib> $<TARGET_OBJECTS:dacecxx>)
 add_library(dace_s STATIC $<TARGET_OBJECTS:c_core_s> $<TARGET_OBJECTS:c_core_contrib_s> $<TARGET_OBJECTS:dacecxx_s>)
 
-target_include_directories(dace INTERFACE $<INSTALL_INTERFACE:include>)
-target_include_directories(dace_s INTERFACE $<INSTALL_INTERFACE:include>)
+# ugly hack: hard code all include directories when building from source (C++ includes, core includes, config.h include)
+target_include_directories(dace INTERFACE $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../core/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../../core/include>
+)
+target_include_directories(dace_s INTERFACE $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/../../core/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/../../core/include>
+)
+
 
 if(WITH_PTHREAD)
   target_link_libraries(dace PUBLIC pthread)
