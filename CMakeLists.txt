@@ -31,7 +31,6 @@ set(DACE_PATCH_VERSION 1)
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
 include(CMakeDependentOption)
 include(CheckSafeStrings)
-include(CPack)
 include(CMakePackageConfigHelpers)
 
 
@@ -247,3 +246,4 @@ elseif(UNIX)
   set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README-LINUX")
   install(FILES README-LINUX DESTINATION share/libdace/ )
 endif(WIN32)
+include(CPack)
