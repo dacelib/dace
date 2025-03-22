@@ -122,12 +122,12 @@ add_library(dace_s STATIC $<TARGET_OBJECTS:c_core_s> $<TARGET_OBJECTS:c_core_con
 
 # ugly hack: hard code all include directories when building from source (C++ includes, core includes, config.h include)
 target_include_directories(dace INTERFACE $<INSTALL_INTERFACE:include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface/cxx/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interfaces/cxx/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/core/include>
 )
 target_include_directories(dace_s INTERFACE $<INSTALL_INTERFACE:include>
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interface/cxx/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interfaces/cxx/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/core/include>
 )
