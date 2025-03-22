@@ -26,8 +26,9 @@ if(WIN32)
 elseif(APPLE)
   cmake_policy(SET CMP0042 NEW)
   cmake_policy(SET CMP0068 NEW)
-  set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
-  set(CMAKE_INSTALL_NAME_DIR "@loader_path")
+  # build libraries use full hard-coded binary path, install libraries replace it by @rpath
+  set(CMAKE_MACOSX_RPATH OFF)
+  set(CMAKE_INSTALL_NAME_DIR "@rpath")
 endif(WIN32)
 
 
