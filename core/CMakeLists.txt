@@ -1,5 +1,5 @@
 set(SRCCCORE daceaux.c dacebasic.c dacecompat.c daceerror.c daceeval.c daceinit.c daceio.c dacemath.c dacememory.c dacenorm.c)
-include_directories(include contrib/include)
+include_directories(include ${PROJECT_BINARY_DIR}/core/include contrib/include)
 
 add_library(c_core_s OBJECT ${SRCCCORE})
 add_library(c_core OBJECT ${SRCCCORE})
