@@ -120,7 +120,7 @@ add_subdirectory(interfaces/cxx)
 add_library(dace SHARED $<TARGET_OBJECTS:c_core> $<TARGET_OBJECTS:c_core_contrib> $<TARGET_OBJECTS:dacecxx>)
 add_library(dace_s STATIC $<TARGET_OBJECTS:c_core_s> $<TARGET_OBJECTS:c_core_contrib_s> $<TARGET_OBJECTS:dacecxx_s>)
 
-# ugly hack: hard code all include directories when building from source (C++ includes, core includes, config.h include)
+# hard code all required include directories when building from source (C++ includes, core includes, config.h include)
 target_include_directories(dace INTERFACE $<INSTALL_INTERFACE:include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interfaces/cxx/include>
   $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include>
@@ -150,7 +150,8 @@ set_property(TARGET dace_s APPEND PROPERTY COMPATIBLE_INTERFACE_STRING dace_s_MA
 set_property(TARGET dace PROPERTY INTERFACE_COMPILE_FEATURES cxx_std_11)
 set_property(TARGET dace_s PROPERTY INTERFACE_COMPILE_FEATURES cxx_std_11)
 
-# install DACE libraries and headers
+
+# install DACE libraries and required headers
 install(TARGETS dace EXPORT dace
         LIBRARY DESTINATION lib COMPONENT libraries
         RUNTIME DESTINATION lib COMPONENT libraries
@@ -163,6 +164,8 @@ install(TARGETS dace_s EXPORT dace
         PUBLIC_HEADER DESTINATION include COMPONENT headers)
 install(DIRECTORY ${PROJECT_SOURCE_DIR}/interfaces/cxx/include/dace DESTINATION include
         COMPONENT headers FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/core/include/ DESTINATION include/ COMPONENT headers FILES_MATCHING PATTERN "*.h")
+install(FILES ${PROJECT_BINARY_DIR}/core/include/dace/config.h DESTINATION include/dace COMPONENT headers)
 
 
 # Automatically create cmake package files to find the DACE
