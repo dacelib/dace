@@ -1,24 +1,12 @@
 cmake_minimum_required (VERSION 3.10)
-include(CMakeDependentOption)
 
 # since MacOS 10.14 (XCode 10.0), default includes are no longer installed to /usr/include or /usr/local/include
 # the SDK to use must be specified explicitly in CMAKE_OSX_SYSROOT as it seems at least cmake 3.12.4 does not find it automatically if left empty
 # this must happen before project()
 if(APPLE AND NOT DEFINED ENV{SDKROOT})
   execute_process(COMMAND xcodebuild -sdk macosx -version Path OUTPUT_VARIABLE RES OUTPUT_STRIP_TRAILING_WHITESPACE)
-  set(CMAKE_OSX_SYSROOT "${RES}" CACHE PATH "The product will be built against the headers and libraries located inside the indicated SDK.")
+  set(CMAKE_OSX_SYSROOT "${RES}" CACHE PATH "Build against headers and libraries in this SDK.")
 endif(APPLE AND NOT DEFINED ENV{SDKROOT})
-
-project(DACE C CXX)
-
-set(DACE_MAJOR_VERSION 2)
-set(DACE_MINOR_VERSION 0)
-set(DACE_PATCH_VERSION 1)
-
-
-# add our own CMake modules to path
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
-
 
 # global OS specific settings
 if(WIN32)
@@ -30,6 +18,20 @@ elseif(APPLE)
   set(CMAKE_MACOSX_RPATH OFF)
   set(CMAKE_INSTALL_NAME_DIR "@rpath")
 endif(WIN32)
+
+
+project(DACE C CXX)
+
+# versioning
+set(DACE_MAJOR_VERSION 2)
+set(DACE_MINOR_VERSION 1)
+set(DACE_PATCH_VERSION 0)
+
+# CMake includes
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
+include(CMakeDependentOption)
+include(CheckSafeStrings)
+include(CMakePackageConfigHelpers)
 
 
 # Set C/C++ standard (adapted https://github.com/ceres-solver/ceres-solver/blob/master/CMakeLists.txt)
@@ -48,8 +50,6 @@ if(NOT CMAKE_CXX_STANDARD)
 endif(NOT CMAKE_CXX_STANDARD)
 set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE BOOL "")
 mark_as_advanced(CMAKE_CXX_STANDARD_REQUIRED)
-
-#message("-- Building with C${CMAKE_C_STANDARD} and C++${CMAKE_CXX_STANDARD}")
 
 
 # Set generally understood compiler flags (enforcing -O2)
@@ -104,83 +104,86 @@ if(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
 endif(DACE_MEMORY_MODEL_U STREQUAL "STATIC")
 
 
-# Run checks for platform-specific functions
-include(CheckSafeStrings)
+# Check platform specific functions and pass options by configuring config.h file in core
 check_safe_strings(HAVE_SAFE_STRINGS)
-
-
-# Pass options to source by configuring config.h file in core
 configure_file(core/include/dace/config.h.in core/include/dace/config.h)
 
 
-# globally set the include directory for the C core headers
-include_directories("core/include")
-include_directories("${PROJECT_BINARY_DIR}/core/include")
-# globally set the include directory for the C++ interface headers
-include_directories("interfaces/cxx/include")
-
-# now process the subdirectories
+# process the subdirectories with actual code
 add_subdirectory(core/contrib)
 add_subdirectory(core)
 add_subdirectory(interfaces/cxx)
 
 
-# Package generation setting
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "DACE Library")
-set(CPACK_PACKAGE_NAME "DACE")
-set(CPACK_PACKAGE_VENDOR "DACE Development Group")
-set(CPACK_RESOURCE_FILE_LICENSE "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE")
-set(CPACK_PACKAGE_VERSION "${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}.${DACE_PATCH_VERSION}")
-set(CPACK_PACKAGE_VERSION_MAJOR "${DACE_MAJOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_MINOR "${DACE_MINOR_VERSION}")
-set(CPACK_PACKAGE_VERSION_PATCH "${DACE_PATCH_VERSION}")
-set(CPACK_PACKAGE_CONTACT "dace@dinamicatech.com")
-set(CPACK_PACKAGING_INSTALL_PREFIX /usr/local)
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "DACE ${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}")
-set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}")
-set(CPACK_COMPONENTS_ALL libraries headers cmake)
-set(CPACK_COMPONENT_LIBRARIES_DISPLAY_NAME "DACE C++ Library")
-set(CPACK_COMPONENT_HEADERS_DISPLAY_NAME "DACE C++ Headers")
-set(CPACK_COMPONENT_CMAKE_DISPLAY_NAME "DACE CMake Package")
-set(CPACK_COMPONENT_LIBRARIES_DESCRIPTION "DACE C++ shared library")
-set(CPACK_COMPONENT_HEADERS_DESCRIPTION "DACE C++ headers files")
-set(CPACK_COMPONENT_CMAKE_DESCRIPTION "DACE CMake package for easy integration into CMake infrastructure")
-set(CPACK_COMPONENT_HEADERS_DEPENDS libraries)
-set(CPACK_COMPONENT_CMAKE_DEPENDS headers)
+# statically and dynamically linked DACE library with C core and C++ interface
+add_library(dace SHARED $<TARGET_OBJECTS:c_core> $<TARGET_OBJECTS:c_core_contrib> $<TARGET_OBJECTS:dacecxx>)
+add_library(dace_s STATIC $<TARGET_OBJECTS:c_core_s> $<TARGET_OBJECTS:c_core_contrib_s> $<TARGET_OBJECTS:dacecxx_s>)
 
-# OS specific packager settings
-if(WIN32)
-  set(CPACK_GENERATOR "NSIS")
-  set(CPACK_NSIS_EXTRA_PREINSTALL_COMMANDS "!include \\\"x64.nsh\\\"")
-  set (CPACK_NSIS_EXTRA_INSTALL_COMMANDS "
+# hard code all required include directories when building from source (C++ includes, core includes, config.h include)
+target_include_directories(dace INTERFACE $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interfaces/cxx/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/core/include>
+)
+target_include_directories(dace_s INTERFACE $<INSTALL_INTERFACE:include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/interfaces/cxx/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/core/include>
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/core/include>
+)
 
-    \\\${DisableX64FSRedirection}
+if(WITH_PTHREAD)
+  target_link_libraries(dace PUBLIC pthread)
+  target_link_libraries(dace_s PUBLIC pthread)
+endif(WITH_PTHREAD)
 
-    CopyFiles \\\"$INSTDIR\\\\lib\\\\dace.dll\\\" \\\"$SYSDIR\\\"
+# library versioning
+set_property(TARGET dace PROPERTY VERSION "${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}.${DACE_PATCH_VERSION}")
+set_property(TARGET dace PROPERTY SOVERSION ${DACE_MAJOR_VERSION})
+set_property(TARGET dace PROPERTY INTERFACE_dace_MAJOR_VERSION ${DACE_MAJOR_VERSION})
+set_property(TARGET dace APPEND PROPERTY COMPATIBLE_INTERFACE_STRING dace_MAJOR_VERSION)
+set_property(TARGET dace_s PROPERTY VERSION "${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}.${DACE_PATCH_VERSION}")
+set_property(TARGET dace_s PROPERTY INTERFACE_dace_s_MAJOR_VERSION ${DACE_MAJOR_VERSION})
+set_property(TARGET dace_s APPEND PROPERTY COMPATIBLE_INTERFACE_STRING dace_s_MAJOR_VERSION)
 
-     ")
-    set(CPACK_NSIS_EXTRA_UNINSTALL_COMMANDS "
+# explicitly set required minimum C++ standard so it carries through to exported targets and consumers
+set_property(TARGET dace PROPERTY INTERFACE_COMPILE_FEATURES cxx_std_11)
+set_property(TARGET dace_s PROPERTY INTERFACE_COMPILE_FEATURES cxx_std_11)
 
-    \\\${DisableX64FSRedirection}
 
-    Delete \\\"$SYSDIR\\\\dace.dll\\\"
+# install DACE libraries and required headers
+install(TARGETS dace EXPORT dace
+        LIBRARY DESTINATION lib COMPONENT libraries
+        RUNTIME DESTINATION lib COMPONENT libraries
+        ARCHIVE DESTINATION lib COMPONENT libraries
+        PUBLIC_HEADER DESTINATION include COMPONENT headers)
+install(TARGETS dace_s EXPORT dace
+        LIBRARY DESTINATION lib COMPONENT libraries
+        RUNTIME DESTINATION lib COMPONENT libraries
+        ARCHIVE DESTINATION lib COMPONENT libraries
+        PUBLIC_HEADER DESTINATION include COMPONENT headers)
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/interfaces/cxx/include/dace DESTINATION include
+        COMPONENT headers FILES_MATCHING PATTERN "*.h")
+install(DIRECTORY ${PROJECT_SOURCE_DIR}/core/include/ DESTINATION include/ COMPONENT headers FILES_MATCHING PATTERN "*.h")
+install(FILES ${PROJECT_BINARY_DIR}/core/include/dace/config.h DESTINATION include/dace COMPONENT headers)
 
-  ")
-  unset(CPACK_PACKAGING_INSTALL_PREFIX)    # replace by whatever it needs to be
-elseif(APPLE)
-  set(CPACK_GENERATOR "TGZ;productbuild")
-  set(CPACK_PACKAGE_VENDOR "DACEDevelopmentGroup")    # no spaces allowed for packagebuild
-  set(CPACK_RESOURCE_FILE_README "${CMAKE_CURRENT_SOURCE_DIR}/README-MAC.rtf")
-  file(COPY "${PROJECT_SOURCE_DIR}/LICENSE" DESTINATION "${PROJECT_BINARY_DIR}")
-  file(RENAME "${PROJECT_BINARY_DIR}/LICENSE" "${PROJECT_BINARY_DIR}/LICENSE.txt")
-  set(CPACK_RESOURCE_FILE_LICENSE "${PROJECT_BINARY_DIR}/LICENSE.txt")
-elseif(UNIX)
-  set(CPACK_GENERATOR "TGZ;DEB")
-  set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE "amd64")
-  # dependencies are set to default libraries on trusty (Ubuntu 14.04 LTS). Should be set to actual versions on build system.
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "libc6 (>= 2.19), libstdc++6 (>= 4.8.4)")
-  set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_CURRENT_SOURCE_DIR}/README-LINUX")
-  install(FILES README-LINUX DESTINATION share/libdace/ )
-endif(WIN32)
 
-include(CPack)
+# Automatically create cmake package files to find the DACE
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/dace/daceConfigVersion.cmake"
+  VERSION "${DACE_MAJOR_VERSION}.${DACE_MINOR_VERSION}.${DACE_PATCH_VERSION}"
+  COMPATIBILITY AnyNewerVersion
+)
+
+export(EXPORT dace
+  FILE "${CMAKE_CURRENT_BINARY_DIR}/dace/dace.cmake"
+  NAMESPACE dace::
+)
+
+configure_file("cmake/daceConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/dace/daceConfig.cmake"
+  COPYONLY
+)
+
+# install cmake package files
+install(EXPORT dace NAMESPACE dace:: DESTINATION lib/cmake/dace COMPONENT cmake)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dace/daceConfig.cmake" "${CMAKE_CURRENT_BINARY_DIR}/dace/daceConfigVersion.cmake" DESTINATION lib/cmake/dace COMPONENT cmake)
