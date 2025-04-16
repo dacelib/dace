@@ -35,3 +35,25 @@ The ```sudo``` is there to give you the required permissions to install into you
 We have moved the tutorials to a different repository https://github.com/dacelib/dace-tutorials to keep the main repository clean. You can clone the tutorials repository and follow the instructions there to get started with DACE.
 
 Also have a look at the [DACE Wiki pages](https://github.com/dacelib/dace/wiki) if you have further questions.
+
+## Embedding the DACE in other projects
+To use the DACE library without installing it locally, use the [FetchContent](https://cmake.org/cmake/help/v3.19/module/FetchContent.html) mechanism of CMake.
+
+Include this code at the start of your CMakeList.txt file to have CMake automatically clone and build the DACE within your project and make the resulting libraries available as the `dace::dace_s` (static) and `dace::dace` (dynamic) targets.
+```
+include(FetchContent)
+FetchContent_Declare(
+  DACE
+  GIT_REPOSITORY https://github.com/dacelib/dace.git
+  GIT_TAG v2.1.0
+)
+FetchContent_MakeAvailable(DACE)
+add_library(dace::dace ALIAS dace)
+add_library(dace::dace_s ALIAS dace_s)
+```
+
+To build against the DACE, simply add your own executable and link it with one of these targets:
+```
+add_executable(my-code my-code.cpp)
+target_link_libraries(my-code PUBLIC dace::dace_s)
+```
