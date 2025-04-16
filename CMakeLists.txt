@@ -5,7 +5,7 @@ cmake_minimum_required (VERSION 3.10)
 # this must happen before project()
 if(APPLE AND NOT DEFINED ENV{SDKROOT})
   execute_process(COMMAND xcodebuild -sdk macosx -version Path OUTPUT_VARIABLE RES OUTPUT_STRIP_TRAILING_WHITESPACE)
-  set(CMAKE_OSX_SYSROOT "${RES}" CACHE PATH "The product will be built against the headers and libraries located inside the indicated SDK.")
+  set(CMAKE_OSX_SYSROOT "${RES}" CACHE PATH "Build against headers and libraries in this SDK.")
 endif(APPLE AND NOT DEFINED ENV{SDKROOT})
 
 # global OS specific settings
@@ -24,8 +24,8 @@ project(DACE C CXX)
 
 # versioning
 set(DACE_MAJOR_VERSION 2)
-set(DACE_MINOR_VERSION 0)
-set(DACE_PATCH_VERSION 1)
+set(DACE_MINOR_VERSION 1)
+set(DACE_PATCH_VERSION 0)
 
 # CMake includes
 list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake")
