@@ -31,7 +31,7 @@
 
 // DACE C++ interface version (must match the version returned by DACEVER)
 #define DACE_CPP_MAJOR (2)
-#define DACE_CPP_MINOR (0)
+#define DACE_CPP_MINOR (1)
 
 // C++ stdlib classes used in this public interface
 #include <iostream>
