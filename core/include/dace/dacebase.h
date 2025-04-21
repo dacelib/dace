@@ -144,6 +144,8 @@ DACE_API void daceCopy(const DACEDA REF(ina), DACEDA REF(inb));
 DACE_API void daceCopyFiltering(const DACEDA REF(ina), DACEDA REF(inb));
 DACE_API void daceFilter(const DACEDA REF(ina), DACEDA REF(inb), const DACEDA REF(inc));
 DACE_API void daceTrim(const DACEDA REF(ina), const unsigned int imin, const unsigned int imax, DACEDA REF(inc));
+DACE_API unsigned int daceIsNan(const DACEDA REF(ina));
+DACE_API unsigned int daceIsInf(const DACEDA REF(ina));
 
 /********************************************************************************
 *     Basic DACE arithmetic operations

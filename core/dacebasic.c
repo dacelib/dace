@@ -569,7 +569,7 @@ void daceTrim(const DACEDA *ina, const unsigned int imin, const unsigned int ima
 
 /*! Copy monomials from a DA object ina to DA object inb if the same monomial
     is non-zero in DA object inc, while filtering out terms below the current
-    cutoff
+    cutoff.
    \param[in] ina Pointer to DA object to filter
    \param[in] inb Pointer to DA object to store the filtered result in
    \param[in] inc Pointer to DA object providing the filter template
@@ -626,5 +626,41 @@ void daceFilter(const DACEDA *ina, DACEDA *inb, const DACEDA *inc)
     }
 
     daceSetLength(inb, ib-ipob);
+}
+
+/*! Check each coefficient of DA object ina to see if any of them are NANs (not a number).
+   \param[in] ina Pointer to DA object to check
+   \return True (non-zero) if any of the coefficients of ina is NAN
+*/
+unsigned int daceIsNan(const DACEDA *ina)
+{
+    monomial *ipoa; unsigned int ilma, illa;
+
+    daceVariableInformation(ina, &ipoa, &ilma, &illa);
+
+    for(monomial *ia = ipoa; ia < ipoa+illa; ia++)
+    {
+        if(isnan(ia->cc))
+            return true;
+    }
+    return false;
+}
+
+/*! Check each coefficient of DA object ina to see if any of them are INF (infinity).
+   \param[in] ina Pointer to DA object to check
+   \return True (non-zero) if any of the coefficients of ina is INF
+*/
+unsigned int daceIsInf(const DACEDA *ina)
+{
+    monomial *ipoa; unsigned int ilma, illa;
+
+    daceVariableInformation(ina, &ipoa, &ilma, &illa);
+
+    for(monomial *ia = ipoa; ia < ipoa+illa; ia++)
+    {
+        if(isinf(ia->cc))
+            return true;
+    }
+    return false;
 }
 /** @}*/
