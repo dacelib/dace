@@ -222,14 +222,14 @@ void daceMultiplyMonomials(const DACEDA *ina, const DACEDA *inb, DACEDA *inc)
 	monomial *ib = ipob, *ic = ipoc;
 	monomial *const ibmax = ipob + ilmb, *const icmax = ipoc + ilmc;
 
-	for (monomial *i = ipoa; i < ipoa + illa; i++)
+	for(monomial *i = ipoa; i < ipoa + illa; i++)
 	{
-		while (ib->ii < i->ii && ib < ibmax)
+		while(ib->ii < i->ii && ib < ibmax)
 			ib++;
-		if (ib == ibmax) break;
-		if (ib->ii == i->ii)
+		if(ib == ibmax) break;
+		if(ib->ii == i->ii)
 		{
-			if (ic >= icmax)
+			if(UNLIKELY(ic >= icmax))
 			{
 				daceSetError(__func__, DACE_ERROR, 21);
 				break;
@@ -324,7 +324,7 @@ void daceMultiplyDouble(const DACEDA *ina, const double ckon, DACEDA *inb)
     {
         for(monomial *ia = ipoa; ia < ipoa+illa; ia++)
         {
-            if(DACECom.ieo[ia->ii] > DACECom_t.nocut)
+            if(UNLIKELY(DACECom.ieo[ia->ii] > DACECom_t.nocut))
                 continue;
 
             const double c = ia->cc*ckon;
@@ -341,13 +341,13 @@ void daceMultiplyDouble(const DACEDA *ina, const double ckon, DACEDA *inb)
         monomial *const ibmax = ipob+ilmb;
         for(monomial *ia = ipoa; ia < ipoa+illa; ia++)
         {
-            if(DACECom.ieo[ia->ii] > DACECom_t.nocut)
+            if(UNLIKELY(DACECom.ieo[ia->ii] > DACECom_t.nocut))
                 continue;
 
             const double c = ia->cc*ckon;
             if(!(fabs(c) <= DACECom_t.eps))
             {
-                if(ib >= ibmax)
+                if(UNLIKELY(ib >= ibmax))
                 {
                     daceSetError(__func__, DACE_ERROR, 21);
                     break;
@@ -451,13 +451,13 @@ void daceDivideByVariable(const DACEDA *ina, const unsigned int var, const unsig
             const unsigned int ic1 = DACECom.ie1[i->ii];
             const unsigned int ic2 = DACECom.ie2[i->ii];
             const unsigned int ipow = (ic2/idiv)%ibase;
-            if(ipow < p)
+            if(UNLIKELY(ipow < p))
             {
                 daceSetError(__func__, DACE_ERROR, 42);
                 daceCreateConstant(inc, 0.0);
                 return;
             }
-            if(ic >= icmax)
+            if(UNLIKELY(ic >= icmax))
             {
                 daceSetError(__func__, DACE_ERROR, 21);
                 break;
@@ -474,13 +474,13 @@ void daceDivideByVariable(const DACEDA *ina, const unsigned int var, const unsig
             const unsigned int ic1 = DACECom.ie1[i->ii];
             const unsigned int ic2 = DACECom.ie2[i->ii];
             const unsigned int ipow = (ic1/idiv)%ibase;
-            if(ipow < p)
+            if(UNLIKELY(ipow < p))
             {
                 daceSetError(__func__, DACE_ERROR, 42);
                 daceCreateConstant(inc, 0.0);
                 return;
             }
-            if(ic >= icmax)
+            if(UNLIKELY(ic >= icmax))
             {
                 daceSetError(__func__, DACE_ERROR, 21);
                 break;
@@ -534,7 +534,7 @@ void daceDifferentiate(const unsigned int idif, const DACEDA *ina, DACEDA *inc)
             const unsigned int ipow = (ic2/idiv)%ibase;
             if(ipow == 0 || DACECom.ieo[i->ii] > DACECom_t.nocut+1)
                 continue;
-            if(ic >= icmax)
+            if(UNLIKELY(ic >= icmax))
             {
                 daceSetError(__func__, DACE_ERROR, 21);
                 break;
@@ -553,7 +553,7 @@ void daceDifferentiate(const unsigned int idif, const DACEDA *ina, DACEDA *inc)
             const unsigned int ipow = (ic1/idiv)%ibase;
             if(ipow == 0 || DACECom.ieo[i->ii] > DACECom_t.nocut+1)
                 continue;
-            if(ic >= icmax)
+            if(UNLIKELY(ic >= icmax))
             {
                 daceSetError(__func__, DACE_ERROR, 21);
                 break;
@@ -602,15 +602,15 @@ void daceIntegrate(const unsigned int iint, const DACEDA *ina, DACEDA *inc)
     {
         for(monomial *i = ipoa; i < ipoa+illa; i++)
         {
-            if(DACECom.ieo[i->ii] >= DACECom_t.nocut)
+            if(UNLIKELY(DACECom.ieo[i->ii] >= DACECom_t.nocut))
                 continue;
             const unsigned int ic1 = DACECom.ie1[i->ii];
             const unsigned int ic2 = DACECom.ie2[i->ii];
             const unsigned int ipow = (ic2/idiv)%ibase;
             const double ccc = i->cc/(ipow+1);
-            if(!(fabs(ccc) <= DACECom_t.eps))
+            if(LIKELY(!(fabs(ccc) <= DACECom_t.eps)))
             {
-                if(ic >= icmax)
+                if(UNLIKELY(ic >= icmax))
                 {
                     daceSetError(__func__, DACE_ERROR, 21);
                     break;
@@ -625,15 +625,15 @@ void daceIntegrate(const unsigned int iint, const DACEDA *ina, DACEDA *inc)
     {
         for(monomial *i = ipoa; i < ipoa+illa; i++)
         {
-            if(DACECom.ieo[i->ii] >= DACECom_t.nocut)
+            if(UNLIKELY(DACECom.ieo[i->ii] >= DACECom_t.nocut))
                 continue;
             const unsigned int ic1 = DACECom.ie1[i->ii];
             const unsigned int ic2 = DACECom.ie2[i->ii];
             const unsigned int ipow = (ic1/idiv)%ibase;
             const double ccc = i->cc/(ipow+1);
-            if(!(fabs(ccc) <= DACECom_t.eps))
+            if(LIKELY(!(fabs(ccc) <= DACECom_t.eps)))
             {
-                if(ic >= icmax)
+                if(UNLIKELY(ic >= icmax))
                 {
                     daceSetError(__func__, DACE_ERROR, 21);
                     break;
@@ -2047,7 +2047,7 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
     monomial *ia = ipoa, *ib = ipob, *ic = ipoc;
     monomial *const iamax = ipoa+illa, *const ibmax = ipob+illb, *const icmax = ipoc+ilmc;
 
-    if(illa > 0 && illb > 0)
+    if(LIKELY(illa > 0 && illb > 0))
     {
         // both polynomials have coefficients, merge until one runs out
         unsigned int ja = ia->ii;
@@ -2057,12 +2057,12 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
             if(ja == jb)
             {
                 // add the two terms
-                if(DACECom.ieo[ja] <= DACECom_t.nocut)
+                if(LIKELY(DACECom.ieo[ja] <= DACECom_t.nocut))
                 {
                     const double ccc = ia->cc*afac + ib->cc*bfac;
-                    if(!(fabs(ccc) <= DACECom_t.eps))
+                    if(LIKELY(!(fabs(ccc) <= DACECom_t.eps)))
                     {
-                        if(ic >= icmax)
+                        if(UNLIKELY(ic >= icmax))
                         {
                             daceSetError(__func__, DACE_ERROR, 21);
                             daceSetLength(inc, ilmc);
@@ -2081,12 +2081,12 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
             else if(ja < jb)
             {
                 // store term a
-                if(DACECom.ieo[ja] <= DACECom_t.nocut)
+                if(LIKELY(DACECom.ieo[ja] <= DACECom_t.nocut))
                 {
                     const double ccc = ia->cc*afac;
-                    if(!(fabs(ccc) <= DACECom_t.eps))
+                    if(LIKELY(!(fabs(ccc) <= DACECom_t.eps)))
                     {
-                        if(ic >= icmax)
+                        if(UNLIKELY(ic >= icmax))
                         {
                             daceSetError(__func__, DACE_ERROR, 21);
                             daceSetLength(inc, ilmc);
@@ -2104,12 +2104,12 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
             else
             {
                 // store term b
-                if(DACECom.ieo[jb] <= DACECom_t.nocut)
+                if(LIKELY(DACECom.ieo[jb] <= DACECom_t.nocut))
                 {
                     const double ccc = ib->cc*bfac;
-                    if(!(fabs(ccc) <= DACECom_t.eps))
+                    if(LIKELY(!(fabs(ccc) <= DACECom_t.eps)))
                     {
-                        if(ic >= icmax)
+                        if(UNLIKELY(ic >= icmax))
                         {
                             daceSetError(__func__, DACE_ERROR, 21);
                             daceSetLength(inc, ilmc);
@@ -2145,12 +2145,12 @@ void daceWeightedSum(const DACEDA *ina, const double afac, const DACEDA *inb, co
 
     for(monomial *is = ismin; is < ismax; is++)
     {
-        if(DACECom.ieo[is->ii] <= DACECom_t.nocut)
+        if(LIKELY(DACECom.ieo[is->ii] <= DACECom_t.nocut))
         {
             const double ccc = is->cc*fac;
-            if(!(fabs(ccc) <= DACECom_t.eps))
+            if(LIKELY(!(fabs(ccc) <= DACECom_t.eps)))
             {
-                if(ic >= icmax)
+                if(UNLIKELY(ic >= icmax))
                 {
                     daceSetError(__func__, DACE_ERROR, 21);
                     daceSetLength(inc, ilmc);
