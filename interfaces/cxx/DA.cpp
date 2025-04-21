@@ -317,6 +317,28 @@ DA::~DA() throw(){
 /********************************************************************************
 *     Coefficient access routines
 *********************************************************************************/
+int DA::isnan() const{
+/*! Check if a DA object has any NAN coefficients.
+   \return True is any coefficients of the DA object are NAN.
+   \throw DACE::DACEException
+*/
+    const int temp = daceIsNan(m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
+int DA::isinf() const{
+/*! Check if a DA object has any INF coefficients.
+   \return True is any coefficients of the DA object are INF.
+   \throw DACE::DACEException
+*/
+    const int temp = daceIsInf(m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
 double DA::cons() const{
 /*! Return the constant part of a DA object.
    \return A double corresponding to the constant part of the DA object.
@@ -1826,9 +1848,6 @@ std::istream& operator>>(std::istream &in, DA &da){
             // convert string vector to DA
             da = DA::fromString(strs);
         }
-        
-
-        
     }
 
     return in;
@@ -1932,6 +1951,22 @@ void DA::memdump(){
 /********************************************************************************
 *     DACE non-member functions
 *********************************************************************************/
+int isnan(const DA &da) {
+/*! Check if a DA object has any NAN coefficients.
+   \param[in] da a given DA object.
+   \return True if any coefficients of the DA object are NAN.
+   \throw DACE::DACEException
+*/
+    return da.isnan();}
+
+int isinf(const DA &da) {
+/*! Check if a DA object has any INF coefficients.
+   \param[in] da a given DA object.
+   \return True if any coefficients of the DA object are INF.
+   \throw DACE::DACEException
+*/
+    return da.isinf();}
+
 double cons(const DA &da) {
 /*! Return the constant part of a DA object.
    \param[in] da a given DA object.
@@ -1958,7 +1993,6 @@ AlgebraicVector<DA> gradient(const DA &da) {
  */
 
     return da.gradient();}
-
 
 DA divide(const DA &da, const unsigned int var, const unsigned int p){
 /*! Divide by independent variable var raised to power p.

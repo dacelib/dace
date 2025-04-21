@@ -61,12 +61,12 @@ double daceEvalMonomials(const DACEDA *ina, const DACEDA *inb)
 	monomial *const ibmax = ipob + ilmb;
 
 	double res = 0.0;
-	for (monomial *i = ipoa; i < ipoa + illa; i++)
+	for(monomial *i = ipoa; i < ipoa + illa; i++)
 	{
-		while (ib->ii < i->ii && ib < ibmax)
+		while(ib->ii < i->ii && ib < ibmax)
 			ib++;
-		if (ib == ibmax) break;
-		if (ib->ii == i->ii) res += ib->cc*i->cc;
+		if(ib == ibmax) break;
+		if(ib->ii == i->ii) res += ib->cc*i->cc;
 	}
 
 	return res;
