@@ -62,7 +62,6 @@ class DACE_API DA
 private:
     static bool initialized;                                                //!< Indicates if DA::init() was called
     static std::stack<unsigned int> TOstack;                                //!< Truncation order stack
-    // XXX: Mauro, MSVC is bitching around (also for other templated classes, e.g. std::string):        Warning    C4251    'DACE::DA::TOstack': class 'std::stack<unsigned int,std::deque<_Ty,std::allocator<_Ty>>>' needs to have dll - interface to be used by clients of class 'DACE::DA'
     DACEDA m_index;                                                         //!< Index to the DA vector
 
 public:
@@ -100,6 +99,8 @@ public:
     /********************************************************************************
     *     Coefficient access and extraction routines
     *********************************************************************************/
+    int isnan() const;
+    int isinf() const;
     double cons() const;                                                    //!< Get constant part of a DA
     AlgebraicVector<double> linear() const;                                 //!< Get linear part of a DA
     AlgebraicVector<DA> gradient() const;                                   //!< Gradient vector with respect to all independent DA variables
@@ -259,6 +260,8 @@ public:
 /********************************************************************************
 *     DACE non-member functions
 *********************************************************************************/
+DACE_API int isnan(const DA &da);
+DACE_API int isinf(const DA &da);
 DACE_API double cons(const DA &da);
 DACE_API AlgebraicVector<double> linear(const DA &da);
 DACE_API AlgebraicVector<DA> gradient(const DA &da);
