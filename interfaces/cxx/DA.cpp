@@ -966,6 +966,21 @@ DA DA::trim(const unsigned int min, const unsigned int max) const{
     return temp;
 }
 
+DA DA::absolute() const{
+/*! Absolute value of a DA object.
+    Returns either the DA or the negative of the DA based on the constant part.
+   \return A new DA object with the absolute value DA.
+   \throw DACE::DACEException
+   \sa DA::abs
+   \sa DA::norm
+ */
+    DA temp;
+    daceAbsolute(m_index, temp.m_index);
+    if(daceGetError()) DACEException();
+
+    return temp;
+}
+
 DA DA::trunc() const{
 /*! Truncate the constant part of a DA object to an integer.
     The result is copied in a new DA object.
@@ -2069,6 +2084,18 @@ DA trim(const DA &da, const unsigned int min, const unsigned int max){
    \sa DA::trim
  */
     return da.trim(min,max);}
+
+DA absolute(const DA &da){
+/*! Absolute value of a DA object.
+    Returns either the DA or the negative of the DA based on the constant part.
+   \param[in] da a given DA object.
+   \return A new DA object with the absolute value DA.
+   \throw DACE::DACEException
+   \sa DA::absolute
+   \sa DA::abs
+   \sa DA::norm
+ */
+    return da.absolute();}
 
 DA trunc(const DA &da){
 /*! Truncate the constant part of a DA object to an integer.

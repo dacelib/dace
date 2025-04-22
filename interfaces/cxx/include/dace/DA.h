@@ -162,6 +162,7 @@ public:
     DA integ(const std::vector<unsigned int> ind) const;                    //!< Integral with respect to given variables
     DA trim(const unsigned int min, const unsigned int max = DA::getMaxOrder()) const;
                                                                             //!< Trim the coefficients only include orders between min and max, inclusively
+    DA absolute() const;                                                    //!< Absolute value of DA based on constant part
     DA trunc() const;                                                       //!< Truncate the constant part to an integer
     DA round() const;                                                       //!< Round the constant part to an integer
     DA mod(const double p) const;                                           //!< Modulo of the constant part
@@ -272,6 +273,7 @@ DACE_API DA deriv(const DA &da, const std::vector<unsigned int> ind);
 DACE_API DA integ(const DA &da, const unsigned int i);
 DACE_API DA integ(const DA &da, const std::vector<unsigned int> ind);
 DACE_API DA trim(const DA &da, const unsigned int min, const unsigned int max = DA::getMaxOrder());
+DACE_API DA absolute(const DA &da);
 DACE_API DA trunc(const DA &da);
 DACE_API DA round(const DA &da);
 DACE_API DA mod(const DA &da, const double p);
