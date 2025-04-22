@@ -328,7 +328,7 @@ void daceMultiplyDouble(const DACEDA *ina, const double ckon, DACEDA *inb)
                 continue;
 
             const double c = ia->cc*ckon;
-            if(!(fabs(c) <= DACECom_t.eps))
+            if(LIKELY(!(fabs(c) <= DACECom_t.eps)))
             {
                 ib->cc = c;
                 ib->ii = ia->ii;
@@ -345,7 +345,7 @@ void daceMultiplyDouble(const DACEDA *ina, const double ckon, DACEDA *inb)
                 continue;
 
             const double c = ia->cc*ckon;
-            if(!(fabs(c) <= DACECom_t.eps))
+            if(LIKELY(!(fabs(c) <= DACECom_t.eps)))
             {
                 if(UNLIKELY(ib >= ibmax))
                 {
@@ -653,6 +653,22 @@ void daceIntegrate(const unsigned int iint, const DACEDA *ina, DACEDA *inc)
  *     DACE intrinsic function routines
  *********************************************************************************/
 
+/*! Absolute value of a DA object.
+    Returns either the DA or the negative of the DA based on the constant part.
+   \param[in] ina Pointer to the DA object to operate on
+   \param[out] inc Pointer to the DA object to store the result in
+   \note This routine is aliasing safe, i.e. inc can be the same as ina.
+   \sa daceAbsoluteValue
+   \sa daceNorm
+ */
+void daceAbsolute(const DACEDA *ina, DACEDA *inc)
+{
+    daceCopy(ina, inc);
+    const double a0 = daceGetConstant(inc);
+    if(a0 < 0.0)
+        daceMultiplyDouble(inc, -1.0, inc);
+}
+
 /*! Truncate the constant part of a DA object to an integer.
    \param[in] ina Pointer to the DA object to operate on
    \param[out] inc Pointer to the DA object to store the result in
@@ -684,7 +700,7 @@ void daceRound(const DACEDA *ina, DACEDA *inc)
 void daceModulo(const DACEDA *ina, const double p, DACEDA *inc)
 {
     daceCopy(ina, inc);
-    daceSetCoefficient0(inc, 0, fmod(daceGetConstant(inc),p));
+    daceSetCoefficient0(inc, 0, fmod(daceGetConstant(inc), p));
 }
 
 /*! Raise a DA object to the p-th power.
