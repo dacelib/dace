@@ -35,6 +35,13 @@
 
 namespace DACE{
 
+double absolute(const double x){
+/*! Absolute value.
+   \param[in] x Function argument.
+ */
+    return std::abs(x);
+}
+
 double cons(const double x){
 /*! Constant part. For double type this is just x.
    \param[in] x Function argument.

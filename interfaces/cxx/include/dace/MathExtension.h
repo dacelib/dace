@@ -31,6 +31,7 @@
 
 namespace DACE{
 
+DACE_API double absolute(const double x);                        //!< Absolute value
 DACE_API double cons(const double x);                            //!< Constant part (i.e. the value x)
 DACE_API double logb(const double x, const double b = 10.0);     //!< Logarithm relative to base b
 DACE_API double isrt(const double x);                            //!< Inverse square root
