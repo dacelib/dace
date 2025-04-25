@@ -214,7 +214,6 @@ DACE_API void dacePsiFunction(const DACEDA REF(ina), const unsigned int n, DACED
 /********************************************************************************
 *     DACE norm and norm estimation routines
 *********************************************************************************/
-DACE_API double daceAbsoluteValue(const DACEDA REF(ina));
 DACE_API double daceNorm(const DACEDA REF(ina), const unsigned int ityp);
 DACE_API void daceOrderedNorm(const DACEDA REF(ina), const unsigned int ivar, const unsigned int ityp, double onorm[]);
 DACE_API void daceEstimate(const DACEDA REF(ina), const unsigned int ivar, const unsigned int ityp, double c[], double err[], const unsigned int nc);

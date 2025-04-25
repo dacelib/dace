@@ -37,7 +37,7 @@
 #include "dace/AlgebraicVector.h"
 #include "dace/AlgebraicVector_t.h"
 
-namespace DACE{
+namespace DACE {
 
 /***********************************************************************************
 *     Coefficient access routines

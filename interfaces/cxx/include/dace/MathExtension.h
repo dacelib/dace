@@ -35,6 +35,7 @@ DACE_API double absolute(const double x);                        //!< Absolute v
 DACE_API double cons(const double x);                            //!< Constant part (i.e. the value x)
 DACE_API double logb(const double x, const double b = 10.0);     //!< Logarithm relative to base b
 DACE_API double isrt(const double x);                            //!< Inverse square root
+DACE_API double icbrt(const double x);                           //!< Inverse cube root
 DACE_API double sqr(const double x);                             //!< Square
 DACE_API double minv(const double x);                            //!< Multiplicative inverse
 DACE_API double root(const double x, const int p = 2);           //!< p-th root

@@ -64,6 +64,13 @@ double isrt(const double x){
     return 1.0/std::sqrt(x);
 }
 
+double icbrt(const double x){
+/*! Inverse cube root 1/cbrt(x).
+   \param[in] x Function argument.
+ */
+    return 1.0/std::cbrt(x);
+}
+
 double sqr(const double x){
 /*! Square of x.
    \param[in] x Function argument.

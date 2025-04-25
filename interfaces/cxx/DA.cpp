@@ -1534,23 +1534,10 @@ unsigned int DA::size() const{
    \return The number of non-zero coefficients stored in the DA object.
    \throw DACE::DACEException
  */
-    unsigned int res;
-    res=daceGetLength(m_index);
+    const unsigned int res = daceGetLength(m_index);
     if(daceGetError()) DACEException();
 
     return res;
-}
-
-double DA::abs() const{
-/*! Compute the max norm of a DA object.
-   \return A double corresponding to the result of the operation.
-   \throw DACE::DACEException
- */
-    double c;
-    c=daceAbsoluteValue(m_index);
-    if(daceGetError()) DACEException();
-
-    return c;
 }
 
 double DA::norm(const unsigned int type) const{
@@ -1562,8 +1549,7 @@ double DA::norm(const unsigned int type) const{
    \return A double corresponding to the result of the operation.
    \throw DACE::DACEException
  */
-    double c;
-    c=daceNorm(m_index, type);
+    const double c = daceNorm(m_index, type);
     if(daceGetError()) DACEException();
 
     return c;
@@ -1582,7 +1568,7 @@ std::vector<double> DA::orderNorm(const unsigned int var, const unsigned int typ
    \throw DACE::DACEException
  */
     std::vector<double> v(daceGetMaxOrder()+1);
-    daceOrderedNorm(m_index, var, type, v.data()); // Note: v.data() is C++11
+    daceOrderedNorm(m_index, var, type, v.data());
     if(daceGetError()) DACEException();
 
     return v;
@@ -1604,7 +1590,7 @@ std::vector<double> DA::estimNorm(const unsigned int var, const unsigned int typ
    \note If estimation is not possible, zero is returned for all requested orders.
  */
     std::vector<double> v(nc+1);
-    daceEstimate(m_index, var, type, v.data(), NULL ,nc); // Note: v.data() is C++11
+    daceEstimate(m_index, var, type, v.data(), NULL, nc);
     if(daceGetError()) DACEException();
 
     return v;
@@ -2582,15 +2568,6 @@ unsigned int size(const DA &da){
  */
     return da.size();}
 
-double abs(const DA &da){
-/*! Compute the max norm of a DA object.
-   \param[in] da a given DA object.
-   \return A double corresponding to the result of the operation.
-   \throw DACE::DACEException
-   \sa DA::abs
- */
-    return da.abs();}
-
 double norm(const DA &da, unsigned int type){
 /*! Compute different types of norms for a DA object.
    \param[in] da a given DA object.
@@ -2759,6 +2736,38 @@ void write(const DA &da, std::ostream &os){
  */
     return da.write(os);}
 
+namespace abs_cons {
+    double abs(const DA &da){
+/*! Absolute value of constant part.
+   \param[in] da a given DA object.
+   \throw DACE::DACEException
+   \sa DA::cons
+ */
+        return std::abs(da.cons());
+    }
+}
+
+namespace abs_max {
+    double abs(const DA &da){
+/*! Largest coefficient in absolute value.
+   \param[in] da a given DA object.
+   \throw DACE::DACEException
+   \sa DA::norm
+ */
+        return da.norm(0);
+    }
+}
+
+namespace abs_sum {
+    double abs(const DA &da){
+/*! Sum of absolute values of all coefficients.
+   \param[in] da a given DA object.
+   \throw DACE::DACEException
+   \sa DA::norm
+ */
+        return da.norm(1);
+    }
+}
 
 // static class variables
 const unsigned int storedDA::headerSize = daceBlobSize(NULL);
