@@ -438,41 +438,6 @@ template<typename U,typename V> AlgebraicVector<typename PromotionTrait< U, V >:
     return temp;
 }
 
-template<typename T> template<typename V> typename PromotionTrait<T,V>::returnType AlgebraicVector<T>::dot(const AlgebraicVector<V> &obj) const {
-/*! Compute the dot product with another AlgebraicVector.
-   \param[in] obj the other AlgebraicVector.
-   \return A scalar value,.
-   \throw std::runtime_error
- */
-    const size_t size = this->size();
-    if(size != obj.size())
-          throw std::runtime_error("DACE::AlgebraicVector<T>::dot(): Vectors must have the same length.");
-
-    typename PromotionTrait<T,V>::returnType temp = 0.0;
-    for(size_t i=0; i<size; i++) {
-        temp += (*this)[i] * obj[i];}
-
-    return temp;
-}
-
-template<typename T> template<typename V> AlgebraicVector<typename PromotionTrait<T,V>::returnType> AlgebraicVector<T>::cross(const AlgebraicVector<V> &obj) const {
-/*! Compute the cross product with another 3D AlgebraicVector.
-   \param[in] obj The other AlgebraicVector.
-   \return A new AlgebraicVector.
-   \throw std::runtime_error
- */
-    if((this->size() != 3) || (obj.size() != 3))
-        throw std::runtime_error("DACE::AlgebraicVector<T>::cross(): Inputs must be 3 element AlgebraicVectors.");
-
-    AlgebraicVector<typename PromotionTrait<T,V>::returnType> temp(3);
-
-    temp[0] = ((*this)[1] * obj[2]) - ((*this)[2] * obj[1]);
-    temp[1] = ((*this)[2] * obj[0]) - ((*this)[0] * obj[2]);
-    temp[2] = ((*this)[0] * obj[1]) - ((*this)[1] * obj[0]);
-
-    return temp;
-}
-
 /***********************************************************************************
 *     Math routines
 ************************************************************************************/
@@ -937,8 +902,43 @@ template<typename T> AlgebraicVector<T> AlgebraicVector<T>::atanh() const {
 }
 
 /***********************************************************************************
-*    Vector norm routines
+*    Vector routines
 ************************************************************************************/
+template<typename T> template<typename V> typename PromotionTrait<T,V>::returnType AlgebraicVector<T>::dot(const AlgebraicVector<V> &obj) const {
+/*! Compute the dot product with another AlgebraicVector.
+   \param[in] obj the other AlgebraicVector.
+   \return A scalar value,.
+   \throw std::runtime_error
+ */
+    const size_t size = this->size();
+    if(size != obj.size())
+          throw std::runtime_error("DACE::AlgebraicVector<T>::dot(): Vectors must have the same length.");
+
+    typename PromotionTrait<T,V>::returnType temp = 0.0;
+    for(size_t i=0; i<size; i++) {
+        temp += (*this)[i] * obj[i];}
+
+    return temp;
+}
+
+template<typename T> template<typename V> AlgebraicVector<typename PromotionTrait<T,V>::returnType> AlgebraicVector<T>::cross(const AlgebraicVector<V> &obj) const {
+/*! Compute the cross product with another 3D AlgebraicVector.
+   \param[in] obj The other AlgebraicVector.
+   \return A new AlgebraicVector.
+   \throw std::runtime_error
+ */
+    if((this->size() != 3) || (obj.size() != 3))
+        throw std::runtime_error("DACE::AlgebraicVector<T>::cross(): Inputs must be 3 element AlgebraicVectors.");
+
+    AlgebraicVector<typename PromotionTrait<T,V>::returnType> temp(3);
+
+    temp[0] = ((*this)[1] * obj[2]) - ((*this)[2] * obj[1]);
+    temp[1] = ((*this)[2] * obj[0]) - ((*this)[0] * obj[2]);
+    temp[2] = ((*this)[0] * obj[1]) - ((*this)[1] * obj[0]);
+
+    return temp;
+}
+
 template<typename T> T AlgebraicVector<T>::length() const {
 /*! Compute the length (Euclidean vector norm).
    \return Length of the vector.
@@ -1008,6 +1008,25 @@ template<> template<typename U> AlgebraicVector<U> AlgebraicVector<DA>::evalScal
    \sa AlgebraicVector::compile()
  */
     return compiledDA(*this).evalScalar(arg);
+}
+
+/***********************************************************************************
+*     DA norm routines
+************************************************************************************/
+template<typename T> AlgebraicVector<double> AlgebraicVector<T>::norm(const unsigned int type) const {
+/*! Element-wise application of the norm function.
+   \param[in] type type of norm to be computed. See DA::norm.
+   \return A new AlgebraicVector<T>.
+   \sa DA::norm()
+ */
+    using DACE::norm;
+
+    const size_t size = this->size();
+    AlgebraicVector<T> temp(size);
+    for(size_t i=0; i<size; i++) {
+        temp[i] = norm((*this)[i], type);}
+
+    return temp;
 }
 
 /***********************************************************************************
@@ -1450,6 +1469,18 @@ template<typename U> AlgebraicVector<U> evalScalar(const AlgebraicVector<DA> &ob
  */
     return obj.evalScalar(arg);
 }
+
+template<typename T> AlgebraicVector<double> norm(const AlgebraicVector<T> &obj, const unsigned int type) {
+/*! Element-wise application of the norm function.
+   \param[in] obj AlgebraicVector<T>.
+   \param[in] type type of norm to be computed. See DA::norm.
+   \return A new AlgebraicVector<T>.
+   \sa AlgebraicVector<T>::norm
+   \sa DA::norm
+ */
+    return obj.norm(type);
+}
+
 
 }
 #endif /* DINAMICA_ALGEBRAICVECTOR_T_H_ */

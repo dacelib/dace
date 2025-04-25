@@ -93,4 +93,12 @@ double root(const double x, const int p){
     return std::pow(x, 1.0/p);
 }
 
+double norm(const double x, const int p){
+/*! norm of x.
+   \param[in] x Function argument.
+   \param[in] type Type of norm (ignored for double).
+ */
+    return std::abs(x);
+}
+
 }

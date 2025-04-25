@@ -39,6 +39,7 @@ DACE_API double icbrt(const double x);                           //!< Inverse cu
 DACE_API double sqr(const double x);                             //!< Square
 DACE_API double minv(const double x);                            //!< Multiplicative inverse
 DACE_API double root(const double x, const int p = 2);           //!< p-th root
+DACE_API double norm(const double x, const int type = 0);        //!< norm (same as abs)
 
 }
 

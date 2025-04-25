@@ -128,8 +128,9 @@ public:
                                                                                                     //!< Dot product (scalar product, inner product) of two vectors.
     template<typename V> AlgebraicVector<typename PromotionTrait<T,V>::returnType> cross(const AlgebraicVector<V> &obj) const;
                                                                                                     //!< Cross product of two vectors of length 3.
-    T length() const;                                                                     //!< Length of the vector in Euclidean norm.
+    T length() const;                                                                               //!< Length of the vector in Euclidean norm.
     AlgebraicVector<T> normalize() const;                                                           //!< Normalized vector of unit length along this vector.
+    // XXX: various Jacobians, gradients, curls, etc?
 
     /***********************************************************************************
     *     Special routines (DA related)
@@ -144,10 +145,12 @@ public:
     AlgebraicVector<T> trim(const unsigned int min, const unsigned int max = DA::getMaxOrder()) const;
                                                                                                     //!< Trim the coefficients of each components to particular orders. DA only.
     AlgebraicVector<T> invert() const;                                                              //!< Inverse function of the AlgebraicVector<DA>. DA only.
-    // XXX: define and add the norm estimation routines from DA including norm(p), convergence radius estimation
-    // XXX: add jacobian routine (returns a DA matrix containing the jacobian)
-    /*
-    double norm(const unsigned int type = 0) const;                         //!< Different types of norms over all coefficients
+
+    /********************************************************************************
+    *     DA norm routines
+    *********************************************************************************/
+    AlgebraicVector<double> norm(const unsigned int type = 0) const;                                //!< Element-wise DA norm
+    /* XXX: define and add the norm estimation routines from DA including convergence radius estimation
     std::vector<double> orderNorm(const unsigned int var = 0, const unsigned int type = 0) const;
                                                                             //!< Different types of norms over coefficients of each order separately
     std::vector<double> estimNorm(const unsigned int var = 0, const unsigned int type = 0, const unsigned int nc = DA::getMaxOrder()) const;
@@ -233,6 +236,7 @@ template<typename T, typename U> AlgebraicVector<U> eval(const AlgebraicVector<T
 template<typename T, typename U> AlgebraicVector<U> evalScalar(const AlgebraicVector<T> &obj, const U &arg);
 template<typename T> compiledDA compile(const AlgebraicVector<T> &obj);
 template<typename T> AlgebraicVector<T> plug(const AlgebraicVector<T> &obj, const unsigned int var, const double val = 0.0);
+template<typename T> AlgebraicVector<double> norm(const AlgebraicVector<T> &obj, const unsigned int type = 0);
 
 // specializations for various DA specific routines implemented and instantiated directly in the library instead of in a template
 #ifdef WITH_ALGEBRAICMATRIX
