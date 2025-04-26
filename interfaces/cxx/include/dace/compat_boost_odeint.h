@@ -30,10 +30,13 @@
 #define DINAMICA_COMPAT_BOOST_ODEINT_H_
 
 /*! This file needs to be included after boost/numeric/odeint.hpp and dace/dace.h to provide
-    a compatibility shim to allow odeint to work with DACE::AlgebraicVector<> as a state type.
+    a compatibility shim to allow odeint to work with DACE::AlgebraicVector as a state type.
     It can be used both with DA and double data types.
 
-    Additionally, after including this file, an implementation of abs(DACE::DA) must be provided
+    Use of the default range_algebra is recommended, but DACE::AlgebraicVector also works with
+    the vector_space_algebra.
+
+    Additionally, before including this file, an implementation of abs(DACE::DA) must be provided
     within the DACE namespace.
     For most practical uses, this can be done by selecting one of the predefined implementations
     provided in DACE::abs_cons, DACE::abs_max, or DACE::abs_sum.
@@ -42,10 +45,10 @@
     \code
         #include <boost/numeric/odeint.hpp>
         #include <dace/dace.h>
-        #include <dace/compat_boost_odeint.h>
 
-        // select implementation of abs(DA)
+        // select implementation of abs(DA) before compat_boost_odeint.h
         namespace DACE { using DACE::abs_max::abs; }
+        #include <dace/compat_boost_odeint.h>
 
 
         using namespace boost::numeric::odeint;
@@ -62,6 +65,8 @@
     \endcode
  */
 
+// range_algebra helpers (default)
+
  namespace boost { namespace numeric { namespace odeint {
     // mark AlgebraicVectors as resizable (using the standard container interface inherited from std::vector)
     template<typename T> struct is_resizeable<DACE::AlgebraicVector<T>>
@@ -70,5 +75,44 @@
         static const bool value = type::value;
     };
 } } }
+
+// vector_space_algebra helpers
+
+namespace boost { namespace numeric { namespace odeint {
+    // specialization to compute double max norm of AlgebraicVector<T>
+    template<typename T> struct vector_space_norm_inf<DACE::AlgebraicVector<T>>
+    {
+        typedef double result_type;
+        double operator()(const DACE::AlgebraicVector<T> &x) const
+        {
+            using DACE::abs;
+            using std::abs;
+
+            double res = 0.0;
+            for(unsigned int i = 0; i < x.size(); i++)
+            {
+                const double temp = abs(x[i]);
+                if(temp > res) res = temp;
+            }
+            return res;
+        }
+    };
+} } }
+
+namespace DACE {
+    // AlgebraicVector component-wise abs() with same output type. Required by vector_space_algebra in boost.
+    template<typename T> DACE::AlgebraicVector<T> abs(const DACE::AlgebraicVector<T> &x)
+    {
+        using DACE::abs;
+        using std::abs;
+
+        DACE::AlgebraicVector<T> res(x.size());
+        for(unsigned int i = 0; i < x.size(); i++)
+        {
+            res[i] = abs(x[i]);
+        }
+        return res;
+    }
+}
 
 #endif /* DINAMICA_COMPAT_BOOST_ODEINT_H_ */
