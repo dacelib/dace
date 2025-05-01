@@ -88,11 +88,25 @@ public:
     /***********************************************************************************
     *     Math routines
     ************************************************************************************/
-    // Included also in the std library cmath
+    AlgebraicVector<T> absolute() const;                                                            //!< Element-wise absolute value function.
+    AlgebraicVector<T> trunc() const;                                                               //!< Element-wise truncation.
+    AlgebraicVector<T> round() const;                                                               //!< Element-wise rounding.
+    AlgebraicVector<T> mod() const;                                                                 //!< Element-wise modulo.
     AlgebraicVector<T> pow(const int p) const;                                                      //!< Element-wise exponentiation to (integer) power.
+    AlgebraicVector<T> pow(const double p) const;                                                   //!< Element-wise exponentiation to (double) power.
+    AlgebraicVector<T> root(const int p = 2) const;                                                 //!< Element-wise p-th root.
+    AlgebraicVector<T> minv() const;                                                                //!< Element-wise multiplicative inverse.
+    AlgebraicVector<T> sqr() const;                                                                 //!< Element-wise square.
     AlgebraicVector<T> sqrt() const;                                                                //!< Element-wise square root.
+    AlgebraicVector<T> isrt() const;                                                                //!< Element-wise inverse square root.
+    AlgebraicVector<T> cbrt() const;                                                                //!< Element-wise cube root.
+    AlgebraicVector<T> icbrt() const;                                                               //!< Element-wise inverse cube root.
+    AlgebraicVector<T> hypot(const AlgebraicVector<T> &obj) const;                                  //!< Element-wise hypotenuse.
     AlgebraicVector<T> exp() const;                                                                 //!< Element-wise exponential.
     AlgebraicVector<T> log() const;                                                                 //!< Element-wise natural logarithm.
+    AlgebraicVector<T> logb(const double b = 10.0) const;                                           //!< Element-wise logarithm wrt a given base.
+    AlgebraicVector<T> log10() const;                                                               //!< Element-wise logarithm to base 10.
+    AlgebraicVector<T> log2() const;                                                                //!< Element-wise logarithm to base 2.
     AlgebraicVector<T> sin() const;                                                                 //!< Element-wise sine.
     AlgebraicVector<T> cos() const;                                                                 //!< Element-wise cosine.
     AlgebraicVector<T> tan() const;                                                                 //!< Element-wise tangent.
@@ -103,18 +117,9 @@ public:
     AlgebraicVector<T> sinh() const;                                                                //!< Element-wise hyperbolic sine.
     AlgebraicVector<T> cosh() const;                                                                //!< Element-wise hyperbolic cosine.
     AlgebraicVector<T> tanh() const;                                                                //!< Element-wise hyperbolic tangent.
-
-    // Available in cmath for double only with C++11
     AlgebraicVector<T> asinh() const;                                                               //!< Element-wise hyperbolic arcsine.
     AlgebraicVector<T> acosh() const;                                                               //!< Element-wise hyperbolic arccosine.
     AlgebraicVector<T> atanh() const;                                                               //!< Element-wise hyperbolic arctangent.
-
-    // Our own math extension routines not included in cmath
-    AlgebraicVector<T> logb(const double b = 10.0) const;                                           //!< Element-wise logarithm wrt a given base.
-    AlgebraicVector<T> isrt() const;                                                                //!< Element-wise inverse square root.
-    AlgebraicVector<T> sqr() const;                                                                 //!< Element-wise square.
-    AlgebraicVector<T> minv() const;                                                                //!< Element-wise multiplicative inverse.
-    AlgebraicVector<T> root(const int p = 2) const;                                                 //!< Element-wise p-th root.
 
     /***********************************************************************************
     *    Vector routines
@@ -123,8 +128,9 @@ public:
                                                                                                     //!< Dot product (scalar product, inner product) of two vectors.
     template<typename V> AlgebraicVector<typename PromotionTrait<T,V>::returnType> cross(const AlgebraicVector<V> &obj) const;
                                                                                                     //!< Cross product of two vectors of length 3.
-    T vnorm() const;                                                                                //!< Euclidean vector norm (length).
+    T length() const;                                                                               //!< Length of the vector in Euclidean norm.
     AlgebraicVector<T> normalize() const;                                                           //!< Normalized vector of unit length along this vector.
+    // XXX: various Jacobians, gradients, curls, etc?
 
     /***********************************************************************************
     *     Special routines (DA related)
@@ -139,11 +145,12 @@ public:
     AlgebraicVector<T> trim(const unsigned int min, const unsigned int max = DA::getMaxOrder()) const;
                                                                                                     //!< Trim the coefficients of each components to particular orders. DA only.
     AlgebraicVector<T> invert() const;                                                              //!< Inverse function of the AlgebraicVector<DA>. DA only.
-    // XXX: define and add the norm estimation routines from DA including abs(), norm(p), convergence radius estimation
-    // XXX: add jacobian routine (returns a DA matrix containing the jacobian)
-    /*
-    double abs() const;                                                     //!< Maximum absolute value of all coefficients
-    double norm(const unsigned int type = 0) const;                         //!< Different types of norms over all coefficients
+
+    /********************************************************************************
+    *     DA norm routines
+    *********************************************************************************/
+    AlgebraicVector<double> norm(const unsigned int type = 0) const;                                //!< Element-wise DA norm
+    /* XXX: define and add the norm estimation routines from DA including convergence radius estimation
     std::vector<double> orderNorm(const unsigned int var = 0, const unsigned int type = 0) const;
                                                                             //!< Different types of norms over coefficients of each order separately
     std::vector<double> estimNorm(const unsigned int var = 0, const unsigned int type = 0, const unsigned int nc = DA::getMaxOrder()) const;
@@ -229,6 +236,7 @@ template<typename T, typename U> AlgebraicVector<U> eval(const AlgebraicVector<T
 template<typename T, typename U> AlgebraicVector<U> evalScalar(const AlgebraicVector<T> &obj, const U &arg);
 template<typename T> compiledDA compile(const AlgebraicVector<T> &obj);
 template<typename T> AlgebraicVector<T> plug(const AlgebraicVector<T> &obj, const unsigned int var, const double val = 0.0);
+template<typename T> AlgebraicVector<double> norm(const AlgebraicVector<T> &obj, const unsigned int type = 0);
 
 // specializations for various DA specific routines implemented and instantiated directly in the library instead of in a template
 #ifdef WITH_ALGEBRAICMATRIX

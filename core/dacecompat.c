@@ -63,14 +63,16 @@ void dacepek(const DACEDA *ina, const unsigned int jj[], double *cjj)
 }
 
 /*! Compute absolute value of a DA object.
+    Same as daceNorm(ina, 0).
    \param[in] ina Pointer to DA object to take absolute value of
    \param[out] anorm Pointer where to store the absolute value
-   \deprecated Has been replaced by daceAbsoluteValue()
-   \sa daceAbsoluteValue()
+   \deprecated Has been replaced by daceNorm() and daceAbsolute()
+   \sa daceNorm()
+   \sa daceAbsolute()
 */
 void daceabs(const DACEDA *ina, double *anorm)
 {
-    *anorm = daceAbsoluteValue(ina);
+    *anorm = daceNorm(ina, 0);
 }
 
 /*! Compute absolute value of a DA object.

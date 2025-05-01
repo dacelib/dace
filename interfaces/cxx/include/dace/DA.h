@@ -65,6 +65,8 @@ private:
     DACEDA m_index;                                                         //!< Index to the DA vector
 
 public:
+   typedef double value_type;                                               //!< Underlying type of DA coefficients (for compatibility with C++ std lib, boost, etc)
+
     /********************************************************************************
     *     DACE Setup
     *********************************************************************************/
@@ -99,15 +101,15 @@ public:
     /********************************************************************************
     *     Coefficient access and extraction routines
     *********************************************************************************/
-    int isnan() const;
-    int isinf() const;
+    int isnan() const;                                                      //!< Check if any coefficients are NaNs
+    int isinf() const;                                                      //!< Check if any coefficients are Inf
     double cons() const;                                                    //!< Get constant part of a DA
     AlgebraicVector<double> linear() const;                                 //!< Get linear part of a DA
     AlgebraicVector<DA> gradient() const;                                   //!< Gradient vector with respect to all independent DA variables
     double getCoefficient(const std::vector<unsigned int> &jj) const;                //!< Get specific coefficient
     void setCoefficient(const std::vector<unsigned int> &jj, const double coeff);    //!< Set specific coefficient
     Monomial getMonomial(const unsigned int npos) const;                    //!< Get the Monomial at given position
-    void getMonomial(const unsigned int npos, Monomial &m) const;            //!< Extract the Monomial at given position
+    void getMonomial(const unsigned int npos, Monomial &m) const;           //!< Extract the Monomial at given position
     std::vector<Monomial> getMonomials() const;                             //!< Get std::vector of all non-zero Monomials
 
     /********************************************************************************
@@ -162,6 +164,7 @@ public:
     DA integ(const std::vector<unsigned int> ind) const;                    //!< Integral with respect to given variables
     DA trim(const unsigned int min, const unsigned int max = DA::getMaxOrder()) const;
                                                                             //!< Trim the coefficients only include orders between min and max, inclusively
+    DA absolute() const;                                                    //!< Absolute value of DA based on constant part
     DA trunc() const;                                                       //!< Truncate the constant part to an integer
     DA round() const;                                                       //!< Round the constant part to an integer
     DA mod(const double p) const;                                           //!< Modulo of the constant part
@@ -207,7 +210,6 @@ public:
     *    Norm and estimation routines
     *********************************************************************************/
     unsigned int size() const;                                              //!< Number of non-zero coefficients
-    double abs() const;                                                     //!< Maximum absolute value of all coefficients
     double norm(const unsigned int type = 0) const;                         //!< Different types of norms over all coefficients
     std::vector<double> orderNorm(const unsigned int var = 0, const unsigned int type = 0) const;
                                                                             //!< Different types of norms over coefficients of each order separately
@@ -272,6 +274,7 @@ DACE_API DA deriv(const DA &da, const std::vector<unsigned int> ind);
 DACE_API DA integ(const DA &da, const unsigned int i);
 DACE_API DA integ(const DA &da, const std::vector<unsigned int> ind);
 DACE_API DA trim(const DA &da, const unsigned int min, const unsigned int max = DA::getMaxOrder());
+DACE_API DA absolute(const DA &da);
 DACE_API DA trunc(const DA &da);
 DACE_API DA round(const DA &da);
 DACE_API DA mod(const DA &da, const double p);
@@ -318,7 +321,6 @@ DACE_API DA LogGammaFunction(const DA &da);
 DACE_API DA PsiFunction(const unsigned int n, const DA &da);
 
 DACE_API unsigned int size(const DA &da);
-DACE_API double abs(const DA &da);
 DACE_API double norm(const DA &da, unsigned int type = 0);
 DACE_API std::vector<double> orderNorm(const DA &da, unsigned int var = 0, unsigned int type = 0);
 DACE_API std::vector<double> estimNorm(const DA &da, unsigned int var = 0, unsigned int type = 0, unsigned int nc = DA::getMaxOrder());
@@ -338,6 +340,17 @@ DACE_API DA translateVariable(const DA &da, const unsigned int var = 0, const do
 DACE_API std::string toString(const DA &da);
 DACE_API void write(const DA &da, std::ostream &os);
 
+namespace abs_cons {
+    double abs(const DA &da);                       //!< Absolute value of constant part.
+}
+
+namespace abs_max {
+    double abs(const DA &da);                       //!< Largest coefficient in absolute value.
+}
+
+namespace abs_sum {
+    double abs(const DA &da);                       //!< Sum of absolute values of all coefficients.
+}
 
 
 /*! Stored DA class representing a DA vector in a binary, setup independent format. */
@@ -347,7 +360,7 @@ private:
     static const unsigned int headerSize;
 
 public:
-    storedDA(const DA &da);                            //!< Constructor from a DA.
+    storedDA(const DA &da);                         //!< Constructor from a DA.
     storedDA(const std::vector<char> &data);        //!< Constructor from binary data.
     storedDA(std::istream &is);                     //!< Constructor from stream.
 

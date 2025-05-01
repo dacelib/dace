@@ -37,13 +37,13 @@
 #include "dace/AlgebraicVector.h"
 #include "dace/AlgebraicVector_t.h"
 
-namespace DACE{
+namespace DACE {
 
 /***********************************************************************************
 *     Coefficient access routines
 ************************************************************************************/
 #ifdef WITH_ALGEBRAICMATRIX
-template<> AlgebraicMatrix<double> AlgebraicVector<DA>::linear() const{
+template<> AlgebraicMatrix<double> AlgebraicVector<DA>::linear() const {
 /*! Return the linear part of a AlgebraicVector<T>. NOT DEFINED FOR TYPES OTHER THAN DA.
    \return A AlgebraicMatrix<double> of dimension size by nvar, where size is the
     size of the AlgebraicVector<T> considered and nvar is the number of variables defined
@@ -57,13 +57,13 @@ template<> AlgebraicMatrix<double> AlgebraicVector<DA>::linear() const{
     const int nvar = DA::getMaxVariables();
 
     AlgebraicMatrix<double> out(size, nvar);
-    for(size_t i=0; i<size; i++){
+    for(size_t i=0; i<size; i++) {
           out.setrow( i, (*this)[i].linear() );
     }
     return out;
 }
 #else
-template<> std::vector< std::vector<double> > AlgebraicVector<DA>::linear() const{
+template<> std::vector< std::vector<double> > AlgebraicVector<DA>::linear() const {
 /*! Return the linear part of a AlgebraicVector<T>. NOT DEFINED FOR TYPES OTHER THAN DA.
    \return A std::vector< std::vector<double> >, where each std::vector<double> contains
     the linear part of the corresponding DA included in the original AlgebraicVector<T>.
@@ -74,15 +74,14 @@ template<> std::vector< std::vector<double> > AlgebraicVector<DA>::linear() cons
     const size_t size = this->size();
 
     std::vector< std::vector<double> > out(size);
-    for(size_t i=0; i<size; i++){
+    for(size_t i=0; i<size; i++) {
           out[i] = (*this)[i].linear();
     }
     return out;
 }
 #endif /* WITH_ALGEBRAICMATRIX */
 
-template<> AlgebraicVector<DA> AlgebraicVector<DA>::trim(const unsigned int min, const unsigned int max) const
-{
+template<> AlgebraicVector<DA> AlgebraicVector<DA>::trim(const unsigned int min, const unsigned int max) const {
 /*! Returns an AlgebraicVector<DA> with all monomials of order less than min and greater than max removed (trimmed). The result is copied in a new AlgebraicVector<DA>.
    \param[in] min minimum order to be preserved.
    \param[in] max maximum order to be preserved.
@@ -102,7 +101,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::trim(const unsigned int min,
 /***********************************************************************************
 *     Math routines
 ************************************************************************************/
-template<> AlgebraicVector<DA> AlgebraicVector<DA>::deriv(const unsigned int p) const{
+template<> AlgebraicVector<DA> AlgebraicVector<DA>::deriv(const unsigned int p) const {
 /*! Compute the derivative of a AlgebraicVector<T> with respect to variable p.
     The result is copied in a new AlgebraicVector<T>. NOT DEFINED FOR TYPES OTHER THAN DA.
    \param[in] p variable with respect to which the derivative is calculated.
@@ -113,13 +112,13 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::deriv(const unsigned int p) 
  */
     const size_t size = this->size();
     AlgebraicVector<DA> temp(size);
-    for(size_t i=0; i<size; i++){
+    for(size_t i=0; i<size; i++) {
         temp[i] = (*this)[i].deriv(p);}
 
     return temp;
 }
 
-template<> AlgebraicVector<DA> AlgebraicVector<DA>::integ(const unsigned int p) const{
+template<> AlgebraicVector<DA> AlgebraicVector<DA>::integ(const unsigned int p) const {
 /*! Compute the integral of a AlgebraicVector<T> with respect to variable p.
     The result is copied in a new AlgebraicVector<T>. NOT DEFINED FOR TYPES OTHER THAN DA.
    \param[in] p variable with respect to which the integral is calculated.
@@ -130,7 +129,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::integ(const unsigned int p) 
  */
     const size_t size = this->size();
     AlgebraicVector<DA> temp(size);
-    for(size_t i=0; i<size; i++){
+    for(size_t i=0; i<size; i++) {
         temp[i] = (*this)[i].integ(p);}
 
     return temp;
@@ -139,7 +138,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::integ(const unsigned int p) 
 /***********************************************************************************
 *     Polynomial evaluation routines
 ************************************************************************************/
-template<> compiledDA AlgebraicVector<DA>::compile() const{
+template<> compiledDA AlgebraicVector<DA>::compile() const {
 /*! Compile vector of polynomials and create a compiledDA object.
    \return The compiled DA object.
    \note This DA specific function is only available in AlgebraicVector<DA>.
@@ -149,7 +148,7 @@ template<> compiledDA AlgebraicVector<DA>::compile() const{
     return compiledDA(*this);
 }
 
-template<> AlgebraicVector<DA> AlgebraicVector<DA>::plug(const unsigned int var, const double val) const{
+template<> AlgebraicVector<DA> AlgebraicVector<DA>::plug(const unsigned int var, const double val) const {
 /*! Partial evaluation of vector of polynomials. In each element of the vector,
     variable var is replaced by the value val. The resulting vector of DAs
     is returned.
@@ -162,7 +161,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::plug(const unsigned int var,
  */
     const size_t size = this->size();
     AlgebraicVector<DA> temp(size);
-    for(size_t i=0; i<size; i++){
+    for(size_t i=0; i<size; i++) {
         temp[i] = (*this)[i].plug(var,val);}
 
     return temp;
@@ -177,20 +176,20 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::plug(const unsigned int var,
    This is NOT intended for public use. Limited error checking is performed
    in accordance with the exclusive use of this routine in map inversion.
  */
-template<> void AlgebraicVector<DA>::matrix_inverse(std::vector< std::vector<double> > &A){
+template<> void AlgebraicVector<DA>::matrix_inverse(std::vector< std::vector<double> > &A) {
     using std::abs;
 
     const size_t n = A.size();
     std::vector<size_t> indexc(n), indexr(n), ipiv(n, 0);
 
-    for (size_t i=0; i<n; i++){
+    for (size_t i=0; i<n; i++) {
         size_t icol = 0, irow = 0;
         double big = 0.0;
         for (size_t j=0; j<n; j++)
             if (ipiv[j] == 0)
                 for (size_t k=0; k<n; k++)
                     if (ipiv[k] == 0)
-                        if (abs(A[j][k]) >= big){
+                        if (abs(A[j][k]) >= big) {
                             big = abs(A[j][k]);
                             irow = j;
                             icol = k;}
@@ -204,7 +203,7 @@ template<> void AlgebraicVector<DA>::matrix_inverse(std::vector< std::vector<dou
         A[icol][icol] = 1.0;
         for (size_t l=0; l<n; l++) A[icol][l] *= pivinv;
         for (size_t ll=0; ll<n; ll++)
-            if (ll != icol){
+            if (ll != icol) {
                 const double temp = A[ll][icol];
                 A[ll][icol] = 0.0;
                 for (size_t l=0; l<n; l++) A[ll][l] -= A[icol][l]*temp;}
@@ -218,7 +217,7 @@ template<> void AlgebraicVector<DA>::matrix_inverse(std::vector< std::vector<dou
 /*! \endcond */
 #endif /* WITH_ALGEBRAICMATRIX */
 
-template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const{
+template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const {
 /*! Invert the polynomials map given by the AlgebraicVector<DA>.
    \return the inverted polynomials
    \throw std::runtime_error
@@ -258,13 +257,13 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const{
     // Compute DA representation of the inverse of the linear part of the map and its composition with non-linear part AN
     AlgebraicVector<DA> Linv(nvar);
     // Linv = AI*AN
-    for(size_t i=0; i<nvar; i++){
+    for(size_t i=0; i<nvar; i++) {
         Linv[i] = 0.0;
         for(size_t j=0; j<nvar; j++)
             Linv[i] += AI[i][j]*AN[j];}
     compiledDA AIoAN(Linv);
     // Linv = AI*DDA
-    for(size_t i=0; i<nvar; i++){
+    for(size_t i=0; i<nvar; i++) {
         Linv[i] = 0.0;
         for(size_t j=0; j<nvar; j++)
             Linv[i] += AI[i][j]*DDA[j];}
@@ -272,7 +271,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const{
 
     // Iterate to obtain the inverse map
     AlgebraicVector<DA> MI = Linv;
-    for(unsigned int i=1; i<ord; i++){
+    for(unsigned int i=1; i<ord; i++) {
         DA::setTO(i+1);
         MI = Linv - AIoAN.eval(MI);}
 
@@ -282,7 +281,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::invert() const{
 /********************************************************************************
 *     Static factory routines
 *********************************************************************************/
-template<> AlgebraicVector<DA> AlgebraicVector<DA>::identity(const size_t n){
+template<> AlgebraicVector<DA> AlgebraicVector<DA>::identity(const size_t n) {
 /*! Return the DA identity of dimension n.
    \param[in] n The dimendion of the identity.
    \return AlgebraicVector<DA> containing the DA identity in n dimensions
@@ -291,7 +290,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::identity(const size_t n){
     error will be the result.
  */
     AlgebraicVector<DA> temp(n);
-    for(size_t i=0; i < n; i++){
+    for(size_t i=0; i < n; i++) {
         temp[i] = DA((int)(i+1));}
 
     return temp;
@@ -301,7 +300,7 @@ template<> AlgebraicVector<DA> AlgebraicVector<DA>::identity(const size_t n){
 *     Non-member functions
 ************************************************************************************/
 #ifdef WITH_ALGEBRAICMATRIX
-template<> AlgebraicMatrix<double> linear(const AlgebraicVector<DA> &obj){
+template<> AlgebraicMatrix<double> linear(const AlgebraicVector<DA> &obj) {
 /*! Return the linear part of a AlgebraicVector<T>.
    \param[in] obj AlgebraicVector<T> to extract linear part from
    \return An AlgebraicMatrix<double> of dimensions size by nvar, where
@@ -313,7 +312,7 @@ template<> AlgebraicMatrix<double> linear(const AlgebraicVector<DA> &obj){
    \sa AlgebraicVector<T>::linear
  */
 #else
-template<> std::vector< std::vector<double> > linear(const AlgebraicVector<DA> &obj){
+template<> std::vector< std::vector<double> > linear(const AlgebraicVector<DA> &obj) {
 /*! Return the linear part of a AlgebraicVector<T>. Only defined for AlgebraicVector<DA>.
    \param[in] obj AlgebraicVector<T> to extract linear part from
    \return A std::vector< std::vector<double> > containing the linear parts of
@@ -327,7 +326,7 @@ template<> std::vector< std::vector<double> > linear(const AlgebraicVector<DA> &
     return obj.linear();
 }
 
-template<> AlgebraicVector<DA> trim(const AlgebraicVector<DA> &obj, unsigned int min, unsigned int max){
+template<> AlgebraicVector<DA> trim(const AlgebraicVector<DA> &obj, unsigned int min, unsigned int max) {
 /*! Returns an AlgebraicVector<DA> with all monomials of order less than min and greater than max removed (trimmed). The result is copied in a new AlgebraicVector<DA>.
    \param[in] obj the AlgebraicVector<DA> to be trimmed.
    \param[in] min minimum order to be preserved.
@@ -341,7 +340,7 @@ template<> AlgebraicVector<DA> trim(const AlgebraicVector<DA> &obj, unsigned int
     return obj.trim(min, max);
 }
 
-template<> AlgebraicVector<DA> deriv(const AlgebraicVector<DA> &obj, const unsigned int p){
+template<> AlgebraicVector<DA> deriv(const AlgebraicVector<DA> &obj, const unsigned int p) {
 /*! Compute the derivative of a AlgebraicVector<T> with respect to variable p.
     The result is copied in a new AlgebraicVector<T>.
    \param[in] obj AlgebraicVector<T>.
@@ -355,7 +354,7 @@ template<> AlgebraicVector<DA> deriv(const AlgebraicVector<DA> &obj, const unsig
     return obj.deriv(p);
 }
 
-template<> AlgebraicVector<DA> integ(const AlgebraicVector<DA> &obj, const unsigned int p){
+template<> AlgebraicVector<DA> integ(const AlgebraicVector<DA> &obj, const unsigned int p) {
 /*! Compute the integral of a AlgebraicVector<T> with respect to variable p.
     The result is copied in a new AlgebraicVector<T>.
    \param[in] obj AlgebraicVector<T>.
@@ -369,7 +368,7 @@ template<> AlgebraicVector<DA> integ(const AlgebraicVector<DA> &obj, const unsig
     return obj.integ(p);
 }
 
-template<> compiledDA compile(const AlgebraicVector<DA> &obj){
+template<> compiledDA compile(const AlgebraicVector<DA> &obj) {
 /*! Compile vector of polynomials and create a compiledDA object.
    \param[in] obj The AlgebraicVector to compile.
    \return The compiled DA object.
@@ -380,7 +379,7 @@ template<> compiledDA compile(const AlgebraicVector<DA> &obj){
     return obj.compile();
 }
 
-template<> AlgebraicVector<DA> plug(const AlgebraicVector<DA> &obj, const unsigned int var, const double val){
+template<> AlgebraicVector<DA> plug(const AlgebraicVector<DA> &obj, const unsigned int var, const double val) {
 /*! Partial evaluation of vector of polynomials. In each element of the vector,
     variable var is replaced by the value val. The resulting vector of DAs
     is returned.
